@@ -1,4 +1,4 @@
 package com.example.batalla_naval.controller;
 
-public class IntroductionController {
+public class StartViewController {
 }

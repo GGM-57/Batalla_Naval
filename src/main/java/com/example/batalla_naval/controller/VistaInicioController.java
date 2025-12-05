@@ -8,6 +8,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ButtonBar;
 
 import java.io.IOException;
 
@@ -25,6 +28,20 @@ public class VistaInicioController {
         System.out.println("Jugando");
         cambiarVentana(event, "/com/example/batalla_naval/VistaConfiguracionTablero.fxml");
     }
+
+    /* logica del boton de instrucciones
+    * */
+    @FXML
+    private void onInstruccionesClick(ActionEvent event){
+        Alert alert=new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Instrucciones del juego");
+        alert.setHeaderText(null);
+        alert.setContentText("instrucciones");
+        ButtonType okButton=new ButtonType("más que claro!!", ButtonBar.ButtonData.OK_DONE); /* boton de aceptar*/
+        alert.getButtonTypes().setAll(okButton);
+        alert.showAndWait();
+    }
+
 
     private void cambiarVentana(ActionEvent event, String fxml) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource(fxml));

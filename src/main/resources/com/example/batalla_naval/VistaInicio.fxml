@@ -35,12 +35,15 @@
         <!-- BOTÓN DE INSTRUCCIONES -->
         <Button text="Instrucciones"
                 prefWidth="150"
-                styleClass="instructions-btn"/>
+                styleClass="instructions-btn"
+                fx:id="instruccionesButton"
+                onAction="#onInstruccionesClick"/>
 
-                <!--
-                style=" -fx-background-color: #3a617d;
-                        -fx-text-fill: white;
-                        -fx-font-size: 10px;"-->
+
+        <!--
+        style=" -fx-background-color: #3a617d;
+                -fx-text-fill: white;
+                -fx-font-size: 10px;"-->
 
 
         <!-- USERNAME -->

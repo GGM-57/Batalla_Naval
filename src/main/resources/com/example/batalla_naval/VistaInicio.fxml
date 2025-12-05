@@ -8,9 +8,10 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.batalla_naval.controller.VistaInicioController"
             prefWidth="650" prefHeight="500"
             styleClass="root"
-            stylesheets="@StartViewStyles.css">
+            stylesheets="@VistaInicioEstilos.css">
             <!--
             style="-fx-background-color: #9ec3d1;"-->
 
@@ -58,7 +59,9 @@
         <Button text="¡JUGAR!"
                 prefWidth="150"
                 prefHeight="45"
-                styleClass="play-btn"/>
+                styleClass="play-btn"
+                fx:id="jugarButton"
+                onAction="#onJugarClick"/>
 
                 <!--style="-fx-background-color: white;
                         -fx-font-size: 22px;
@@ -67,18 +70,8 @@
 
     <!-- IMÁGENES DECORATIVAS ABAJO -->
 
-
-    <!-- Olas -->
-    <ImageView fitWidth="650" preserveRatio="true"
-               AnchorPane.bottomAnchor="-5"
-               AnchorPane.leftAnchor="0"
-               AnchorPane.rightAnchor="0">
-        <image>
-            <Image url="@images/imageCenterWaves.png" />
-        </image>
-    </ImageView>
-    <!-- ship right -->
-    <ImageView fitWidth="250" preserveRatio="true"
+    <!-- ship left -->
+    <ImageView fitWidth="270" preserveRatio="true"
                AnchorPane.bottomAnchor="0"
                AnchorPane.leftAnchor="10">
         <image>
@@ -86,13 +79,73 @@
         </image>
     </ImageView>
 
-    <!-- ship left -->
-    <ImageView fitWidth="250" preserveRatio="true"
+
+    <!-- ship right -->
+    <ImageView fitWidth="290" preserveRatio="true"
                AnchorPane.bottomAnchor="0"
                AnchorPane.rightAnchor="10">
         <image>
             <Image url="@images/imageLeft.png" />
         </image>
     </ImageView>
+
+    <!-- olas -->
+
+    <TilePane AnchorPane.bottomAnchor="0"
+              AnchorPane.leftAnchor="0"
+              AnchorPane.rightAnchor="0"
+              alignment="CENTER"
+              hgap="0"
+              vgap="0"
+              prefTileWidth="100">
+
+        <ImageView fitWidth="100" preserveRatio="true">
+            <image>
+                <Image url="@images/imageCenterWaves.png"/>
+            </image>
+        </ImageView>
+
+        <ImageView fitWidth="100" preserveRatio="true">
+            <image>
+                <Image url="@images/imageCenterWaves.png"/>
+            </image>
+        </ImageView>
+
+        <ImageView fitWidth="100" preserveRatio="true">
+            <image>
+                <Image url="@images/imageCenterWaves.png"/>
+            </image>
+        </ImageView>
+
+        <ImageView fitWidth="100" preserveRatio="true">
+            <image>
+                <Image url="@images/imageCenterWaves.png"/>
+            </image>
+        </ImageView>
+
+        <ImageView fitWidth="100" preserveRatio="true">
+            <image>
+                <Image url="@images/imageCenterWaves.png"/>
+            </image>
+        </ImageView>
+
+        <ImageView fitWidth="100" preserveRatio="true">
+            <image>
+                <Image url="@images/imageCenterWaves.png"/>
+            </image>
+        </ImageView>
+
+    </TilePane>
+
+
+    <!-- Olas
+    <ImageView fitWidth="650" preserveRatio="true"
+               AnchorPane.bottomAnchor="-5"
+               AnchorPane.leftAnchor="0"
+               AnchorPane.rightAnchor="0">
+        <image>
+            <Image url="@images/imageCenterWaves.png" />
+        </image>
+    </ImageView>-->
 
 </AnchorPane>

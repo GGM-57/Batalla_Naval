@@ -8,8 +8,9 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.batalla_naval.controller.VistaConfiguracionTableroController"
             prefWidth="900" prefHeight="650"
-            stylesheets="@FleetSetupViewStyles.css">
+            stylesheets="@VistaConfiguracionTableroEstilos.css">
 
     <!-- CONTENEDOR PRINCIPAL -->
     <HBox spacing="40" alignment="CENTER"
@@ -28,29 +29,45 @@
 
             <!-- Fragatas (x4) -->
             <HBox spacing="10" alignment="CENTER_LEFT">
-                <ImageView fitWidth="35" preserveRatio="true"
-                           image="@images/fragata.png" />
+                <ImageView fitWidth="35"
+                           preserveRatio="true">
+                    <image>
+                           <Image url="@images/fragata.png" />
+                    </image>
+                </ImageView>
                 <Label text="x4" styleClass="ship-count" />
             </HBox>
 
             <!-- Destructores (x3) -->
             <HBox spacing="10" alignment="CENTER_LEFT">
-                <ImageView fitWidth="45" preserveRatio="true"
-                           image="@images/fragata.png" />
+                <ImageView fitWidth="35"
+                           preserveRatio="true">
+                    <image>
+                        <Image url="@images/fragata.png" />
+                    </image>
+                </ImageView>
                 <Label text="x3" styleClass="ship-count" />
             </HBox>
 
             <!-- Submarinos (x2) -->
             <HBox spacing="10" alignment="CENTER_LEFT">
-                <ImageView fitWidth="55" preserveRatio="true"
-                           image="@images/fragata.png" />
+                <ImageView fitWidth="35"
+                           preserveRatio="true">
+                    <image>
+                        <Image url="@images/fragata.png" />
+                    </image>
+                </ImageView>
                 <Label text="x2" styleClass="ship-count" />
             </HBox>
 
             <!-- Portaaviones (x1) -->
             <HBox spacing="10" alignment="CENTER_LEFT">
-                <ImageView fitWidth="70" preserveRatio="true"
-                           image="@images/fragata.png" />
+                <ImageView fitWidth="35"
+                           preserveRatio="true">
+                    <image>
+                        <Image url="@images/fragata.png" />
+                    </image>
+                </ImageView>
                 <Label text="x1" styleClass="ship-count" />
             </HBox>
 
@@ -59,7 +76,7 @@
         <!-- PANEL CENTRAL QUE CONTIENE EL TABLERO -->
         <VBox spacing="15" alignment="TOP_CENTER">
 
-            <Label text="Player's Fleet"
+            <Label text="Tablero del Jugador"
                    styleClass="board-title"/>
 
             <!-- TABLERO (lo manejarás desde el controlador) -->
@@ -77,7 +94,8 @@
         <!-- BOTÓN DE COMENZAR JUEGO -->
         <VBox alignment="CENTER_RIGHT"
               prefWidth="180">
-            <Button text="Start Game"
+            <Button fx:id="btnIniciarBatalla"
+                    text="Iniciar Batalla"
                     styleClass="start-btn"
                     prefWidth="150"
                     prefHeight="50"/>

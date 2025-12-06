@@ -21,7 +21,9 @@
 
         <!-- PANEL IZQUIERDO -->
         <VBox spacing="20" alignment="TOP_CENTER"
+              minWidth="160"
               prefWidth="160"
+              maxWidth="160"
               styleClass="ship-panel">
 
             <Label text="Navios" styleClass="panel-title"/>
@@ -29,8 +31,8 @@
             <!-- Fragata -->
             <Label text="Fragatas" styleClass="subtitles-ships"/>
             <HBox spacing="10" alignment="CENTER_LEFT" prefWidth="80">
-                <ImageView fitWidth="45" preserveRatio="true">
-                    <image><Image url="@images/fragata.png"/></image>
+                <ImageView fx:id="imageFragatas" fitWidth="45" preserveRatio="true">
+                    <image><Image url="@images/fragata.png" /></image>
                 </ImageView>
                 <Label fx:id="fragataCount" text="x4" styleClass="ship-count"/>
                 <!--el label del navio fragata debe cambiar -falta hacer logica de eso en el VistaConfiguracionTableroController-->
@@ -40,18 +42,23 @@
             <!-- Destructores -->
             <Label text="Destructores" styleClass="subtitles-ships"/>
             <HBox spacing="10" alignment="CENTER_LEFT" prefWidth="80">
-                <ImageView fitWidth="45" preserveRatio="true">
+                <ImageView fx:id="imageDestructores" fitWidth="45" preserveRatio="true">
                     <image><Image url="@images/fragata.png"/></image>
                 </ImageView>
                 <Label text="x3" styleClass="ship-count"/>
                 <!--el label del navio destructores debe cambiar -falta hacer logica de eso en el VistaConfiguracionTableroController-->
             </HBox>
 
+
+
+
+
+
             <!-- Submarinos -->
             <Label text="Submarinos" styleClass="subtitles-ships"/>
             <HBox spacing="10" alignment="CENTER_LEFT" prefWidth="80">
                 <ImageView fitWidth="45" preserveRatio="true">
-                    <image><Image url="@images/fragata.png"/></image>
+                    <image><Image url="@images/fragata.png" fx:id="imageSubmarinos"/></image>
                 </ImageView>
                 <Label text="x2" styleClass="ship-count"/>
                 <!--el label del navio submarinos debe cambiar -falta hacer logica de eso en el VistaConfiguracionTableroController-->
@@ -61,28 +68,29 @@
             <Label text="Portaaviones" styleClass="subtitles-ships"/>
             <HBox spacing="10" alignment="CENTER_LEFT" prefWidth="80">
                 <ImageView fitWidth="45" preserveRatio="true">
-                    <image><Image url="@images/fragata.png"/></image>
+                    <image><Image url="@images/fragata.png" fx:id="imagePortaaviones"/></image>
                 </ImageView>
                 <Label text="x1" styleClass="ship-count"/>
                 <!--el label del navio portaviones debe cambiar -falta hacer logica de eso en el VistaConfiguracionTableroController-->
             </HBox>
         </VBox>
 
-        <!-- PANEL CENTRAL (TABLERO + BOTÓN) -->
+        <!-- PANEL CENTRAL (TABLERO Y BARRA INFORMACIONES) -->
         <VBox spacing="20" alignment="CENTER" prefWidth="480" prefHeight="480">
 
             <Label text="Tablero del Jugador" styleClass="board-title"/>
 
             <GridPane fx:id="playerBoard"
+                      minWidth="450" minHeight="450"
+                      prefWidth="450" prefHeight="450"
+                      maxWidth="450" maxHeight="450"
                       styleClass="game-board"/>
-                     <!-- maxWidth="Infinity"
-                      maxHeight="Infinity"
-                      VBox.vgrow="ALWAYS"-->
 
             <!-- MENSAJE -->
             <Label fx:id="informationLabel"
                    text="Posicione sus navios en el tablero - Presione click derecho para girar el barco"
                    prefWidth="600"
+                   wrapText="true"
                    styleClass="rotate-hint"/>
         </VBox>
 

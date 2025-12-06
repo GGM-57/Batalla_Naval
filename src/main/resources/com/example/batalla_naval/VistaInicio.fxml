@@ -12,8 +12,7 @@
             prefWidth="650" prefHeight="500"
             styleClass="root"
             stylesheets="@VistaInicioEstilos.css">
-            <!--
-            style="-fx-background-color: #9ec3d1;"-->
+
 
 
     <!-- CONTENEDOR CENTRAL -->
@@ -26,10 +25,7 @@
         <HBox alignment="CENTER">
             <Text text="Batalla Naval"
                   styleClass="title-text"/>
-            <!--
-                  style="-fx-font-size: 48px;
-                        -fx-font-weight: bold;
-                         -fx-fill: #0b0b0b;" />-->
+
         </HBox>
 
         <!-- BOTÓN DE INSTRUCCIONES -->
@@ -39,18 +35,10 @@
                 fx:id="instruccionesButton"
                 onAction="#onInstruccionesClick"/>
 
-
-        <!--
-        style=" -fx-background-color: #3a617d;
-                -fx-text-fill: white;
-                -fx-font-size: 10px;"-->
-
-
         <!-- USERNAME -->
         <VBox spacing="10" alignment="CENTER">
             <Label text="Nombre del jugador:"
                    styleClass="username-label"/>
-            <!--style="-fx-font-size: 18px; -fx-text-fill: #1d1d1d;"-->
 
             <TextField fx:id="usernameField"
                         maxWidth="250"

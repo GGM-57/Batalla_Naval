@@ -49,11 +49,11 @@
                    styleClass="username-label"/>
             <!--style="-fx-font-size: 18px; -fx-text-fill: #1d1d1d;"-->
 
-   <TextField fx:id="usernameField"
-              maxWidth="250"
-              promptText="Ingrese su nombre"
-              styleClass="username-field"/>
-</VBox>
+            <TextField fx:id="usernameField"
+                        maxWidth="250"
+                        promptText="Ingrese su nombre"
+                        styleClass="username-field"/>
+        </VBox>
 
 <!-- BOTÓN PLAY -->
         <Button text="¡JUGAR!"
@@ -137,15 +137,5 @@
 
     </TilePane>
 
-
-    <!-- Olas
-    <ImageView fitWidth="650" preserveRatio="true"
-               AnchorPane.bottomAnchor="-5"
-               AnchorPane.leftAnchor="0"
-               AnchorPane.rightAnchor="0">
-        <image>
-            <Image url="@images/imageCenterWaves.png" />
-        </image>
-    </ImageView>-->
 
 </AnchorPane>

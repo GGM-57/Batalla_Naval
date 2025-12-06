@@ -1,0 +1,112 @@
+/* ================
+   FONDO GENERAL
+   ================ */
+.root {
+    -fx-background-color: #8fb5c5;
+    -fx-font-family: "Arial Rounded MT Bold", Arial, sans-serif;
+}
+
+/* ====================
+   PANEL IZQUIERDO
+   ==================== */
+.ship-panel {
+    -fx-background-color: #3e5870;
+    -fx-padding: 20;
+    -fx-background-radius: 18;
+    -fx-border-radius: 18;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 8, 0.3, 2, 2);
+}
+
+.panel-title {
+    -fx-text-fill: white;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+/* Cantidad de barcos */
+.ship-count {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+}
+
+/* ====================
+   TABLERO DE JUEGO
+   ==================== */
+.board-title {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0a0a0a;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 6, 0.2, 2, 2);
+}
+/*tablero*/
+.game-board {
+    /*-fx-background-color: #f8f8f8
+
+    -fx-border-color: #425d6b;
+    -fx-border-width: 3;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;*/
+    -fx-background-color: #1e3a56;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-padding: 8;
+
+    -fx-border-color: #0f2233;
+    -fx-border-width: 3;
+
+    -fx-grid-lines-visible: false;
+}
+/*celdas*/
+.cell {
+    -fx-border-color: rgba(255,255,255,0.45);
+    -fx-border-width: 0.5;
+    -fx-background-color: transparent;
+}
+/* ====================
+   MENSAJE INFORMATIVO
+   ==================== */
+.rotate-hint {
+    -fx-background-color: #ffffff;
+    -fx-padding: 10 18;
+    -fx-font-size: 16px;
+    -fx-text-fill: #1a1a1a;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-border-color: #395463;
+    -fx-border-width: 2;
+}
+
+/* ====================
+   BOTÓN START GAME
+   ==================== */
+.start-btn {
+    -fx-background-color: linear-gradient(#cfe5ef, #a9c7d6);
+    -fx-text-fill: #000000;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 30;
+    -fx-border-radius: 30;
+    -fx-padding: 10 10;
+    -fx-border-color: black;
+    -fx-border-width: 2;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 6, 0.2, 2, 2);
+
+}
+
+.start-btn:hover {
+    -fx-background-color: linear-gradient(#e1f3ff, #b9d9eb);
+}
+
+/* ====================
+   IMÁGENES DE LOS NAVÍOS
+   ==================== */
+.image-view {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 5, 0.2, 1, 1);
+}
+
+.subtitles-ships {
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}

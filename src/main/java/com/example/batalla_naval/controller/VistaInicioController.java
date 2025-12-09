@@ -27,6 +27,7 @@ public class VistaInicioController {
     private void onJugarClick(ActionEvent event) throws IOException {
         System.out.println("Jugando");
         cambiarVentana(event, "/com/example/batalla_naval/VistaConfiguracionTablero.fxml");
+
     }
 
     /* logica del boton de instrucciones
@@ -68,6 +69,7 @@ public class VistaInicioController {
 
     private void cambiarVentana(ActionEvent event, String fxml) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource(fxml));
+        System.out.println("cambio de ventana 1 correcto");
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);

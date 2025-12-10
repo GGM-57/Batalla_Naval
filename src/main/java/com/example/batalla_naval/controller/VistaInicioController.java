@@ -11,6 +11,8 @@ import javafx.stage.Stage;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ButtonBar;
+import com.example.batalla_naval.util.MusicManager;
+
 
 import java.io.IOException;
 
@@ -21,10 +23,13 @@ public class VistaInicioController {
     @FXML
     private void initialize() {
         //agregar logica
+        MusicManager.playMenuMusic();
+
     }
 
     @FXML
     private void onJugarClick(ActionEvent event) throws IOException {
+        MusicManager.stopMenuMusic();
         System.out.println("Jugando");
         cambiarVentana(event, "/com/example/batalla_naval/VistaConfiguracionTablero.fxml");
 

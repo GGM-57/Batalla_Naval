@@ -3,6 +3,8 @@ import javafx.scene.Group;
 import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Polygon;
+import javafx.scene.paint.Color;
 
 
 public class Navio {
@@ -67,10 +69,10 @@ public class Navio {
     }
 
     /*Mertodo donde se decide la forma a dibujar*/
-    private Group crearForma() {
-        Group navioForma = new Group();
+    private Group crearForma(){
+        Group navioForma=new Group();
 
-        switch (tipo) {
+        switch (tipo){
             case "Fragata":
                 return crearFragata();
             case "Destructor":
@@ -122,17 +124,65 @@ public class Navio {
 //        System.out.println("se creó la figura en la clase navio");
 //        return navioForma;
 
-        private Group crearFragata() {
-            Group g = new Group();
-            Rectangle r = new Rectangle(15, 15);
-            r.setFill(Color.DARKBLUE);
-            r.setStroke(Color.BLACK);
-            r.setStrokeWidth(2);
-            g.getChildren().add(r);
-            return g;
-        }
+    private Group crearFragata() {
+        Group g = new Group();
 
-        private Group crearDestructor() {
+        // Cuerpo principal (casco)
+        Rectangle cuerpo = new Rectangle(40, 18);
+        cuerpo.setArcWidth(10);
+        cuerpo.setArcHeight(10);
+        cuerpo.setFill(Color.web("#334155")); // Gris-azulado elegante
+        cuerpo.setStroke(Color.BLACK);
+        cuerpo.setStrokeWidth(1.8);
+        g.getChildren().add(cuerpo);
+
+        // Proa (punta del barco)
+        Polygon proa = new Polygon();
+        proa.getPoints().addAll(
+                40.0, 0.0,   // punta derecha superior
+                40.0, 18.0,  // punta derecha inferior
+                54.0, 9.0    // punta extendida
+        );
+        proa.setFill(Color.web("#475569")); // Tone más claro para contraste
+        proa.setStroke(Color.BLACK);
+        proa.setStrokeWidth(1.5);
+        g.getChildren().add(proa);
+
+        // Línea decorativa horizontal (detalle visual)
+        javafx.scene.shape.Line lineaDecorativa = new javafx.scene.shape.Line();
+        lineaDecorativa.setStartX(0);
+        lineaDecorativa.setStartY(12);
+        lineaDecorativa.setEndX(40);
+        lineaDecorativa.setEndY(12);
+        lineaDecorativa.setStroke(Color.web("#93C5FD")); // Azul luminoso
+        lineaDecorativa.setStrokeWidth(2);
+        g.getChildren().add(lineaDecorativa);
+
+        // Cabina
+        Rectangle cabina = new Rectangle(14, 10);
+        cabina.setFill(Color.web("#E5E7EB")); // gris claro
+        cabina.setStroke(Color.BLACK);
+        cabina.setStrokeWidth(1.2);
+        cabina.setTranslateX(6);
+        cabina.setTranslateY(3);
+        g.getChildren().add(cabina);
+
+        // Ventanita de la cabina
+        Rectangle ventana = new Rectangle(6, 5);
+        ventana.setFill(Color.web("#60A5FA")); // azul brillante
+        ventana.setStroke(Color.BLACK);
+        ventana.setStrokeWidth(1);
+        ventana.setTranslateX(9);
+        ventana.setTranslateY(5);
+        g.getChildren().add(ventana);
+
+        return g;
+    }
+
+
+
+
+    private Group crearDestructor() {
             Group g = new Group();
 
             for (int i = 0; i < tamaño; i++) {

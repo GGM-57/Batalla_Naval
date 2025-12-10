@@ -178,23 +178,59 @@ public class Navio {
 
 
     private Group crearDestructor() {
-            Group g = new Group();
+        Group g=new Group();
 
-            for (int i = 0; i < tamaño; i++) {
-                Rectangle r = new Rectangle(20, 20);
-                r.setArcWidth(20);
-                r.setArcHeight(20);
-                r.setFill(Color.FORESTGREEN);
-                r.setStroke(Color.BLACK);
-                r.setStrokeWidth(2);
-                r.setTranslateX(i * 45);
-                g.getChildren().add(r);
-            }
+        for (int i=0;i <tamaño;i++){
+            Rectangle bloque=new Rectangle(40, 18);
+            bloque.setArcWidth(8);
+            bloque.setArcHeight(8);
+            bloque.setFill(Color.web("#0f7a3a"));
+            bloque.setStroke(Color.web("#063e1f"));
+            bloque.setStrokeWidth(1.6);
+            bloque.setTranslateX(i*45);
+            g.getChildren().add(bloque);
 
-            return g;
+            Rectangle franja=new Rectangle(36, 4);
+            franja.setFill(Color.web("#53c18a"));
+            franja.setStroke(Color.TRANSPARENT);
+            franja.setTranslateX(i * 45 + 2);
+            franja.setTranslateY(8);
+            g.getChildren().add(franja);
+
+            Rectangle ventana1=new Rectangle(6, 4);
+            ventana1.setFill(Color.web("#a7f3d0"));
+            ventana1.setStroke(Color.BLACK);
+            ventana1.setTranslateX(i*45+10);
+            ventana1.setTranslateY(6);
+            g.getChildren().add(ventana1);
+
+            Rectangle ventana2=new Rectangle(6, 4);
+            ventana2.setFill(Color.web("#a7f3d0"));
+            ventana2.setStroke(Color.BLACK);
+            ventana2.setTranslateX(i * 45 + 24);
+            ventana2.setTranslateY(6);
+            g.getChildren().add(ventana2);
         }
 
-        private Group crearSubmarino() {
+        Rectangle torreta=new Rectangle(14, 12);
+        torreta.setFill(Color.web("#111827")); // casi negro
+        torreta.setStroke(Color.web("#000000"));
+        torreta.setStrokeWidth(1.4);
+        torreta.setTranslateX(8);   // dentro del primer bloque
+        torreta.setTranslateY(-12); // encima del bloque
+        g.getChildren().add(torreta);
+
+        Rectangle canon=new Rectangle(18, 4);
+        canon.setFill(Color.web("#0b5c2e"));
+        canon.setStroke(Color.BLACK);
+        canon.setTranslateX(40);
+        canon.setTranslateY(-6);
+        g.getChildren().add(canon);
+        return g;
+    }
+
+
+    private Group crearSubmarino() {
             Group g = new Group();
 
             for (int i = 0; i < tamaño; i++) {

@@ -67,7 +67,8 @@
 
             <Label text="Tablero del Jugador" styleClass="board-title"/>
 
-            <GridPane fx:id="tableroJugadorGrid"
+            <GridPane fx:id="tableroJugadorGrid" stylesheets="@VistaConfiguracionTableroEstilos.css"
+
                       minWidth="450" minHeight="450"
                       prefWidth="450" prefHeight="450"
                       maxWidth="450" maxHeight="450"

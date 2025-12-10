@@ -22,6 +22,7 @@ public class VistaConfiguracionTableroController {
     public Button btnIniciarBatalla;
     public Label informationLabel;
     public Label fragataCount;
+    private static final int CELL = 45;
 
     @FXML private Pane paneFragatas;
     @FXML private Pane paneDestructores;
@@ -35,6 +36,24 @@ public class VistaConfiguracionTableroController {
     @FXML
     /*metodo que se ejecuta automáticamente al cargar el controlador*/
     private void initialize() {
+
+        tableroJugadorGrid.setPrefSize(CELL * 10, CELL * 10);
+        tableroJugadorGrid.setMinSize(CELL * 10, CELL * 10);
+        tableroJugadorGrid.setMaxSize(CELL * 10, CELL * 10);
+
+        // fijar columnas y filas a tamaño CELL
+        for (int i = 0; i < 10; i++) {
+            javafx.scene.layout.ColumnConstraints cc = new javafx.scene.layout.ColumnConstraints(CELL);
+            cc.setMinWidth(CELL);
+            cc.setMaxWidth(CELL);
+            tableroJugadorGrid.getColumnConstraints().add(cc);
+
+            javafx.scene.layout.RowConstraints rc = new javafx.scene.layout.RowConstraints(CELL);
+            rc.setMinHeight(CELL);
+            rc.setMaxHeight(CELL);
+            tableroJugadorGrid.getRowConstraints().add(rc);
+        }
+
         System.out.println("Inicializando tablero vista 2");
 
 
@@ -217,8 +236,8 @@ public class VistaConfiguracionTableroController {
                 Navio navio = new Navio(tipo, tamaño);
 
                 // Calcular fila/columna donde se soltó
-                int columna = (int) (event.getX() / (tableroJugadorGrid.getWidth() / 10));
-                int fila    = (int) (event.getY() / (tableroJugadorGrid.getHeight() / 10));
+                int columna=(int) (event.getX() /45);
+                int fila=(int) (event.getY() /45);
 
                 // Intentar colocarlo en el modelo
                 boolean colocado = tableroJugador.colocarBarco(navio, fila, columna);
@@ -228,7 +247,15 @@ public class VistaConfiguracionTableroController {
                     informationLabel.setText("✔ Barco colocado en (" + fila + ", " + columna + ")");
 
                     // Agregar visualmente al grid
+                    navio.getForma().setTranslateX(0);
+                    navio.getForma().setTranslateY(0);
+
+                    navio.getForma().setTranslateX(0);
+                    navio.getForma().setTranslateY(0);
                     tableroJugadorGrid.add(navio.getForma(), columna, fila);
+                    GridPane.setColumnSpan(navio.getForma(), tamaño);
+
+
 
                     event.setDropCompleted(true);
 

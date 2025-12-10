@@ -5,7 +5,11 @@
     -fx-background-color: #8fb5c5;
     -fx-font-family: "Arial Rounded MT Bold", Arial, sans-serif;
 }
-
+.celda {
+    -fx-border-color: #444;
+    -fx-border-width: 1;
+    -fx-background-color: #1d1d1d;
+}
 /* ====================
    PANEL IZQUIERDO
    ==================== */

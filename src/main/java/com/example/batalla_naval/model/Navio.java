@@ -5,6 +5,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.paint.Color;
+import javafx.geometry.Bounds;
+import javafx.scene.Node;
 
 
 public class Navio {
@@ -22,7 +24,9 @@ public class Navio {
         this.tipo=tipo;
        // this.vertical=true;
         this.forma=crearForma(); /* en esta parte del constructor se crea la figura visual segun el tipo*/
-        //System.out.println("se creó forma en clase navio");
+        this.forma = crearForma();
+        normalizarForma(this.forma);
+
         habilitarRotacion();
        // System.out.println("se hablito rotacion en clase navio");
     }
@@ -86,6 +90,33 @@ public class Navio {
                 return crearGenerico();    
         }
     }
+    /**
+     * Ajusta los hijos del grupo para que la esquina superior izquierda del conjunto
+     * quede en (0,0). Esto evita offsets visuales al insertar el Group en el GridPane.
+     */
+
+    private void normalizarForma(Group g) {
+        if (g == null || g.getChildren().isEmpty()) return;
+
+        double minX=Double.MAX_VALUE;
+        double minY=Double.MAX_VALUE;
+
+        for (Node n:g.getChildren()) {
+            Bounds b=n.getBoundsInLocal();
+            double childMinX=b.getMinX()+ n.getTranslateX();
+            double childMinY =b.getMinY() +n.getTranslateY();
+            if (childMinX<minX) minX=childMinX;
+            if (childMinY<minY) minY=childMinY;
+        }
+
+        if (minX==Double.MAX_VALUE || minY==Double.MAX_VALUE) return;
+
+        for (Node n :g.getChildren()){
+            n.setTranslateX(n.getTranslateX()-minX);
+            n.setTranslateY(n.getTranslateY()-minY);
+        }
+    }
+
 
     /*metodos de distintas formas para cada navio*/
     private Group crearGenerico() {

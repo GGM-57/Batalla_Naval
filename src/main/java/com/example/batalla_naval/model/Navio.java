@@ -124,6 +124,7 @@ public class Navio {
 //        System.out.println("se creó la figura en la clase navio");
 //        return navioForma;
 
+    /* canva del barco fagata que tiene un cuadrado de tamano*/
     private Group crearFragata() {
         Group g=new Group();
 
@@ -176,63 +177,180 @@ public class Navio {
 
 
 
-
+    /* canva del barco destructr que tiene dos cuadrados de tamano*/
     private Group crearDestructor() {
-            Group g = new Group();
+        Group g=new Group();
 
-            for (int i = 0; i < tamaño; i++) {
-                Rectangle r = new Rectangle(20, 20);
-                r.setArcWidth(20);
-                r.setArcHeight(20);
-                r.setFill(Color.FORESTGREEN);
-                r.setStroke(Color.BLACK);
-                r.setStrokeWidth(2);
-                r.setTranslateX(i * 45);
-                g.getChildren().add(r);
-            }
+        for (int i=0;i <tamaño;i++){
+            Rectangle bloque=new Rectangle(40, 18);
+            bloque.setArcWidth(8);
+            bloque.setArcHeight(8);
+            bloque.setFill(Color.web("#0f7a3a"));
+            bloque.setStroke(Color.web("#063e1f"));
+            bloque.setStrokeWidth(1.6);
+            bloque.setTranslateX(i*45);
+            g.getChildren().add(bloque);
 
-            return g;
+            Rectangle franja=new Rectangle(36, 4);
+            franja.setFill(Color.web("#53c18a"));
+            franja.setStroke(Color.TRANSPARENT);
+            franja.setTranslateX(i * 45 + 2);
+            franja.setTranslateY(8);
+            g.getChildren().add(franja);
+
+            Rectangle ventana1=new Rectangle(6, 4);
+            ventana1.setFill(Color.web("#a7f3d0"));
+            ventana1.setStroke(Color.BLACK);
+            ventana1.setTranslateX(i*45+10);
+            ventana1.setTranslateY(6);
+            g.getChildren().add(ventana1);
+
+            Rectangle ventana2=new Rectangle(6, 4);
+            ventana2.setFill(Color.web("#a7f3d0"));
+            ventana2.setStroke(Color.BLACK);
+            ventana2.setTranslateX(i * 45 + 24);
+            ventana2.setTranslateY(6);
+            g.getChildren().add(ventana2);
         }
 
-        private Group crearSubmarino() {
-            Group g = new Group();
+        Rectangle torreta=new Rectangle(14, 12);
+        torreta.setFill(Color.web("#111827")); // casi negro
+        torreta.setStroke(Color.web("#000000"));
+        torreta.setStrokeWidth(1.4);
+        torreta.setTranslateX(8);   // dentro del primer bloque
+        torreta.setTranslateY(-12); // encima del bloque
+        g.getChildren().add(torreta);
 
-            for (int i = 0; i < tamaño; i++) {
-                Rectangle r = new Rectangle(25, 25);
-                r.setArcHeight(45);  // borde totalmente redondeado
-                r.setArcWidth(45);
-                r.setFill(Color.GRAY);
-                r.setStroke(Color.BLACK);
-                r.setStrokeWidth(2);
-                r.setTranslateX(i * 45);
-                g.getChildren().add(r);
-            }
+        Rectangle canon=new Rectangle(18, 4);
+        canon.setFill(Color.web("#0b5c2e"));
+        canon.setStroke(Color.BLACK);
+        canon.setTranslateX(40);
+        canon.setTranslateY(-6);
+        g.getChildren().add(canon);
+        return g;
+    }
 
-            return g;
+    /* canva del submarino que tiene tres cuadrados de tamano*/
+    private Group crearSubmarino(){
+        Group g=new Group();
+
+        for (int i=0;i<tamaño;i++) {
+
+            Rectangle bloque=new Rectangle(40, 18);
+            bloque.setArcWidth(10);
+            bloque.setArcHeight(10);
+            bloque.setFill(Color.web("#6b7280"));
+            bloque.setStroke(Color.web("#374151"));
+            bloque.setStrokeWidth(1.6);
+            bloque.setTranslateX(i*45);
+            g.getChildren().add(bloque);
+
+            Rectangle franja=new Rectangle(36, 3);
+            franja.setFill(Color.web("#9ca3af"));
+            franja.setStroke(Color.TRANSPARENT);
+            franja.setTranslateX(i*45+2);
+            franja.setTranslateY(10);
+            g.getChildren().add(franja);
+
+            Rectangle ventana=new Rectangle(6, 6);
+            ventana.setFill(Color.web("#dbeafe"));
+            ventana.setStroke(Color.BLACK);
+            ventana.setStrokeWidth(0.8);
+            ventana.setTranslateX(i*45+16);
+            ventana.setTranslateY(4);
+            g.getChildren().add(ventana);
         }
 
-        private Group crearPortaaviones() {
-            Group g = new Group();
+        Rectangle torre=new Rectangle(10, 20);
+        torre.setFill(Color.web("#4b5563")); // gris aún más oscuro
+        torre.setStroke(Color.BLACK);
+        torre.setStrokeWidth(1.4);
+        torre.setTranslateX(45+14); // sobre el bloque central
+        torre.setTranslateY(-18);
+        g.getChildren().add(torre);
 
-            // Cuerpo principal
-            for (int i = 0; i < tamaño; i++) {
-                Rectangle r = new Rectangle(30, 30);
-                r.setFill(Color.DARKRED);
-                r.setStroke(Color.BLACK);
-                r.setStrokeWidth(2);
-                r.setTranslateX(i * 45);
-                g.getChildren().add(r);
-            }
+        Rectangle periscopioBase=new Rectangle(4, 14);
+        periscopioBase.setFill(Color.web("#374151"));
+        periscopioBase.setStroke(Color.BLACK);
+        periscopioBase.setTranslateX(45+19);
+        periscopioBase.setTranslateY(-30);
+        g.getChildren().add(periscopioBase);
 
-            // Cabina en la parte superior del primer bloque
-//            Rectangle cabina = new Rectangle(30, 20);
-//            cabina.setTranslateX(8);
-//            cabina.setTranslateY(-20);
-//            cabina.setFill(Color.BLACK);
-//            g.getChildren().add(cabina);
+        Rectangle periscopioCabeza=new Rectangle(10, 4);
+        periscopioCabeza.setFill(Color.web("#374151"));
+        periscopioCabeza.setStroke(Color.BLACK);
+        periscopioCabeza.setTranslateX(45+16);
+        periscopioCabeza.setTranslateY(-34);
+        g.getChildren().add(periscopioCabeza);
+        return g;
+    }
 
-            return g;
+    /* canva del portaaviones que tiene cuatro cuadrados de tamano*/
+    private Group crearPortaaviones(){
+        Group g=new Group();
+        int tamaño=4;
+
+        for (int i=0;i<tamaño; i++){
+
+            Rectangle bloque=new Rectangle(40, 20);
+            bloque.setArcWidth(8);
+            bloque.setArcHeight(8);
+            bloque.setFill(Color.web("#6b7280"));
+            bloque.setStroke(Color.web("#111827"));
+            bloque.setStrokeWidth(1.7);
+            bloque.setTranslateX(i * 45);
+            g.getChildren().add(bloque);
+
+            Rectangle franja=new Rectangle(36, 4);
+            franja.setFill(Color.web("#9ca3af"));
+            franja.setTranslateX(i*45+2);
+            franja.setTranslateY(12);
+            g.getChildren().add(franja);
         }
+
+        Rectangle pista=new Rectangle( (40*tamaño)+(5 * (tamaño - 1)), 6);
+        pista.setFill(Color.web("#facc15"));
+        pista.setStroke(Color.BLACK);
+        pista.setStrokeWidth(1.2);
+        pista.setTranslateY(6);
+        g.getChildren().add(pista);
+
+        for (int i=0; i <tamaño; i++) {
+            Rectangle linea =new Rectangle(8, 2);
+            linea.setFill(Color.WHITE);
+            linea.setTranslateX(i *45+16);
+            linea.setTranslateY(8);
+            g.getChildren().add(linea);
+        }
+
+        Rectangle torreBase=new Rectangle(20, 26);
+        torreBase.setFill(Color.web("#4b5563"));
+        torreBase.setStroke(Color.BLACK);
+        torreBase.setStrokeWidth(1.6);
+        torreBase.setTranslateX(45 *2 +10);
+        torreBase.setTranslateY(-26);
+        g.getChildren().add(torreBase);
+
+        for (int y=0; y<3; y++){
+            Rectangle ventana=new Rectangle(6, 6);
+            ventana.setFill(Color.web("#dbeafe"));
+            ventana.setStroke(Color.BLACK);
+            ventana.setStrokeWidth(0.8);
+            ventana.setTranslateX(45*2+14);
+            ventana.setTranslateY(-22+(y*8));
+            g.getChildren().add(ventana);
+        }
+
+        // Radar superior
+        Rectangle radar =new Rectangle(14, 4);
+        radar.setFill(Color.web("#9ca3af"));
+        radar.setStroke(Color.BLACK);
+        radar.setTranslateX(45 * 2 + 13);
+        radar.setTranslateY(-30);
+        g.getChildren().add(radar);
+
+        return g;
+    }
 
 
 

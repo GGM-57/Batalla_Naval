@@ -14,7 +14,8 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.RowConstraints;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -43,16 +44,19 @@ public class VistaConfiguracionTableroController {
 
         // fijar columnas y filas a tamaño CELL
         for (int i = 0; i < 10; i++) {
-            javafx.scene.layout.ColumnConstraints cc = new javafx.scene.layout.ColumnConstraints(CELL);
+            ColumnConstraints cc = new ColumnConstraints();
             cc.setMinWidth(CELL);
+            cc.setPrefWidth(CELL);
             cc.setMaxWidth(CELL);
             tableroJugadorGrid.getColumnConstraints().add(cc);
 
-            javafx.scene.layout.RowConstraints rc = new javafx.scene.layout.RowConstraints(CELL);
+            RowConstraints rc = new RowConstraints();
             rc.setMinHeight(CELL);
+            rc.setPrefHeight(CELL);
             rc.setMaxHeight(CELL);
             tableroJugadorGrid.getRowConstraints().add(rc);
         }
+
 
         System.out.println("Inicializando tablero vista 2");
 
@@ -74,9 +78,13 @@ public class VistaConfiguracionTableroController {
         for (int fila=0; fila<10; fila++) {
             for (int columna=0; columna<10; columna++) { /*recorre filas y columnas*/
 
-                Pane celda= new Pane(); /*crea un contenedor (de tipo pane) vacío por celda; se puede usar para recibir nodos*/
+                Pane celda = new Pane();
                 celda.getStyleClass().add("celda");
-                celda.setPrefSize(45, 45); /*cada celda 45 porque el tablero esta fijado en 450*/
+
+                celda.setPrefSize(CELL, CELL);
+                celda.setMinSize(CELL, CELL);
+                celda.setMaxSize(CELL, CELL);
+                /*cada celda 45 porque el tablero esta fijado en 450*/
 
                 tableroJugadorGrid.add(celda, columna, fila);
 

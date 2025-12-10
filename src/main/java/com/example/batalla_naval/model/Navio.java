@@ -231,23 +231,68 @@ public class Navio {
 
 
     private Group crearSubmarino() {
-            Group g = new Group();
+        Group g = new Group();
 
-            for (int i = 0; i < tamaño; i++) {
-                Rectangle r = new Rectangle(25, 25);
-                r.setArcHeight(45);  // borde totalmente redondeado
-                r.setArcWidth(45);
-                r.setFill(Color.GRAY);
-                r.setStroke(Color.BLACK);
-                r.setStrokeWidth(2);
-                r.setTranslateX(i * 45);
-                g.getChildren().add(r);
-            }
+        // Submarino = 3 bloques
+        for (int i = 0; i < tamaño; i++) {
+            // Cuerpo principal
+            Rectangle bloque = new Rectangle(40, 18);
+            bloque.setArcWidth(10);
+            bloque.setArcHeight(10);
+            bloque.setFill(Color.web("#6b7280")); // gris medio
+            bloque.setStroke(Color.web("#374151")); // gris oscuro
+            bloque.setStrokeWidth(1.6);
+            bloque.setTranslateX(i * 45);
+            g.getChildren().add(bloque);
 
-            return g;
+            // Franja decorativa
+            Rectangle franja = new Rectangle(36, 3);
+            franja.setFill(Color.web("#9ca3af")); // gris claro
+            franja.setStroke(Color.TRANSPARENT);
+            franja.setTranslateX(i * 45 + 2);
+            franja.setTranslateY(10);
+            g.getChildren().add(franja);
+
+            // Ventanas
+            Rectangle ventana = new Rectangle(6, 6);
+            ventana.setFill(Color.web("#dbeafe")); // azul hielo
+            ventana.setStroke(Color.BLACK);
+            ventana.setStrokeWidth(0.8);
+            ventana.setTranslateX(i * 45 + 16);
+            ventana.setTranslateY(4);
+            g.getChildren().add(ventana);
         }
 
-        private Group crearPortaaviones() {
+        // Torre (snorkel)
+        Rectangle torre = new Rectangle(10, 20);
+        torre.setFill(Color.web("#4b5563")); // gris aún más oscuro
+        torre.setStroke(Color.BLACK);
+        torre.setStrokeWidth(1.4);
+        torre.setTranslateX(45 + 14); // sobre el bloque central
+        torre.setTranslateY(-18);
+        g.getChildren().add(torre);
+
+        // Periscopio: base
+        Rectangle periscopioBase = new Rectangle(4, 14);
+        periscopioBase.setFill(Color.web("#374151"));
+        periscopioBase.setStroke(Color.BLACK);
+        periscopioBase.setTranslateX(45 + 19);
+        periscopioBase.setTranslateY(-30);
+        g.getChildren().add(periscopioBase);
+
+        // Periscopio: cabeza
+        Rectangle periscopioCabeza = new Rectangle(10, 4);
+        periscopioCabeza.setFill(Color.web("#374151"));
+        periscopioCabeza.setStroke(Color.BLACK);
+        periscopioCabeza.setTranslateX(45 + 16);
+        periscopioCabeza.setTranslateY(-34);
+        g.getChildren().add(periscopioCabeza);
+
+        return g;
+    }
+
+
+    private Group crearPortaaviones() {
             Group g = new Group();
 
             // Cuerpo principal

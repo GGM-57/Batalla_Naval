@@ -67,12 +67,19 @@
 
             <Label text="Tablero del Jugador" styleClass="board-title"/>
 
-            <GridPane fx:id="tableroJugadorGrid" stylesheets="@VistaConfiguracionTableroEstilos.css"
+            <StackPane fx:id="contenedorTablero"
+                       alignment="CENTER"
+                       prefWidth="500" prefHeight="500"
+                       maxWidth="500" maxHeight="500"
+                       style="-fx-background-color: #0a1f44; -fx-background-radius: 10; -fx-padding: 20;">
 
-                      minWidth="450" minHeight="450"
-                      prefWidth="450" prefHeight="450"
-                      maxWidth="450" maxHeight="450"
-                      styleClass="game-board"/>
+                <GridPane fx:id="tableroJugadorGrid"
+                          minWidth="450" minHeight="450"
+                          prefWidth="450" prefHeight="450"
+                          maxWidth="450" maxHeight="450"
+                          styleClass="grid-board"/>
+            </StackPane>
+
 
             <!-- MENSAJE -->
             <Label fx:id="informationLabel"

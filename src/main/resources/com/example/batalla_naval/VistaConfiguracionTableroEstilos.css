@@ -43,23 +43,10 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 6, 0.2, 2, 2);
 }
 /*tablero*/
-.game-board {
-    /*-fx-background-color: #f8f8f8
-
-    -fx-border-color: #425d6b;
-    -fx-border-width: 3;
-    -fx-background-radius: 10;
-    -fx-border-radius: 10;*/
-    -fx-background-color: #1e3a56;
-    -fx-background-radius: 12;
-    -fx-border-radius: 12;
-    -fx-padding: 8;
-
-    -fx-border-color: #0f2233;
-    -fx-border-width: 3;
-
-    -fx-grid-lines-visible: false;
+.grid-board {
+    -fx-grid-lines-visible: true;
 }
+
 /*celdas*/
 .cell {
     -fx-border-color: rgba(255,255,255,0.45);

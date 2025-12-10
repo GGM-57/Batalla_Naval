@@ -25,6 +25,19 @@ public class Navio {
        // this.vertical=true;
         this.forma=crearForma(); /* en esta parte del constructor se crea la figura visual segun el tipo*/
         this.forma = crearForma();
+
+        /* Limitar el área visible del barco sin modificar sus posiciones internas*/
+        forma.layoutBoundsProperty().addListener((obs, oldB, newB) -> {
+            Rectangle clip = new Rectangle(
+                    newB.getMinX(),
+                    newB.getMinY(),
+                    newB.getWidth(),
+                    newB.getHeight()
+            );
+            forma.setClip(clip);
+        });
+
+
         normalizarForma(this.forma);
 
         habilitarRotacion();

@@ -9,10 +9,9 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.example.batalla_naval.controller.VistaInicioController"
-            prefWidth="650" prefHeight="500"
+            prefWidth="900" prefHeight="650"
             styleClass="root"
             stylesheets="@VistaInicioEstilos.css">
-
 
 
     <!-- CONTENEDOR CENTRAL -->

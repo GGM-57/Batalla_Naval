@@ -4,11 +4,8 @@ import com.example.batalla_naval.model.Navio;
 import com.example.batalla_naval.model.Tablero;
 import javafx.animation.ScaleTransition;
 import javafx.fxml.FXML;
-import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
@@ -17,8 +14,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.RowConstraints;
-import java.net.URL;
-import java.util.ResourceBundle;
 import com.example.batalla_naval.util.SoundEffects;
 import javafx.util.Duration;
 
@@ -298,7 +293,7 @@ public class VistaConfiguracionTableroController {
                 boolean colocado = tableroJugador.colocarBarco(navio, fila, columna);
 
                 if (colocado) {
-                    SoundEffects.playPositiveClick();
+                    SoundEffects.playPosicionarBarco();
                     System.out.println("Barco colocado en fila " + fila + ", columna " + columna);
                     informationLabel.setText("✔ Barco colocado en (" + fila + ", " + columna + ")");
 

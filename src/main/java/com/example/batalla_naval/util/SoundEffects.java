@@ -43,7 +43,7 @@ public class SoundEffects {
         if(clickSound !=null){
             clickNegativeSound.play(0.6);
         }
-    }public static void playPositiveClick(){
+    }public static void playPosicionarBarco(){
         if(clickSound !=null){
             posicionarBarcoSound.play(0.6);
         }

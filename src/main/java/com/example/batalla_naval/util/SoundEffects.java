@@ -8,12 +8,15 @@ public class SoundEffects {
     private static AudioClip hoverSound;
     private static AudioClip clickSound;
     private static AudioClip clickNegativeSound;
+    private static AudioClip posicionarBarcoSound;
+
 
     static {
         // Cargar sonidos solo una vez
         hoverSound = loadClip("/com/example/batalla_naval/audios/soundEffects/hoverEffect.mp3");
         clickSound = loadClip("/com/example/batalla_naval/audios/soundEffects/menuPositive.mp3");
         clickNegativeSound = loadClip("/com/example/batalla_naval/audios/soundEffects/menuNegative.mp3");
+        posicionarBarcoSound=loadClip("/com/example/batalla_naval/audios/soundEffects/posicionar.mp3");
     }
 
     private static AudioClip loadClip(String path) {
@@ -39,6 +42,10 @@ public class SoundEffects {
     public static void playNegativeClick(){
         if(clickSound !=null){
             clickNegativeSound.play(0.6);
+        }
+    }public static void playPositiveClick(){
+        if(clickSound !=null){
+            posicionarBarcoSound.play(0.6);
         }
     }
 }

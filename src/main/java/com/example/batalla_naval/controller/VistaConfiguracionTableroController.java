@@ -2,6 +2,7 @@ package com.example.batalla_naval.controller;
 
 import com.example.batalla_naval.model.Navio;
 import com.example.batalla_naval.model.Tablero;
+import javafx.animation.ScaleTransition;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
@@ -18,18 +19,21 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.RowConstraints;
 import java.net.URL;
 import java.util.ResourceBundle;
+import com.example.batalla_naval.util.SoundEffects;
+import javafx.util.Duration;
+
 
 public class VistaConfiguracionTableroController {
     public Button btnIniciarBatalla;
     public Label informationLabel;
     public Label fragataCount;
     private static final int CELL = 45;
+    private boolean dragging = false;
 
     @FXML private Pane paneFragatas;
     @FXML private Pane paneDestructores;
     @FXML private Pane paneSubmarinos;
     @FXML private Pane panePortaaviones;
-
     private Tablero tableroJugador = new Tablero(10, 10);
     @FXML private GridPane tableroJugadorGrid;
 
@@ -37,7 +41,12 @@ public class VistaConfiguracionTableroController {
     @FXML
     /*metodo que se ejecuta automáticamente al cargar el controlador*/
     private void initialize() {
-
+        btnIniciarBatalla.setOnMouseEntered(e->{
+            SoundEffects.playHover();
+        });
+        btnIniciarBatalla.setOnAction(e->{
+            SoundEffects.playClick();
+        });
         tableroJugadorGrid.setPrefSize(CELL * 10, CELL * 10);
         tableroJugadorGrid.setMinSize(CELL * 10, CELL * 10);
         tableroJugadorGrid.setMaxSize(CELL * 10, CELL * 10);
@@ -132,7 +141,45 @@ public class VistaConfiguracionTableroController {
     /*metodo que permite tomar/arrastar (drag) la imagen del panel izquiero al tabler/gridpane*/
 
     private void habilitarDrag(Pane paneNavio) {
+
+
+        paneNavio.setOnMouseEntered(e -> {
+            SoundEffects.playHover();
+
+            ScaleTransition st =new ScaleTransition(Duration.millis(150), paneNavio);
+            st.setToX(1.1);
+            st.setToY(1.1);
+            st.play();
+        });
+
+        paneNavio.setOnMouseExited(e -> {
+            ScaleTransition st= new ScaleTransition(Duration.millis(150), paneNavio);
+            st.setToX(1.0);
+            st.setToY(1.0);
+            st.play();
+        });
+
+        paneNavio.setOnMousePressed(e -> {
+            SoundEffects.playClick();
+            ScaleTransition st= new ScaleTransition(Duration.millis(150), paneNavio);
+            st.setToX(1.2);
+            st.setToY(1.2);
+            st.play();
+        });
+        paneNavio.setOnMouseReleased(e -> {
+            SoundEffects.playNegativeClick();
+            ScaleTransition st= new ScaleTransition(Duration.millis(150), paneNavio);
+            st.setToX(1.0);
+            st.setToY(1.0);
+            st.play();
+
+        });
+
+
+
+
         paneNavio.setOnDragDetected(event -> {
+
 
             // Recuperar el Navio almacenado en el pane
             Navio navio = (Navio) paneNavio.getUserData();
@@ -251,6 +298,7 @@ public class VistaConfiguracionTableroController {
                 boolean colocado = tableroJugador.colocarBarco(navio, fila, columna);
 
                 if (colocado) {
+                    SoundEffects.playPositiveClick();
                     System.out.println("Barco colocado en fila " + fila + ", columna " + columna);
                     informationLabel.setText("✔ Barco colocado en (" + fila + ", " + columna + ")");
 

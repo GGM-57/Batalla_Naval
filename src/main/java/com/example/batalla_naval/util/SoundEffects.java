@@ -30,7 +30,7 @@ public class SoundEffects {
 
     public static void playHover() {
         if (hoverSound != null){
-            hoverSound.play(0.4);
+            hoverSound.play(0.9);
         }
     }
 

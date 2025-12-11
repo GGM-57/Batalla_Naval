@@ -12,6 +12,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ButtonBar;
 import com.example.batalla_naval.util.MusicManager;
+import com.example.batalla_naval.util.SoundEffects;
+
 
 
 import java.io.IOException;
@@ -19,26 +21,47 @@ import java.io.IOException;
 public class VistaInicioController {
     @FXML
     private Button jugarButton;
+    @FXML
+    private Button instruccionesButton;
 
     @FXML
     private void initialize() {
         //agregar logica
         MusicManager.playMenuMusic();
+        jugarButton.setOnMouseEntered(e -> SoundEffects.playHover());
+        instruccionesButton.setOnMouseEntered(e->SoundEffects.playHover());
+
+
+        jugarButton.setOnAction(e -> {
+            SoundEffects.playClick();
+            try {
+                onJugarClick(e);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        instruccionesButton.setOnAction(e ->{
+            SoundEffects.playClick();
+            onInstruccionesClick(e);
+        });
+
 
     }
 
     @FXML
     private void onJugarClick(ActionEvent event) throws IOException {
-        MusicManager.stopMenuMusic();
         System.out.println("Jugando");
         cambiarVentana(event, "/com/example/batalla_naval/VistaConfiguracionTablero.fxml");
 
     }
 
+
     /* logica del boton de instrucciones
     * */
     @FXML
     private void onInstruccionesClick(ActionEvent event){
+
         Alert alert=new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Instrucciones del juego");
         alert.setHeaderText(null);

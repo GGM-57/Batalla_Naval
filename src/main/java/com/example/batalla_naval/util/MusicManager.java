@@ -18,11 +18,11 @@ public class MusicManager {
 
         // Cargar el recurso desde /src/main/resources/audio/menu_theme.mp3
         URL recurso = MusicManager.class.getResource(
-                "/com/example/batalla_naval/audios/ElementalStars.mp3"
+                "/com/example/batalla_naval/audios/soundtracks/ElementalStars.mp3"
         );
 
         if (recurso == null) {
-            System.err.println("No se encontró /com/example/batalla_naval/audios/ElementalStars.mp3 ");
+            System.err.println("No se encontró /com/example/batalla_naval/audios/soundtracks/ElementalStars.mp3 ");
             return;
         }
 

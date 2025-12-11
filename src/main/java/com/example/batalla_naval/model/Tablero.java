@@ -1,15 +1,23 @@
 package com.example.batalla_naval.model;
 
+import java.util.List;
+
 public class Tablero {
-    private int filas;
-    private int columnas;
-    private int[][] tablero; /*lee 0=vacio y 1=ocupado*/
-    private Object navio;
+
+    private final int filas;
+    private final int columnas;
+    private final Celda[][] grilla;
 
     public Tablero(int filas, int columnas) {
         this.filas = filas;
         this.columnas = columnas;
-        this.tablero = new int[filas][columnas];
+        this.grilla = new Celda[filas][columnas];
+
+        for (int f = 0; f < filas; f++) {
+            for (int c = 0; c < columnas; c++) {
+                grilla[f][c] = new Celda(f, c);
+            }
+        }
     }
 
     public int getFilas() {
@@ -20,70 +28,91 @@ public class Tablero {
         return columnas;
     }
 
-    /*metodo para verificar si un navio puede ser colocado ahí, sin que se
-    * salga del tablero o sobreponga a otro*/
-    public boolean puedeColocarse(Navio navio, int fila, int columna){
-        int tamaño= navio.getTamaño();
-        boolean vertical= navio.esVertical();
+    public Celda getCelda(int fila, int columna) {
+        return grilla[fila][columna];
+    }
 
-        if(vertical){
-            /*Verifica límite vertical*/
-            if(fila+tamaño > filas)
-                return false; /*el navio se sale del tablero*/
-            /*Verifica colisiones verticales*/
-            for(int i=0; i<tamaño; i++){ /*bucle que recorre cada celda del tablero*/
-                if(tablero[fila+i][columna]==1)
-                    return false;/*coalision de navios*/
+    // Validar si se puede ubicar el barco
+    public boolean puedeUbicarBarco(Barco barco, Coordenada inicio, Orientacion orientacion) {
+        int fila = inicio.getFila();
+        int columna = inicio.getColumna();
+        int tamanio = barco.getTamanio();
+
+        if (orientacion == Orientacion.VERTICAL) {
+            if (fila + tamanio > filas) return false;
+            for (int i = 0; i < tamanio; i++) {
+                if (grilla[fila + i][columna].tieneBarco()) return false;
             }
-        } else {
-            /*Verifica límite horizontal*/
-            if (columna + tamaño > columnas)
-                return false;
-            /*Verifica colisiones horizontales*/
-            for (int i = 0; i < tamaño; i++) {
-                if (tablero[fila][columna + i] == 1)
-                    return false;
+        } else { // HORIZONTAL
+            if (columna + tamanio > columnas) return false;
+            for (int i = 0; i < tamanio; i++) {
+                if (grilla[fila][columna + i].tieneBarco()) return false;
             }
         }
-
         return true;
     }
 
-    /*metodo que coloca el navio en el tablero si es valido
-    * retorna true si el navio se coloco correctamente*/
-    public boolean colocarBarco(Navio navio, int fila, int columna) {
-        if (!puedeColocarse(navio, fila, columna)) {
+    // Colocar barco si es válido
+    public boolean ubicarBarco(Barco barco, Coordenada inicio, Orientacion orientacion) {
+        if (!puedeUbicarBarco(barco, inicio, orientacion)) {
             return false;
-            /*Llama a puedeColocarse(...) para validar la colocación.
-            Si no puede colocarse (puedeColocarse devuelve false), el método
-            retorna false y no modifica el tablero.*/
         }
 
-        int tamaño=navio.getTamaño();
+        int fila = inicio.getFila();
+        int columna = inicio.getColumna();
+        int tamanio = barco.getTamanio();
 
-        if (navio.esVertical()) {
-            for (int i=0; i<tamaño; i++) {
-                tablero[fila+i][columna]=1;
-            }
-        } else {
-            for (int i=0; i<tamaño; i++) {
-                tablero[fila][columna+i]=1;
-            }
+        for (int i = 0; i < tamanio; i++) {
+            int f = (orientacion == Orientacion.VERTICAL) ? fila + i : fila;
+            int c = (orientacion == Orientacion.HORIZONTAL) ? columna + i : columna;
+
+            grilla[f][c].setBarco(barco);
+            barco.agregarCoordenada(new Coordenada(f, c));
         }
 
-        navio.setPosicion(fila, columna);
+        barco.setPosicion(fila, columna);
         return true;
     }
 
-    /*impresion del tablero en consola para revisiones*/
-    public void imprimirTablero() {
-        for (int i=0; i<filas; i++) {
-            for (int j=0; j < columnas; j++) {
-                System.out.print(tablero[i][j] + " ");
+    // Disparo a una coordenada
+    public ResultadoDisparo recibirDisparo(Coordenada coord) {
+        Celda celda = grilla[coord.getFila()][coord.getColumna()];
+
+        if (celda.estaGolpeada()) {
+            return ResultadoDisparo.AGUA;
+        }
+
+        celda.marcarGolpe();
+
+        if (!celda.tieneBarco()) {
+            return ResultadoDisparo.AGUA;
+        }
+
+        Barco barco = celda.getBarco();
+        barco.registrarGolpe();
+
+        if (barco.estaHundido()) {
+            return ResultadoDisparo.HUNDIDO;
+        } else {
+            return ResultadoDisparo.TOCADO;
+        }
+    }
+
+    public boolean todosBarcosHundidos(List<Barco> barcos) {
+        for (Barco b : barcos) {
+            if (!b.estaHundido()) return false;
+        }
+        return true;
+    }
+
+    // Solo para debug
+    public void imprimirTableroDebug() {
+        for (int i = 0; i < filas; i++) {
+            for (int j = 0; j < columnas; j++) {
+                System.out.print(grilla[i][j].tieneBarco() ? "1 " : "0 ");
             }
             System.out.println();
         }
         System.out.println();
     }
-
 }

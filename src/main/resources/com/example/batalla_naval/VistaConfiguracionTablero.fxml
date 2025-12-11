@@ -38,7 +38,7 @@
                 <Pane fx:id="paneFragatas" prefWidth="60" prefHeight="60"/>
                 <Label fx:id="fragataCount" text="x4" styleClass="ship-count" alignment="BOTTOM_RIGHT"/>
 
-                <!--el label del navio fragata debe cambiar -falta hacer logica de eso en el VistaConfiguracionTableroController-->
+                <!--el label del barco fragata debe cambiar -falta hacer logica de eso en el VistaConfiguracionTableroController-->
 
             </HBox>
 
@@ -49,7 +49,7 @@
             <HBox spacing="10" alignment="CENTER_LEFT" prefWidth="80">
                 <Pane fx:id="paneDestructores" prefWidth="60" prefHeight="60"/>
                 <Label text="x3" styleClass="ship-count" alignment="BOTTOM_RIGHT"/>
-                <!--el label del navio destructores debe cambiar -falta hacer logica de eso en el VistaConfiguracionTableroController-->
+                <!--el label del barco destructores debe cambiar -falta hacer logica de eso en el VistaConfiguracionTableroController-->
             </HBox>
 
             <!-- Submarinos -->
@@ -59,7 +59,7 @@
                 <Pane fx:id="paneSubmarinos" prefWidth="60" prefHeight="60"/>
                 <Label text="x2" styleClass="ship-count" alignment="BOTTOM_RIGHT"/>
 
-                <!--el label del navio submarinos debe cambiar -falta hacer logica de eso en el VistaConfiguracionTableroController-->
+                <!--el label del barco submarinos debe cambiar -falta hacer logica de eso en el VistaConfiguracionTableroController-->
             </HBox>
 
             <!-- Portaaviones -->
@@ -69,7 +69,7 @@
                 <Pane fx:id="panePortaaviones" prefWidth="60" prefHeight="60"/>
                 <Label text="x1" styleClass="ship-count" alignment="BOTTOM_RIGHT"/>
 
-                <!--el label del navio portaviones debe cambiar -falta hacer logica de eso en el VistaConfiguracionTableroController-->
+                <!--el label del barco portaviones debe cambiar -falta hacer logica de eso en el VistaConfiguracionTableroController-->
             </HBox>
         </VBox>
 

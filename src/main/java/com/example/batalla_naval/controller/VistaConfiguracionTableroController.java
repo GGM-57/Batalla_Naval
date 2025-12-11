@@ -1,6 +1,6 @@
 package com.example.batalla_naval.controller;
 
-import com.example.batalla_naval.model.Navio;
+import com.example.batalla_naval.model.Barco;
 import com.example.batalla_naval.model.Tablero;
 import javafx.animation.ScaleTransition;
 import javafx.fxml.FXML;
@@ -16,6 +16,10 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.RowConstraints;
 import com.example.batalla_naval.util.SoundEffects;
 import javafx.util.Duration;
+import com.example.batalla_naval.model.Coordenada;
+import com.example.batalla_naval.model.Orientacion;
+
+
 
 
 public class VistaConfiguracionTableroController {
@@ -30,6 +34,7 @@ public class VistaConfiguracionTableroController {
     @FXML private Pane paneSubmarinos;
     @FXML private Pane panePortaaviones;
     private Tablero tableroJugador = new Tablero(10, 10);
+
     @FXML private GridPane tableroJugadorGrid;
 
 
@@ -107,25 +112,25 @@ public class VistaConfiguracionTableroController {
      * se conecta con VistaConfiguracionTablero.fxml*/
     private void crearBarcosPanelIzquierdo() {
 
-        Navio fragata = new Navio("Fragata", 1);
+        Barco fragata = new Barco("Fragata", 1);
         //paneFragatas.getChildren().clear();
         paneFragatas.getChildren().add(fragata.getForma());
         paneFragatas.setUserData(fragata); /*guarda el barco en el pane para poder moverlo*/
         habilitarDrag(paneFragatas);
 
-        Navio destructor = new Navio("Destructor", 2);
+        Barco destructor = new Barco("Destructor", 2);
         //paneDestructores.getChildren().clear();
         paneDestructores.getChildren().add(destructor.getForma());
         paneDestructores.setUserData(destructor);
         habilitarDrag(paneDestructores);
 
-        Navio submarino = new Navio("Submarino", 3);
+        Barco submarino = new Barco("Submarino", 3);
         //paneSubmarinos.getChildren().clear();
         paneSubmarinos.getChildren().add(submarino.getForma());
         paneSubmarinos.setUserData(submarino);
         habilitarDrag(paneSubmarinos);
 
-        Navio portaaviones = new Navio("Portaaviones", 4);
+        Barco portaaviones = new Barco("Portaaviones", 4);
         //panePortaaviones.getChildren().clear();
         panePortaaviones.getChildren().add(portaaviones.getForma());
         panePortaaviones.setUserData(portaaviones);
@@ -177,8 +182,8 @@ public class VistaConfiguracionTableroController {
 
 
             // Recuperar el Navio almacenado en el pane
-            Navio navio = (Navio) paneNavio.getUserData();
-            if (navio == null) {
+            Barco barco = (Barco) paneNavio.getUserData();
+            if (barco == null) {
                 System.out.println("⚠ ERROR: paneNavio no tiene un Navio asignado en setUserData()");
                 return;
             }
@@ -190,10 +195,10 @@ public class VistaConfiguracionTableroController {
             ClipboardContent content = new ClipboardContent();
 
             // Enviar tipo de barco
-            content.putString(navio.getTipo());
+            content.putString(barco.getTipo());
 
             // Tomar snapshot de la figura real del navio
-            WritableImage snapshot = navio.getForma().snapshot(null, null);
+            WritableImage snapshot = barco.getForma().snapshot(null, null);
             content.putImage(snapshot);
 
             // Guardarlo en el dragboard
@@ -280,17 +285,26 @@ public class VistaConfiguracionTableroController {
             if (dragboard.hasImage()) {
 
                 String tipo = dragboard.getString();
-                int tamaño = Navio.tamañoPorTipo(tipo);
+                int tamaño = Barco.tamañoPorTipo(tipo);
 
-                // Crear navio real
-                Navio navio = new Navio(tipo, tamaño);
+                // Crear barco real
+                Barco barco = new Barco(tipo, tamaño);
 
                 // Calcular fila/columna donde se soltó
-                int columna=(int) (event.getX() /45);
-                int fila=(int) (event.getY() /45);
+                int columna = (int) (event.getX() / 45);
+                int fila    = (int) (event.getY() / 45);
+
+                // Coordenada inicial en el tablero
+                Coordenada inicio = new Coordenada(fila, columna);
+
+                // Orientación según el barco
+                Orientacion orientacion = barco.esVertical()
+                        ? Orientacion.VERTICAL
+                        : Orientacion.HORIZONTAL;
 
                 // Intentar colocarlo en el modelo
-                boolean colocado = tableroJugador.colocarBarco(navio, fila, columna);
+                boolean colocado = tableroJugador.ubicarBarco(barco, inicio, orientacion);
+
 
                 if (colocado) {
                     SoundEffects.playPosicionarBarco();
@@ -298,13 +312,13 @@ public class VistaConfiguracionTableroController {
                     informationLabel.setText("✔ Barco colocado en (" + fila + ", " + columna + ")");
 
                     // Agregar visualmente al grid
-                    navio.getForma().setTranslateX(0);
-                    navio.getForma().setTranslateY(0);
+                    barco.getForma().setTranslateX(0);
+                    barco.getForma().setTranslateY(0);
 
-                    navio.getForma().setTranslateX(0);
-                    navio.getForma().setTranslateY(0);
-                    tableroJugadorGrid.add(navio.getForma(), columna, fila);
-                    GridPane.setColumnSpan(navio.getForma(), tamaño);
+                    barco.getForma().setTranslateX(0);
+                    barco.getForma().setTranslateY(0);
+                    tableroJugadorGrid.add(barco.getForma(), columna, fila);
+                    GridPane.setColumnSpan(barco.getForma(), tamaño);
 
 
 

@@ -17,6 +17,7 @@ import com.example.batalla_naval.util.SoundEffects;
 
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class VistaInicioController {
     @FXML
@@ -89,9 +90,14 @@ public class VistaInicioController {
                        \s
                         8. Gana quien hunda todos los barcos del oponente"""
         );
-        ButtonType okButton=new ButtonType("más que claro!!", ButtonBar.ButtonData.OK_DONE); /* boton de aceptar*/
+        ButtonType okButton = new ButtonType("¡más que claro!", ButtonBar.ButtonData.OK_DONE);
         alert.getButtonTypes().setAll(okButton);
-        alert.showAndWait();
+
+        Optional<ButtonType> resultado = alert.showAndWait();
+
+        if (resultado.isPresent() && resultado.get() == okButton) {
+            SoundEffects.playNegativeClick();
+        }
     }
 
 

@@ -27,7 +27,14 @@ public class VistaConfiguracionTableroController {
     public Label informationLabel;
     public Label fragataCount;
     private static final int CELL = 45;
-    private boolean dragging = false;
+
+    // Matriz de panes que representan cada celda del GridPane
+    private Pane[][] celdasGraficas = new Pane[10][10];
+
+    // Lista de celdas que están actualmente en "preview"
+    private final java.util.List<Pane> celdasPreview = new java.util.ArrayList<>();
+
+
 
     @FXML private Pane paneFragatas;
     @FXML private Pane paneDestructores;
@@ -73,12 +80,6 @@ public class VistaConfiguracionTableroController {
         /*crear navios*/
         crearBarcosPanelIzquierdo();
 
-        /*llamar el metodo que permite movimiento de navios*/
-//        habilitarDrag(paneFragatas); /*metodo para arrastrar*/
-//        habilitarDrag(paneDestructores);
-//        habilitarDrag(paneSubmarinos);
-//        habilitarDrag(panePortaaviones);
-        /*metodo para manejar lo arrastrado y soltado en el tablero*/
         configurarEventosArrastre();
 
         /*codigo que conecta con el VistaConfiguracionTablero.fxml y
@@ -96,7 +97,7 @@ public class VistaConfiguracionTableroController {
                 /*cada celda 45 porque el tablero esta fijado en 450*/
 
                 tableroJugadorGrid.add(celda, columna, fila);
-
+                celdasGraficas[fila][columna] = celda;
                 /*la organizacion del tablero de juego:
                 * tablero -> es un grid pane
                 * celda -> es un pane (espacio en blanco donde se puede meter elementos)*/
@@ -208,50 +209,6 @@ public class VistaConfiguracionTableroController {
         });
 
 
-//
-//        paneNavio.setOnDragDetected(event -> { /*cuando se arrastra la imagen se dectata el evento*/
-//            //System.out.println("se esta haciendo drag");
-//
-//
-//            //Navio navio = new Navio(/*"Fragata", 1*/);
-//
-//            Dragboard contenedorArrastre =paneNavio.startDragAndDrop(TransferMode.MOVE);
-//            /*Dragboard es un contenedor temporal donde se aloja lo que se está arrastrando*/
-//            /*obtener el barco Group*/
-//            Navio navio = (Navio) paneNavio.getUserData(); /*recupera el barco original*/
-//
-//            ClipboardContent content = new ClipboardContent();
-//            content.putString(navio.getTipo()); /*enviar el tipo de barco*/
-//
-//            WritableImage snapshot = navio.getForma().snapshot(null, null);
-//            content.putImage(snapshot);
-//
-//            contenedorArrastre.setContent(content);
-//
-//            event.consume();
-//
-//
-//
-//
-//
-//
-//            //System.out.println("drag- se metió pane al dragboard");
-//            if (!paneNavio.getChildren().isEmpty()) {
-//                Group barco = (Group) paneNavio.getChildren().get(0);
-//
-//                // Crear snapshot del barco
-//                WritableImage snapshot = barco.snapshot(null, null);
-//
-//
-//                ClipboardContent contenido = new ClipboardContent();
-//                /*clipboardcontent : cajita que se pone dentro del dragboard para guardar la info a mover*/
-//                contenido.putImage(snapshot);/*pone la imagen(contenido) en el clipboard*/
-//                //System.out.println("se puso el contenido en el clipboard");
-//                contenedorArrastre.setContent(contenido);/*guarda el contenido en el drag*/
-//            }
-//            event.consume();
-////            //System.out.println("terminó evento de drag");
-//        });
     }
 
 
@@ -265,17 +222,42 @@ public class VistaConfiguracionTableroController {
         /*--------------------------- DRAG OVER --------------------------------*/
         tableroJugadorGrid.setOnDragOver(event -> {
 
+            limpiarPreview();  // limpiar cualquier resaltado anterior
+
             Dragboard dragboard = event.getDragboard();
 
-            // Solo aceptamos si viene una imagen (snapshot del barco)
-            if (event.getGestureSource() != tableroJugadorGrid &&
-                    dragboard.hasImage()) {
-
+            if (event.getGestureSource() != tableroJugadorGrid && dragboard.hasImage()) {
                 event.acceptTransferModes(TransferMode.MOVE);
+
+                // --- NUEVO: calcular preview ---
+
+                String tipo = dragboard.getString();
+                if (tipo != null) {
+
+                    int tamanio = Barco.tamañoPorTipo(tipo);
+
+                    int columna = (int) (event.getX() / CELL);
+                    int fila    = (int) (event.getY() / CELL);
+
+                    // Orientación (por ahora manejamos horizontal)
+                    Orientacion orientacion = Orientacion.HORIZONTAL;
+
+                    // Revisar si sería una posición válida en el modelo
+                    Barco barcoTemporal = new Barco(tipo, tamanio);
+                    Coordenada inicio = new Coordenada(fila, columna);
+                    boolean valido = tableroJugador.puedeUbicarBarco(barcoTemporal, inicio, orientacion);
+
+                    // Pintar preview
+                    marcarPreview(fila, columna, tamanio, orientacion, valido);
+                }
+            } else {
+                // si no hay imagen, quitar preview
+                limpiarPreview();
             }
 
             event.consume();
         });
+
 
         /*--------------------------- DRAG DROPPED -----------------------------*/
         tableroJugadorGrid.setOnDragDropped(event -> {
@@ -294,41 +276,47 @@ public class VistaConfiguracionTableroController {
                 int columna = (int) (event.getX() / 45);
                 int fila    = (int) (event.getY() / 45);
 
+                // Validar que la casilla está dentro del tablero
+                if (fila < 0 || fila >= tableroJugador.getFilas()
+                        || columna < 0 || columna >= tableroJugador.getColumnas()) {
+
+                    informationLabel.setText("⚠ No se puede colocar fuera del tablero.");
+                    event.setDropCompleted(false);
+                    event.consume();
+                    return;
+                }
+
+
+                // Coordenada inicial en el tablero
                 // Coordenada inicial en el tablero
                 Coordenada inicio = new Coordenada(fila, columna);
 
-                // Orientación según el barco
-                Orientacion orientacion = barco.esVertical()
-                        ? Orientacion.VERTICAL
-                        : Orientacion.HORIZONTAL;
+// Por ahora, tratamos siempre el barco como HORIZONTAL,
+// porque su forma gráfica está dibujada a lo largo de las columnas.
+                Orientacion orientacion = Orientacion.HORIZONTAL;
 
-                // Intentar colocarlo en el modelo
+// Intentar colocarlo en el modelo
                 boolean colocado = tableroJugador.ubicarBarco(barco, inicio, orientacion);
+
 
 
                 if (colocado) {
                     SoundEffects.playPosicionarBarco();
-                    System.out.println("Barco colocado en fila " + fila + ", columna " + columna);
                     informationLabel.setText("✔ Barco colocado en (" + fila + ", " + columna + ")");
-
-                    // Agregar visualmente al grid
-                    barco.getForma().setTranslateX(0);
-                    barco.getForma().setTranslateY(0);
 
                     barco.getForma().setTranslateX(0);
                     barco.getForma().setTranslateY(0);
                     tableroJugadorGrid.add(barco.getForma(), columna, fila);
-                    GridPane.setColumnSpan(barco.getForma(), tamaño);
 
-
+                    GridPane.setColumnSpan(barco.getForma(), barco.getTamanio());
 
                     event.setDropCompleted(true);
-
                 } else {
-                    System.out.println("No se puede colocar en (" + fila + ", " + columna + ")");
                     informationLabel.setText("⚠ No se puede colocar el barco ahí.");
                     event.setDropCompleted(false);
                 }
+
+
 
             } else {
                 event.setDropCompleted(false);
@@ -336,80 +324,49 @@ public class VistaConfiguracionTableroController {
 
             event.consume();
         });
-//        System.out.println("se entró a cofigurarEventosArrastre");
-//
-//        tableroJugadorGrid.setOnDragOver(event -> {
-//            /*detecta si algo está siendo arrastrado sobre el tablero
-//            * que no sea el mismo tablero
-//            * que sea una imagen (hay que cambiar esto por figuras)
-//            * ahí sí permite el movimiento*/
-//
-//
-//            //System.out.println("se esta arrastrando algo al grid");
-//
-//            if (event.getGestureSource() != tableroJugadorGrid && /*asegura que lo que arrastra no es el propio*/
-//                    event.getDragboard().hasImage()) { /*comprueba que el Dragboard contiene una imagen.*/
-//
-//                event.acceptTransferModes(TransferMode.MOVE);
-//            }
-//            event.consume();
-//        });
-//
-//
-//        tableroJugadorGrid.setOnDragDropped(event -> {
-//            /*handler que se dispara si el usuario soltó el mouse sobre el tableroJugadorGrid,
-//            crea un nuevo imageView con la imagen del barco arrastrado*/
-//            Dragboard contenedorArrastre = event.getDragboard(); /*obtiene el contenido que traía el drag*/
-//
-//            if (contenedorArrastre.hasImage()) { /*Comprueba que efectivamente hay una imagen en el Dragboard*/
-//
-//                String tipo = contenedorArrastre.getString();
-//                int tamaño = Navio.tamañoPorTipo(tipo);
-//                /*crea un navio con el tipo y tamaño respectivo*/
-//                Navio navio = new Navio (tipo, tamaño);
-//
-//
-//
-//                /* calcula aproximada la casilla donde cayó el barco*/
-//                int columna = (int) (event.getX() / (tableroJugadorGrid.getWidth() / 10));
-//                int fila = (int) (event.getY() / (tableroJugadorGrid.getHeight() / 10));
-//
-//
-//
-//                //System.out.println("navio instanciado en setOnDragDropped de configurarEventosArrastre");
-//
-//                /*intenta colocarlo en el modelo*/
-//                boolean colocado = tableroJugador.colocarBarco(navio, fila, columna);
-//
-//                if (colocado) {
-//                    informationLabel.setText("Barco colocado correctamente en fila "+fila+ " ,columna " + columna);
-//                    System.out.println("Barco colocado correctamente en fila "+fila+ " ,columna " + columna);
-//
-//                    /*agregar la forma del navio al tablero*/
-//                    tableroJugadorGrid.add(navio.getForma(), columna, fila);
-//                    /*ImageView nuevoNavio = new ImageView(contenedorArrastre.getImage());*/
-//
-//                    /*nuevoNavio.setFitWidth(45);
-//                    nuevoNavio.setPreserveRatio(true);
-//
-//                    tableroJugadorGrid.add(nuevoNavio, columna, fila);*/
-//
-//                    event.setDropCompleted(true);
-//
-//                } else {
-//                    System.out.println("No se puede colocar el barco en " +fila+ "," +columna);
-//                    informationLabel.setText("⚠ No se puede colocar el barco allí.");
-//                    event.setDropCompleted(false);
-//                }
-//
-//            } else {
-//                event.setDropCompleted(false);
-//            }
-//
-//            event.consume();
-//        });
+        tableroJugadorGrid.setOnDragExited(event -> limpiarPreview());
+
 
     }
+
+
+    private void limpiarPreview() {
+        for (Pane p : celdasPreview) {
+            p.getStyleClass().remove("celda-preview");
+            p.getStyleClass().remove("celda-preview-invalid");
+        }
+        celdasPreview.clear();
+    }
+
+    private void marcarPreview(int filaInicio,
+                               int columnaInicio,
+                               int tamanio,
+                               Orientacion orientacion,
+                               boolean valido) {
+
+        limpiarPreview();
+
+        for (int i = 0; i < tamanio; i++) {
+            int f = (orientacion == Orientacion.HORIZONTAL) ? filaInicio : filaInicio + i;
+            int c = (orientacion == Orientacion.HORIZONTAL) ? columnaInicio + i : columnaInicio;
+
+            if (f < 0 || f >= tableroJugador.getFilas()
+                    || c < 0 || c >= tableroJugador.getColumnas()) {
+                // se sale del tablero, no se marca
+                continue;
+            }
+
+            Pane celda = celdasGraficas[f][c];
+            if (celda == null) continue;
+
+            String styleClass = valido ? "celda-preview" : "celda-preview-invalid";
+            if (!celda.getStyleClass().contains(styleClass)) {
+                celda.getStyleClass().add(styleClass);
+            }
+            celdasPreview.add(celda);
+        }
+    }
+
 
 }
 

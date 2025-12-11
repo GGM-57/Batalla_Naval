@@ -102,3 +102,16 @@
     -fx-font-weight: bold;
 
 }
+.celda {
+    -fx-background-color: #18181b; /* el color base que ya usas */
+    -fx-border-color: #27272f;
+    -fx-border-width: 1;
+}
+
+.celda-preview {
+    -fx-background-color: rgba(56, 189, 248, 0.4); /* azul claro translúcido */
+}
+
+.celda-preview-invalid {
+    -fx-background-color: rgba(248, 113, 113, 0.4); /* rojito para posición inválida */
+}

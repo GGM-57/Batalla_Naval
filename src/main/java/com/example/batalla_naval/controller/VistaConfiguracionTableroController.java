@@ -19,14 +19,27 @@ import javafx.util.Duration;
 import com.example.batalla_naval.model.Coordenada;
 import com.example.batalla_naval.model.Orientacion;
 
-
-
-
 public class VistaConfiguracionTableroController {
     public Button btnIniciarBatalla;
     public Label informationLabel;
-    public Label fragataCount;
+
+    @FXML private Label fragataCount;
+    @FXML private Label destructorCount;
+    @FXML private Label submarinoCount;
+    @FXML private Label portaavionesCount;
+
     private static final int CELL = 45;
+
+    /*límites y contadores de barcos*/
+    private static final int MAX_FRAGATAS = 4;
+    private static final int MAX_DESTRUCTORES = 3;
+    private static final int MAX_SUBMARINOS = 2;
+    private static final int MAX_PORTAAVIONES = 1;
+
+    private int fragatasColocadas = 0;
+    private int destructoresColocados = 0;
+    private int submarinosColocados = 0;
+    private int portaavionesColocados = 0;
 
     // Matriz de panes que representan cada celda del GridPane
     private Pane[][] celdasGraficas = new Pane[10][10];
@@ -54,6 +67,16 @@ public class VistaConfiguracionTableroController {
         btnIniciarBatalla.setOnAction(e->{
             SoundEffects.playClick();
         });
+
+        fragataCount.setText("x" + MAX_FRAGATAS);
+        destructorCount.setText("x" + MAX_DESTRUCTORES);
+        submarinoCount.setText("x" + MAX_SUBMARINOS);
+        portaavionesCount.setText("x" + MAX_PORTAAVIONES);
+
+        btnIniciarBatalla.setDisable(true);
+
+
+
         tableroJugadorGrid.setPrefSize(CELL * 10, CELL * 10);
         tableroJugadorGrid.setMinSize(CELL * 10, CELL * 10);
         tableroJugadorGrid.setMaxSize(CELL * 10, CELL * 10);
@@ -269,8 +292,45 @@ public class VistaConfiguracionTableroController {
                 String tipo = dragboard.getString();
                 int tamaño = Barco.tamañoPorTipo(tipo);
 
-                // Crear barco real
+// verificar límite por tipo
+                switch (tipo) {
+                    case "Fragata" -> {
+                        if (fragatasColocadas >= MAX_FRAGATAS) {
+                            informationLabel.setText("Ya colocaste todas las Fragatas.");
+                            event.setDropCompleted(false);
+                            event.consume();
+                            return;
+                        }
+                    }
+                    case "Destructor" -> {
+                        if (destructoresColocados >= MAX_DESTRUCTORES) {
+                            informationLabel.setText("Ya colocaste todos los Destructores.");
+                            event.setDropCompleted(false);
+                            event.consume();
+                            return;
+                        }
+                    }
+                    case "Submarino" -> {
+                        if (submarinosColocados >= MAX_SUBMARINOS) {
+                            informationLabel.setText("Ya colocaste todos los Submarinos.");
+                            event.setDropCompleted(false);
+                            event.consume();
+                            return;
+                        }
+                    }
+                    case "Portaaviones" -> {
+                        if (portaavionesColocados >= MAX_PORTAAVIONES) {
+                            informationLabel.setText("Ya colocaste el Portaaviones.");
+                            event.setDropCompleted(false);
+                            event.consume();
+                            return;
+                        }
+                    }
+                }
+
+// Crear barco real
                 Barco barco = new Barco(tipo, tamaño);
+
 
                 // Calcular fila/columna donde se soltó
                 int columna = (int) (event.getX() / 45);
@@ -311,8 +371,38 @@ public class VistaConfiguracionTableroController {
                     GridPane.setColumnSpan(barco.getForma(), barco.getTamanio());
 
                     event.setDropCompleted(true);
+
+                    /*actualizar contadores */
+                    switch (tipo) {
+                        case "Fragata" -> {
+                            fragatasColocadas++;
+                            fragataCount.setText("x" + (MAX_FRAGATAS - fragatasColocadas));
+                        }
+                        case "Destructor" -> {
+                            destructoresColocados++;
+                            destructorCount.setText("x" + (MAX_DESTRUCTORES - destructoresColocados));
+                        }
+                        case "Submarino" -> {
+                            submarinosColocados++;
+                            submarinoCount.setText("x" + (MAX_SUBMARINOS - submarinosColocados));
+                        }
+                        case "Portaaviones" -> {
+                            portaavionesColocados++;
+                            portaavionesCount.setText("x" + (MAX_PORTAAVIONES - portaavionesColocados));
+                        }
+                    }
+
+
+                    int totalNecesario = MAX_FRAGATAS + MAX_DESTRUCTORES + MAX_SUBMARINOS + MAX_PORTAAVIONES;
+                    int totalColocado = fragatasColocadas + destructoresColocados +
+                            submarinosColocados + portaavionesColocados;
+
+                    if (totalColocado == totalNecesario) {
+                        btnIniciarBatalla.setDisable(false);
+                        informationLabel.setText("Todos los barcos colocados. ¡Listo para luchar!");
+                    }
                 } else {
-                    informationLabel.setText("⚠ No se puede colocar el barco ahí.");
+                    informationLabel.setText("No se puede colocar el barco ahí.");
                     event.setDropCompleted(false);
                 }
 

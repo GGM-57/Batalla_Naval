@@ -115,3 +115,25 @@
 .celda-preview-invalid {
     -fx-background-color: rgba(248, 113, 113, 0.4); /* rojito para posición inválida */
 }
+/*-----------------------------------------css del controlodorJuego---------------------------
+.celda-batalla {
+    -fx-background-color: #111827;   /* gris oscuro */
+    -fx-border-color: #1f2933;
+    -fx-border-width: 1;
+}
+
+.celda-barco-jugador {
+    -fx-background-color: #1d4ed8;   /* azul para barcos del jugador */
+}
+
+.celda-agua {
+    -fx-background-color: #0f172a;   /* un tono más oscuro para agua fallida */
+}
+
+.celda-tocado {
+    -fx-background-color: #f97316;   /* naranja para tocado */
+}
+
+.celda-hundido {
+    -fx-background-color: #b91c1c;   /* rojo fuerte para hundido */
+}

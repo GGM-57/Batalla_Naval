@@ -4,6 +4,9 @@ import com.example.batalla_naval.model.Barco;
 import com.example.batalla_naval.model.Tablero;
 import javafx.animation.ScaleTransition;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.WritableImage;
@@ -15,9 +18,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.RowConstraints;
 import com.example.batalla_naval.util.SoundEffects;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import com.example.batalla_naval.model.Coordenada;
 import com.example.batalla_naval.model.Orientacion;
+import javafx.event.ActionEvent;
+
+import java.io.IOException;
 
 public class VistaConfiguracionTableroController {
     public Button btnIniciarBatalla;
@@ -64,9 +71,15 @@ public class VistaConfiguracionTableroController {
         btnIniciarBatalla.setOnMouseEntered(e->{
             SoundEffects.playHover();
         });
-        btnIniciarBatalla.setOnAction(e->{
+        btnIniciarBatalla.setOnAction(e -> {
             SoundEffects.playClick();
+            try {
+                irALucha(e);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         });
+
 
         fragataCount.setText("x" + MAX_FRAGATAS);
         destructorCount.setText("x" + MAX_DESTRUCTORES);
@@ -455,6 +468,25 @@ public class VistaConfiguracionTableroController {
             }
             celdasPreview.add(celda);
         }
+    }
+    private void irALucha(ActionEvent event) throws IOException {
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                "/com/example/batalla_naval/VistaBatalla.fxml"
+        ));
+
+        Parent root = loader.load();
+
+        ControladorJuego controladorJuego = loader.getController();
+
+
+        controladorJuego.initData(tableroJugador);
+
+        // Cambiar de escena
+        Stage stage = (Stage) btnIniciarBatalla.getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 
 

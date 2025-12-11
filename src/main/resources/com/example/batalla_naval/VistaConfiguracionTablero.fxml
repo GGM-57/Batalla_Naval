@@ -9,7 +9,7 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.example.batalla_naval.controller.VistaConfiguracionTableroController"
-            prefWidth="900" prefHeight="650"
+            prefWidth="999" prefHeight="700"
             stylesheets="@VistaConfiguracionTableroEstilos.css">
 
     <!-- CONTENEDOR PRINCIPAL -->
@@ -21,9 +21,9 @@
 
         <!-- PANEL IZQUIERDO -->
         <VBox spacing="20" alignment="TOP_CENTER"
-              minWidth="160"
-              prefWidth="160"
-              maxWidth="160"
+              minWidth="225"
+              prefWidth="225"
+              maxWidth="225"
               styleClass="ship-panel">
 
             <Label text="Navios" styleClass="panel-title"/>
@@ -32,7 +32,7 @@
             <Label text="Fragatas" styleClass="subtitles-ships"/>
             <HBox spacing="10" alignment="CENTER_LEFT" prefWidth="80">
                 <Pane fx:id="paneFragatas" prefWidth="60" prefHeight="60"/>
-                <Label fx:id="fragataCount" text="x4" styleClass="ship-count"/>
+                <Label fx:id="fragataCount" text="x4" styleClass="ship-count" alignment="BOTTOM_RIGHT"/>
                 <!--el label del navio fragata debe cambiar -falta hacer logica de eso en el VistaConfiguracionTableroController-->
 
             </HBox>
@@ -41,7 +41,7 @@
             <Label text="Destructores" styleClass="subtitles-ships"/>
             <HBox spacing="10" alignment="CENTER_LEFT" prefWidth="80">
                 <Pane fx:id="paneDestructores" prefWidth="60" prefHeight="60"/>
-                <Label text="x3" styleClass="ship-count"/>
+                <Label text="x3" styleClass="ship-count" alignment="BOTTOM_RIGHT"/>
                 <!--el label del navio destructores debe cambiar -falta hacer logica de eso en el VistaConfiguracionTableroController-->
             </HBox>
 
@@ -49,7 +49,7 @@
             <Label text="Submarinos" styleClass="subtitles-ships"/>
             <HBox spacing="10" alignment="CENTER_LEFT" prefWidth="80">
                 <Pane fx:id="paneSubmarinos" prefWidth="60" prefHeight="60"/>
-                <Label text="x2" styleClass="ship-count"/>
+                <Label text="x2" styleClass="ship-count" alignment="BOTTOM_RIGHT"/>
                 <!--el label del navio submarinos debe cambiar -falta hacer logica de eso en el VistaConfiguracionTableroController-->
             </HBox>
 
@@ -57,7 +57,7 @@
             <Label text="Portaaviones" styleClass="subtitles-ships"/>
             <HBox spacing="10" alignment="CENTER_LEFT" prefWidth="80">
                 <Pane fx:id="panePortaaviones" prefWidth="60" prefHeight="60"/>
-                <Label text="x1" styleClass="ship-count"/>
+                <Label text="x1" styleClass="ship-count" alignment="BOTTOM_RIGHT"/>
                 <!--el label del navio portaviones debe cambiar -falta hacer logica de eso en el VistaConfiguracionTableroController-->
             </HBox>
         </VBox>

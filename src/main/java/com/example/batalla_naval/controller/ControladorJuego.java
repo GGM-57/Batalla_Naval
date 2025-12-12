@@ -28,14 +28,12 @@ import com.example.batalla_naval.util.MusicManager;
 import com.example.batalla_naval.util.TableroUIFactory;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
-
-
 import com.example.batalla_naval.model.SesionJuego;
-
 import java.util.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
+import javafx.animation.PauseTransition;
 
 
 
@@ -43,6 +41,8 @@ public class ControladorJuego {
 
     private static final int CELL = 45;
     private static final int TAM = 10;
+    /*  tiempo de espera de la maquina*/
+    private static final double DELAY_MAQUINA_SEG = 2;
 
     @FXML private GridPane gridJugador;
     @FXML private GridPane gridMaquina;
@@ -297,8 +297,6 @@ public class ControladorJuego {
         if (!turnoJugador || juegoTerminado) {
             return;
         }
-
-        // ⬇️ NUEVO: si ya disparaste aquí, no hagas nada
         if (disparosJugador[fila][col]) {
             lblEstado.setText("Ya disparaste a (" + fila + ", " + col + "). Elige otra casilla.");
             return;
@@ -339,7 +337,7 @@ public class ControladorJuego {
         turnoJugador = false;
         lblTurno.setText("Turno de la máquina");
 
-        turnoMaquina();
+        simularPensandoMaquina();
     }
 
 
@@ -419,6 +417,20 @@ public class ControladorJuego {
         turnoJugador = true;
         lblTurno.setText("Turno del jugador");
     }
+    private void simularPensandoMaquina() {
+        if (juegoTerminado) return;
+
+        lblEstado.setText("La máquina está pensando...");
+
+        PauseTransition pause = new PauseTransition(Duration.seconds(DELAY_MAQUINA_SEG));
+        pause.setOnFinished(e -> {
+            if (!juegoTerminado) {
+                turnoMaquina();
+            }
+        });
+        pause.play();
+    }
+
 
     private void actualizarCeldaJugador(int fila, int col, ResultadoDisparo resultado) {
         Pane p = celdasJugador[fila][col];

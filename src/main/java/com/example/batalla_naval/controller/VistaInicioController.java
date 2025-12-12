@@ -13,8 +13,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ButtonBar;
 import com.example.batalla_naval.util.MusicManager;
 import com.example.batalla_naval.util.SoundEffects;
-
-
+import com.example.batalla_naval.model.SesionJuego;
+import javafx.scene.control.TextField;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -24,6 +24,9 @@ public class VistaInicioController {
     private Button jugarButton;
     @FXML
     private Button instruccionesButton;
+    @FXML
+    private TextField usernameField;
+
 
     @FXML
     private void initialize() {
@@ -53,10 +56,11 @@ public class VistaInicioController {
 
     @FXML
     private void onJugarClick(ActionEvent event) throws IOException {
-        System.out.println("Jugando");
+        SesionJuego.setNombreJugador(usernameField.getText());
         cambiarVentana(event, "/com/example/batalla_naval/VistaConfiguracionTablero.fxml");
-
     }
+
+
 
 
     /* logica del boton de instrucciones

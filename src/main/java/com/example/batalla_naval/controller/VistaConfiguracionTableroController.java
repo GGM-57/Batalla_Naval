@@ -19,7 +19,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.RowConstraints;
 import com.example.batalla_naval.util.SoundEffects;
 import com.example.batalla_naval.util.MusicManager;
-
+import com.example.batalla_naval.model.SesionJuego;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import com.example.batalla_naval.model.Coordenada;
@@ -31,6 +31,8 @@ import java.io.IOException;
 public class VistaConfiguracionTableroController {
     public Button btnIniciarBatalla;
     public Label informationLabel;
+    @FXML private Label lblTituloTablero;
+
 
     @FXML private Label fragataCount;
     @FXML private Label destructorCount;
@@ -70,6 +72,8 @@ public class VistaConfiguracionTableroController {
     @FXML
     /*metodo que se ejecuta automáticamente al cargar el controlador*/
     private void initialize() {
+        String nombre = SesionJuego.getNombreJugador();
+        lblTituloTablero.setText("Tablero de " + nombre);
         btnIniciarBatalla.setOnMouseEntered(e->{
             SoundEffects.playHover();
         });

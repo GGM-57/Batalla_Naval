@@ -9,6 +9,8 @@ public class SoundEffects {
     private static AudioClip clickSound;
     private static AudioClip clickNegativeSound;
     private static AudioClip posicionarBarcoSound;
+    private static AudioClip explosion1;
+    private static AudioClip explosion2;
 
 
     static {
@@ -17,6 +19,8 @@ public class SoundEffects {
         clickSound = loadClip("/com/example/batalla_naval/audios/soundEffects/menuPositive.mp3");
         clickNegativeSound = loadClip("/com/example/batalla_naval/audios/soundEffects/menuNegative.mp3");
         posicionarBarcoSound=loadClip("/com/example/batalla_naval/audios/soundEffects/posicionar.mp3");
+        explosion1=loadClip("/com/example/batalla_naval/audios/soundEffects/explosion.mp3");
+        explosion2=loadClip("/com/example/batalla_naval/audios/soundEffects/explosion2.mp3");
     }
 
     private static AudioClip loadClip(String path) {
@@ -46,6 +50,15 @@ public class SoundEffects {
     }public static void playPosicionarBarco(){
         if(clickSound !=null){
             posicionarBarcoSound.play(0.6);
+        }
+    }
+    public static void playExplosion1(){
+        if(clickSound !=null){
+            explosion1.play(0.6);
+        }
+    } public static void playExplosion2(){
+        if(clickSound !=null){
+            explosion2.play(0.6);
         }
     }
 }

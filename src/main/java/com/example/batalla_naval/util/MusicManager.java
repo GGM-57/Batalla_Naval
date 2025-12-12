@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class MusicManager {
 
-    // Un MediaPlayer por tipo de música
+
     private static final Map<MusicTrack, MediaPlayer> players =
             new EnumMap<>(MusicTrack.class);
 
@@ -17,8 +17,8 @@ public class MusicManager {
     private static final Map<MusicTrack, String> RUTAS = Map.of(
             MusicTrack.MENU,    "/com/example/batalla_naval/audios/soundtracks/ElementalStars.mp3",
             MusicTrack.BATALLA, "/com/example/batalla_naval/audios/soundtracks/pazAntesdelaGuerra.mp3",
-            MusicTrack.VICTORIA,"/com/example/batalla_naval/audios/soundtracks/VictoryTheme.mp3",
-            MusicTrack.DERROTA, "/com/example/batalla_naval/audios/soundtracks/DefeatTheme.mp3"
+            MusicTrack.VICTORIA,"/com/example/batalla_naval/audios/soundtracks/Victory.mp3",
+            MusicTrack.DERROTA, "/com/example/batalla_naval/audios/soundtracks/derrota.mp3"
     );
 
     // Para saber qué pista está en loop actualmente (opcional)

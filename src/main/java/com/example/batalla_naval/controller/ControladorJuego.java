@@ -59,6 +59,8 @@ public class ControladorJuego {
     private final List<Barco> flotaMaquina = new ArrayList<>();
 
     private final boolean[][] disparosMaquina = new boolean[TAM][TAM];
+    private final boolean[][] disparosJugador = new boolean[TAM][TAM];
+
 
     private final Random random = new Random();
 
@@ -159,31 +161,35 @@ public class ControladorJuego {
     }
 
     private void crearCeldasVisuales() {
-        // Celdas del jugador (solo visual, sin eventos)
+        // Celdas del jugador
         for (int fila = 0; fila < TAM; fila++) {
             for (int col = 0; col < TAM; col++) {
                 Pane p = new Pane();
-                p.getStyleClass().add("celda-batalla");
                 p.setPrefSize(CELL, CELL);
                 p.setMinSize(CELL, CELL);
                 p.setMaxSize(CELL, CELL);
+
+                // estilo base
+                p.setStyle("-fx-background-color: #111827; -fx-border-color: #1f2933; -fx-border-width: 1;");
 
                 gridJugador.add(p, col, fila);
                 celdasJugador[fila][col] = p;
             }
         }
 
-        // Celdas de la máquina (reciben disparos del jugador)
+        // Celdas de la máquina
         for (int fila = 0; fila < TAM; fila++) {
             for (int col = 0; col < TAM; col++) {
                 final int f = fila;
                 final int c = col;
 
                 Pane p = new Pane();
-                p.getStyleClass().add("celda-batalla");
                 p.setPrefSize(CELL, CELL);
                 p.setMinSize(CELL, CELL);
                 p.setMaxSize(CELL, CELL);
+
+                // estilo base
+                p.setStyle("-fx-background-color: #111827; -fx-border-color: #1f2933; -fx-border-width: 1;");
 
                 p.setOnMouseClicked(e -> manejarDisparoJugador(f, c));
 
@@ -210,21 +216,44 @@ public class ControladorJuego {
         }
         flotaJugador.clear();
         flotaJugador.addAll(set);
+        System.out.println("Barcos del jugador en batalla: " + flotaJugador.size());
     }
 
     private void pintarBarcosJugador() {
+
+        // Opcional: dejar todas las celdas con estilo base oscuro (sin azul)
         for (int fila = 0; fila < TAM; fila++) {
             for (int col = 0; col < TAM; col++) {
-                Celda celda = tableroJugador.getCelda(fila, col);
-                if (celda.tieneBarco()) {
-                    Pane p = celdasJugador[fila][col];
-                    if (!p.getStyleClass().contains("celda-barco-jugador")) {
-                        p.getStyleClass().add("celda-barco-jugador");
-                    }
-                }
+                Pane p = celdasJugador[fila][col];
+                p.setStyle("-fx-background-color: #111827; -fx-border-color: #1f2933; -fx-border-width: 1;");
+            }
+        }
+
+        // Poner cada barco como una sola figura en el GridPane
+        for (Barco barco : flotaJugador) {
+
+            int filaInicio = barco.getFila();
+            int colInicio  = barco.getColumna();
+
+            // Dibujo original del barco (el mismo de la pantalla de configuración)
+            javafx.scene.Group forma = barco.getForma();
+
+            // Importante: quitar interacción (no queremos rotarlo en batalla)
+            forma.setOnMouseClicked(null);
+
+            // Añadir al grid del jugador en la celda inicial
+            gridJugador.add(forma, colInicio, filaInicio);
+
+            // Hacer que ocupe varias celdas según su orientación y tamaño
+            if (barco.esVertical()) {
+                GridPane.setRowSpan(forma, barco.getTamaño());
+            } else {
+                GridPane.setColumnSpan(forma, barco.getTamaño());
             }
         }
     }
+
+
 
     // ------------------------------------------------------------------
     // Flota de la máquina (aleatoria)
@@ -267,15 +296,31 @@ public class ControladorJuego {
             return;
         }
 
+        // ⬇️ NUEVO: si ya disparaste aquí, no hagas nada
+        if (disparosJugador[fila][col]) {
+            lblEstado.setText("Ya disparaste a (" + fila + ", " + col + "). Elige otra casilla.");
+            return;
+        }
+        disparosJugador[fila][col] = true;
+
         Coordenada objetivo = new Coordenada(fila, col);
         ResultadoDisparo resultado = tableroMaquina.recibirDisparo(objetivo);
 
         actualizarCeldaMaquina(fila, col, resultado);
 
         switch (resultado) {
-            case AGUA -> lblEstado.setText("Disparaste a (" + fila + ", " + col + "): AGUA.");
-            case TOCADO -> lblEstado.setText("Disparaste a (" + fila + ", " + col + "): TOCADO.");
-            case HUNDIDO -> lblEstado.setText("¡Hundiste un barco enemigo!");
+            case AGUA ->{
+                lblEstado.setText("Disparaste a (" + fila + ", " + col + "): AGUA.");
+            }
+            case TOCADO ->{
+                lblEstado.setText("Disparaste a (" + fila + ", " + col + "): TOCADO.");
+                SoundEffects.playExplosion1();
+            }
+            case HUNDIDO ->{
+                lblEstado.setText("¡Hundiste un barco enemigo!");
+                SoundEffects.playExplosion2();
+            }
+
         }
 
         if (tableroMaquina.todosBarcosHundidos(flotaMaquina)) {
@@ -290,30 +335,23 @@ public class ControladorJuego {
         turnoJugador = false;
         lblTurno.setText("Turno de la máquina");
 
-        // Turno de la máquina (sencillo)
         turnoMaquina();
     }
+
 
     private void actualizarCeldaMaquina(int fila, int col, ResultadoDisparo resultado) {
         Pane p = celdasMaquina[fila][col];
 
-        p.getStyleClass().removeAll("celda-agua", "celda-tocado", "celda-hundido");
-
         switch (resultado) {
-            case AGUA -> {
-                if (!p.getStyleClass().contains("celda-agua")) {
-                    p.getStyleClass().add("celda-agua");
-                }
-            }
-            case TOCADO -> {
-                if (!p.getStyleClass().contains("celda-tocado")) {
-                    p.getStyleClass().add("celda-tocado");
-                }
-            }
+            case AGUA -> p.setStyle(
+                    "-fx-background-color: #020617; -fx-border-color: #1f2933; -fx-border-width: 1;");
+            case TOCADO -> p.setStyle(
+                    "-fx-background-color: #f97316; -fx-border-color: #1f2933; -fx-border-width: 1;");
             case HUNDIDO -> {
-                if (!p.getStyleClass().contains("celda-hundido")) {
-                    p.getStyleClass().add("celda-hundido");
-                }
+                p.setStyle(
+                        "-fx-background-color: #b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
+                // PINTAR TODO EL BARCO HUNDIDO EN ROJO
+                marcarBarcoHundido(tableroMaquina, celdasMaquina, fila, col);
             }
         }
     }
@@ -350,8 +388,14 @@ public class ControladorJuego {
 
         switch (resultado) {
             case AGUA -> lblEstado.setText("La máquina disparó a (" + fila + ", " + col + "): AGUA.");
-            case TOCADO -> lblEstado.setText("La máquina te ha TOCADO en (" + fila + ", " + col + ").");
-            case HUNDIDO -> lblEstado.setText("La máquina hundió uno de tus barcos.");
+            case TOCADO -> {
+                lblEstado.setText("La máquina te ha TOCADO en (" + fila + ", " + col + ").");
+                SoundEffects.playExplosion1();
+            }
+            case HUNDIDO -> {
+                lblEstado.setText("La máquina hundió uno de tus barcos.");
+                SoundEffects.playExplosion2();
+            }
         }
 
         if (tableroJugador.todosBarcosHundidos(flotaJugador)) {
@@ -370,23 +414,16 @@ public class ControladorJuego {
     private void actualizarCeldaJugador(int fila, int col, ResultadoDisparo resultado) {
         Pane p = celdasJugador[fila][col];
 
-        p.getStyleClass().removeAll("celda-agua", "celda-tocado", "celda-hundido");
-
         switch (resultado) {
-            case AGUA -> {
-                if (!p.getStyleClass().contains("celda-agua")) {
-                    p.getStyleClass().add("celda-agua");
-                }
-            }
-            case TOCADO -> {
-                if (!p.getStyleClass().contains("celda-tocado")) {
-                    p.getStyleClass().add("celda-tocado");
-                }
-            }
+            case AGUA -> p.setStyle(
+                    "-fx-background-color: #020617; -fx-border-color: #1f2933; -fx-border-width: 1;");
+            case TOCADO -> p.setStyle(
+                    "-fx-background-color: #f97316; -fx-border-color: #1f2933; -fx-border-width: 1;");
             case HUNDIDO -> {
-                if (!p.getStyleClass().contains("celda-hundido")) {
-                    p.getStyleClass().add("celda-hundido");
-                }
+                p.setStyle(
+                        "-fx-background-color: #b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
+              /*marcar el barco undido*/
+                marcarBarcoHundido(tableroJugador, celdasJugador, fila, col);
             }
         }
     }
@@ -409,5 +446,23 @@ public class ControladorJuego {
             lblEstado.setText("Error al volver al menú.");
         }
     }
+    private void marcarBarcoHundido(Tablero tablero, Pane[][] celdas, int fila, int col) {
+        Celda celdaImpacto = tablero.getCelda(fila, col);
+        if (!celdaImpacto.tieneBarco()) return;
+
+        Barco barcoHundido = celdaImpacto.getBarco();
+
+        for (int f = 0; f < TAM; f++) {
+            for (int c = 0; c < TAM; c++) {
+                Celda celda = tablero.getCelda(f, c);
+                if (celda.tieneBarco() && celda.getBarco() == barcoHundido) {
+                    Pane p = celdas[f][c];
+                    p.setStyle(
+                            "-fx-background-color: #b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
+                }
+            }
+        }
+    }
+
 
 }

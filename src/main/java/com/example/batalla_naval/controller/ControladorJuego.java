@@ -13,6 +13,13 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import java.io.IOException;
 
 import java.util.*;
 
@@ -81,12 +88,10 @@ public class ControladorJuego {
     // No usamos initialize() para lógica, porque necesitamos primero el tableroJugador
     @FXML
     private void initialize() {
-        // Botones básicos (puedes completar la lógica de cambiar de escena luego)
-        btnVolverMenu.setOnAction(e -> {
-            // TODO: volver al menú principal
-            System.out.println("Volver al menú (por implementar)");
-        });
+        // Volver al menú
+        btnVolverMenu.setOnAction(this::volverAlMenu);
 
+        // Rendirse
         btnRendirse.setOnAction(e -> {
             if (!juegoTerminado) {
                 juegoTerminado = true;
@@ -96,6 +101,7 @@ public class ControladorJuego {
             }
         });
     }
+
 
     // ------------------------------------------------------------------
     // Construcción de grillas
@@ -352,4 +358,24 @@ public class ControladorJuego {
             }
         }
     }
+    private void volverAlMenu(ActionEvent event) {
+        try {
+            // Ajusta el nombre del FXML si tu pantalla inicial se llama distinto
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/example/batalla_naval/VistaInicio.fxml")
+            );
+            Parent root = loader.load();
+
+            Stage stage = (Stage) ((Node) event.getSource())
+                    .getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            lblEstado.setText("Error al volver al menú.");
+        }
+    }
+
 }

@@ -10,6 +10,8 @@ import com.example.batalla_naval.util.MusicTrack;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -23,7 +25,13 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import com.example.batalla_naval.util.SoundEffects;
 import com.example.batalla_naval.util.MusicManager;
+import com.example.batalla_naval.util.TableroUIFactory;
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
+
+
 import com.example.batalla_naval.model.SesionJuego;
+
 import java.util.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -33,37 +41,27 @@ import javafx.util.Duration;
 
 public class ControladorJuego {
 
-    private static final int TAM = 10;
     private static final int CELL = 45;
+    private static final int TAM = 10;
 
-    @FXML
-    private GridPane gridJugador;
-    @FXML
-    private GridPane gridMaquina;
+    @FXML private GridPane gridJugador;
+    @FXML private GridPane gridMaquina;
+    @FXML private Label lblTitulo;
+    @FXML private Label lblTurno;
+    @FXML private Label lblEstado;
+    @FXML private Button btnVolverMenu;
+    @FXML private Button btnRendirse;
 
-    @FXML
-    private Label lblTitulo;
-    @FXML
-    private Label lblTurno;
-    @FXML
-    private Label lblEstado;
+
+
     @FXML
     private Label lblTableroJugador;
-    @FXML
-    private Button btnVolverMenu;
-    @FXML
-    private Button btnRendirse;
-    @FXML
-    private Label lblCronometro;
-
-    private Timeline cronometro;
-    private int segundos = 0;
 
     private Tablero tableroJugador;
     private Tablero tableroMaquina;
 
-    private Pane[][] celdasJugador = new Pane[TAM][TAM];
-    private Pane[][] celdasMaquina = new Pane[TAM][TAM];
+    private Pane[][] celdasJugador;
+    private Pane[][] celdasMaquina;
 
     private final List<Barco> flotaJugador = new ArrayList<>();
     private final List<Barco> flotaMaquina = new ArrayList<>();
@@ -86,9 +84,34 @@ public class ControladorJuego {
         this.tableroJugador = tableroJugador;
 
         // Construir grillas visuales
-        configurarGrid(gridJugador);
-        configurarGrid(gridMaquina);
-        crearCeldasVisuales();
+        celdasJugador = TableroUIFactory.construirTablero(gridJugador, TAM, CELL);
+        celdasMaquina = TableroUIFactory.construirTablero(gridMaquina, TAM, CELL);
+
+        // Asegurar que el grid no tenga separaciones
+        gridJugador.setHgap(0);
+        gridJugador.setVgap(0);
+        gridMaquina.setHgap(0);
+        gridMaquina.setVgap(0);
+
+// Forzar el mismo estilo base en ambos tableros (evita que el enemigo se vea "más oscuro")
+        String base = "-fx-background-color: #111827; -fx-border-color: #1f2933; -fx-border-width: 1;";
+        for (int f = 0; f < TAM; f++) {
+            for (int c = 0; c < TAM; c++) {
+                celdasJugador[f][c].setStyle(base);
+                celdasMaquina[f][c].setStyle(base);
+            }
+        }
+
+        /*codigo para dar click en las celdas del enemigo*/
+        for (int fila = 0; fila < TAM; fila++) {
+            for (int col = 0; col < TAM; col++) {
+                final int f = fila;
+                final int c = col;
+                celdasMaquina[fila][col].setOnMouseClicked(e -> manejarDisparoJugador(f, c));
+            }
+        }
+
+
 
         // Dibujar barcos del jugador
         extraerFlotaJugadorDesdeTablero();
@@ -161,67 +184,7 @@ public class ControladorJuego {
     }
 
 
-    // ------------------------------------------------------------------
-    // Construcción de grillas
-    // ------------------------------------------------------------------
 
-    private void configurarGrid(GridPane grid) {
-        grid.getColumnConstraints().clear();
-        grid.getRowConstraints().clear();
-
-        for (int i = 0; i < TAM; i++) {
-            ColumnConstraints cc = new ColumnConstraints();
-            cc.setPrefWidth(CELL);
-            cc.setMinWidth(CELL);
-            cc.setMaxWidth(CELL);
-            grid.getColumnConstraints().add(cc);
-
-            RowConstraints rc = new RowConstraints();
-            rc.setPrefHeight(CELL);
-            rc.setMinHeight(CELL);
-            rc.setMaxHeight(CELL);
-            grid.getRowConstraints().add(rc);
-        }
-    }
-
-    private void crearCeldasVisuales() {
-        // Celdas del jugador
-        for (int fila = 0; fila < TAM; fila++) {
-            for (int col = 0; col < TAM; col++) {
-                Pane p = new Pane();
-                p.setPrefSize(CELL, CELL);
-                p.setMinSize(CELL, CELL);
-                p.setMaxSize(CELL, CELL);
-
-                // estilo base
-                p.setStyle("-fx-background-color: #111827; -fx-border-color: #1f2933; -fx-border-width: 1;");
-
-                gridJugador.add(p, col, fila);
-                celdasJugador[fila][col] = p;
-            }
-        }
-
-        // Celdas de la máquina
-        for (int fila = 0; fila < TAM; fila++) {
-            for (int col = 0; col < TAM; col++) {
-                final int f = fila;
-                final int c = col;
-
-                Pane p = new Pane();
-                p.setPrefSize(CELL, CELL);
-                p.setMinSize(CELL, CELL);
-                p.setMaxSize(CELL, CELL);
-
-                // estilo base
-                p.setStyle("-fx-background-color: #111827; -fx-border-color: #1f2933; -fx-border-width: 1;");
-
-                p.setOnMouseClicked(e -> manejarDisparoJugador(f, c));
-
-                gridMaquina.add(p, col, fila);
-                celdasMaquina[fila][col] = p;
-            }
-        }
-    }
 
     // ------------------------------------------------------------------
     // Flota del jugador (se extrae del tablero que viene de la config)
@@ -266,14 +229,22 @@ public class ControladorJuego {
             forma.setOnMouseClicked(null);
 
             // Añadir al grid del jugador en la celda inicial
+// Resetear offsets (muy importante para que no quede corrido)
+            forma.setTranslateX(0);
+            forma.setTranslateY(0);
+            forma.setLayoutX(0);
+            forma.setLayoutY(0);
+
+// Añadir al grid del jugador
             gridJugador.add(forma, colInicio, filaInicio);
 
+// Centrar dentro de la celda (o del área que ocupa)
+            GridPane.setHalignment(forma, HPos.CENTER);
+            GridPane.setValignment(forma, VPos.CENTER);
+
             // Hacer que ocupe varias celdas según su orientación y tamaño
-            if (barco.esVertical()) {
-                GridPane.setRowSpan(forma, barco.getTamaño());
-            } else {
-                GridPane.setColumnSpan(forma, barco.getTamaño());
-            }
+            GridPane.setColumnSpan(forma, barco.getTamaño());
+
         }
     }
 
@@ -415,16 +386,14 @@ public class ControladorJuego {
         switch (resultado) {
             case AGUA -> {
                 lblEstado.setText("La máquina disparó a (" + fila + ", " + col + "): AGUA.");
-                SoundEffects.misilFallado();
             }
             case TOCADO -> {
                 lblEstado.setText("La máquina te ha TOCADO en (" + fila + ", " + col + ").");
-                SoundEffects.stopAguaSalpicada();
+
                 SoundEffects.playExplosion1();
             }
             case HUNDIDO -> {
                 lblEstado.setText("La máquina hundió uno de tus barcos.");
-                SoundEffects.stopAguaSalpicada();
                 SoundEffects.playExplosion2();
                 activarMusicaBatalla();
             }
@@ -453,13 +422,43 @@ public class ControladorJuego {
             case TOCADO -> p.setStyle(
                     "-fx-background-color: #f97316; -fx-border-color: #1f2933; -fx-border-width: 1;");
             case HUNDIDO -> {
-                p.setStyle(
-                        "-fx-background-color: #b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
+
+//                p.setStyle(
+//                        "-fx-background-color: #b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
+//                mostrarAnimacionHundimiento(p); /*insertar animacion de explosion*/
               /*marcar el barco undido*/
                 marcarBarcoHundido(tableroJugador, celdasJugador, fila, col);
             }
         }
     }
+
+    //metodo para animacion de explosion en barco hundido
+    private void mostrarAnimacionHundimiento(Pane celda) {
+        try {
+            celda.setStyle("-fx-background-color: transparent; -fx-border-color: #1f2933; -fx-border-width: 1;");
+            celda.getChildren().clear();
+
+            String rutaGif = "/com/example/batalla_naval/images/explosion1.gif"; // Cambia esta ruta
+            Image gifImage = new Image(getClass().getResource(rutaGif).toExternalForm());
+
+
+            ImageView gifView = new ImageView(gifImage);
+
+            gifView.fitWidthProperty().bind(celda.widthProperty());
+            gifView.fitHeightProperty().bind(celda.heightProperty());
+            gifView.setPreserveRatio(false); // Estirar el GIF para cubrir
+
+
+//            celda.getChildren().clear();
+            celda.getChildren().add(gifView);
+
+        } catch (Exception e) {
+            System.err.println("Error al cargar o mostrar el GIF de hundimiento: " + e.getMessage());
+            // En caso de error (ej. GIF no encontrado), ponemos el color rojo como fallback.
+            celda.setStyle("-fx-background-color: #b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
+        }
+    }
+
     private void volverAlMenu(ActionEvent event) {
         detenerCronometro();
 
@@ -487,13 +486,23 @@ public class ControladorJuego {
 
         Barco barcoHundido = celdaImpacto.getBarco();
 
+        if (tablero == tableroJugador) {
+            Node formaBarco = barcoHundido.getForma();
+
+            // Verificamos si la forma existe y si su padre es gridJugador
+            if (formaBarco != null && formaBarco.getParent() instanceof GridPane gridPadre) {
+                gridPadre.getChildren().remove(formaBarco);
+            }
+
+        }
         for (int f = 0; f < TAM; f++) {
             for (int c = 0; c < TAM; c++) {
                 Celda celda = tablero.getCelda(f, c);
                 if (celda.tieneBarco() && celda.getBarco() == barcoHundido) {
                     Pane p = celdas[f][c];
-                    p.setStyle(
-                            "-fx-background-color: #b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
+                    mostrarAnimacionHundimiento(p);
+//                    p.setStyle(
+//                            "-fx-background-color: #b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
                 }
             }
         }

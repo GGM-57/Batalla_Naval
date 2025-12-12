@@ -20,6 +20,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
+import com.example.batalla_naval.util.SoundEffects;
+
 
 import java.util.*;
 
@@ -88,7 +90,12 @@ public class ControladorJuego {
     // No usamos initialize() para lógica, porque necesitamos primero el tableroJugador
     @FXML
     private void initialize() {
-        // Volver al menú
+
+        btnVolverMenu.setOnMouseEntered(e->{
+            SoundEffects.playHover();
+        });
+
+
         btnVolverMenu.setOnAction(this::volverAlMenu);
 
         // Rendirse

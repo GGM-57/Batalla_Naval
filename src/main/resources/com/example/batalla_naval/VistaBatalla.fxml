@@ -14,14 +14,17 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.example.batalla_naval.controller.ControladorJuego"
-            prefWidth="1080.0" prefHeight="720.0">
+            prefWidth="1080.0" prefHeight="720.0"
+            stylesheets="@VistaBatalla.css">
 
     <children>
         <BorderPane prefWidth="1080.0" prefHeight="720.0"
-                    AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
-                    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                    AnchorPane.topAnchor="0.0"
+                    AnchorPane.bottomAnchor="0.0"
+                    AnchorPane.leftAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0">
 
-            <!-- CABECERA -->
+            <!-- ===== CABECERA ===== -->
             <top>
                 <VBox spacing="4.0" BorderPane.alignment="CENTER">
                     <padding>
@@ -29,106 +32,241 @@
                     </padding>
                     <children>
                         <Label fx:id="lblTitulo"
-                               text="Batalla Naval"
-                               style="-fx-font-size: 28px; -fx-text-fill: #0f172a; -fx-font-weight: bold;"
-                        />
+                               text="Batalla Naval"/>
                         <Label fx:id="lblTurno"
-                               text="Turno del jugador"
-                               style="-fx-font-size: 16px; -fx-text-fill: #1f2933;"
-                        />
+                               text="Turno del jugador"/>
                     </children>
                 </VBox>
             </top>
 
-            <!-- CENTRO: DOS TABLEROS -->
+            <!-- ===== CENTRO: TABLEROS ===== -->
             <center>
                 <HBox spacing="30.0" BorderPane.alignment="CENTER">
                     <padding>
                         <Insets top="10" right="15" bottom="10" left="15"/>
                     </padding>
+
                     <children>
 
                         <!-- PANEL JUGADOR -->
-                        <VBox spacing="10.0">
+                        <VBox spacing="10.0" styleClass="vbox-board">
                             <children>
                                 <Label text="Tablero del Jugador"
-                                       style="-fx-font-size: 18px; -fx-text-fill: #e5e7eb; -fx-font-weight: bold;"/>
+                                       styleClass="board-title"/>
+
                                 <GridPane fx:id="gridJugador"
                                           prefWidth="450.0" prefHeight="450.0"
-                                          style="-fx-background-color: #020617; -fx-border-color: #0f172a; -fx-border-width: 6; -fx-background-radius: 8; -fx-border-radius: 8;">
-                                    <!-- Las restricciones de filas/columnas se rellenan en el controlador -->
+                                          styleClass="grid-board">
+
                                     <columnConstraints>
                                         <ColumnConstraints/>
+                                        <ColumnConstraints/>
+                                        <ColumnConstraints/>
                                     </columnConstraints>
+
                                     <rowConstraints>
                                         <RowConstraints/>
+                                        <RowConstraints/>
+                                        <RowConstraints/>
                                     </rowConstraints>
+
                                 </GridPane>
                             </children>
-                            <style>
-                                -fx-background-color: #1f2937;
-                                -fx-padding: 15;
-                                -fx-background-radius: 12;
-                            </style>
                         </VBox>
 
                         <!-- PANEL MÁQUINA -->
-                        <VBox spacing="10.0">
+                        <VBox spacing="10.0" styleClass="vbox-board">
                             <children>
                                 <Label text="Tablero de la Máquina"
-                                       style="-fx-font-size: 18px; -fx-text-fill: #e5e7eb; -fx-font-weight: bold;"/>
+                                       styleClass="board-title"/>
+
                                 <GridPane fx:id="gridMaquina"
                                           prefWidth="450.0" prefHeight="450.0"
-                                          style="-fx-background-color: #020617; -fx-border-color: #0f172a; -fx-border-width: 6; -fx-background-radius: 8; -fx-border-radius: 8;">
+                                          styleClass="grid-board">
+
                                     <columnConstraints>
                                         <ColumnConstraints/>
+                                        <ColumnConstraints/>
+                                        <ColumnConstraints/>
                                     </columnConstraints>
+
                                     <rowConstraints>
                                         <RowConstraints/>
+                                        <RowConstraints/>
+                                        <RowConstraints/>
                                     </rowConstraints>
+
                                 </GridPane>
                             </children>
-                            <style>
-                                -fx-background-color: #1f2937;
-                                -fx-padding: 15;
-                                -fx-background-radius: 12;
-                            </style>
                         </VBox>
 
                     </children>
                 </HBox>
             </center>
 
-            <!-- PIE: MENSAJES Y BOTONES -->
+            <!-- ===== PIE DE PÁGINA ===== -->
             <bottom>
                 <VBox spacing="8.0" BorderPane.alignment="CENTER">
                     <padding>
                         <Insets top="10" right="15" bottom="15" left="15"/>
                     </padding>
+
                     <children>
+
                         <Label fx:id="lblEstado"
-                               text="Coloca el cursor sobre el tablero enemigo y dispara."
-                               style="-fx-font-size: 14px; -fx-text-fill: #0f172a;"
-                        />
+                               text="Coloca el cursor sobre el tablero enemigo y dispara."/>
 
                         <HBox spacing="10.0">
                             <children>
                                 <Button fx:id="btnVolverMenu"
-                                        text="Volver al menú"
-                                        style="-fx-font-size: 13px; -fx-padding: 8 16 8 16;"/>
+                                        text="Volver al menú"/>
+
                                 <Button fx:id="btnRendirse"
-                                        text="Rendirse"
-                                        style="-fx-font-size: 13px; -fx-padding: 8 16 8 16;"/>
+                                        text="Rendirse"/>
                             </children>
                         </HBox>
+
                     </children>
                 </VBox>
             </bottom>
 
-            <!-- COLOR DE FONDO GENERAL -->
-            <style>
-                -fx-background-color: #93c5fd;
-            </style>
         </BorderPane>
     </children>
 </AnchorPane>
+
+
+
+        <!--<?xml version="1.0" encoding="UTF-8"?>-->
+
+<!--<?import javafx.geometry.Insets?>-->
+<!--<?import javafx.scene.control.Button?>-->
+<!--<?import javafx.scene.control.Label?>-->
+<!--<?import javafx.scene.layout.AnchorPane?>-->
+<!--<?import javafx.scene.layout.BorderPane?>-->
+<!--<?import javafx.scene.layout.ColumnConstraints?>-->
+<!--<?import javafx.scene.layout.GridPane?>-->
+<!--<?import javafx.scene.layout.HBox?>-->
+<!--<?import javafx.scene.layout.RowConstraints?>-->
+<!--<?import javafx.scene.layout.VBox?>-->
+
+<!--<AnchorPane xmlns="http://javafx.com/javafx"-->
+<!--            xmlns:fx="http://javafx.com/fxml"-->
+<!--            fx:controller="com.example.batalla_naval.controller.ControladorJuego"-->
+<!--            prefWidth="1080.0" prefHeight="720.0">-->
+
+<!--    <children>-->
+<!--        <BorderPane prefWidth="1080.0" prefHeight="720.0"-->
+<!--                    AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"-->
+<!--                    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">-->
+
+<!--            &lt;!&ndash; CABECERA &ndash;&gt;-->
+<!--            <top>-->
+<!--                <VBox spacing="4.0" BorderPane.alignment="CENTER">-->
+<!--                    <padding>-->
+<!--                        <Insets top="15" right="15" bottom="10" left="15"/>-->
+<!--                    </padding>-->
+<!--                    <children>-->
+<!--                        <Label fx:id="lblTitulo"-->
+<!--                               text="Batalla Naval"/>-->
+<!--&lt;!&ndash;                               style="-fx-font-size: 28px; -fx-text-fill: #0f172a; -fx-font-weight: bold;"&ndash;&gt;-->
+
+<!--                        <Label fx:id="lblTurno"-->
+<!--                               text="Turno del jugador"/>-->
+<!--&lt;!&ndash;                               style="-fx-font-size: 16px; -fx-text-fill: #1f2933;"&ndash;&gt;-->
+
+<!--                    </children>-->
+<!--                </VBox>-->
+<!--            </top>-->
+
+<!--            &lt;!&ndash; CENTRO: DOS TABLEROS &ndash;&gt;-->
+<!--            <center>-->
+<!--                <HBox spacing="30.0" BorderPane.alignment="CENTER">-->
+<!--                    <padding>-->
+<!--                        <Insets top="10" right="15" bottom="10" left="15"/>-->
+<!--                    </padding>-->
+<!--                    <children>-->
+
+<!--                        &lt;!&ndash; PANEL JUGADOR &ndash;&gt;-->
+<!--                        <VBox spacing="10.0">-->
+<!--                            <children>-->
+<!--                                <Label text="Tablero del Jugador"/>-->
+<!--&lt;!&ndash;                                       style="-fx-font-size: 18px; -fx-text-fill: #e5e7eb; -fx-font-weight: bold;"/>&ndash;&gt;-->
+<!--                                <GridPane fx:id="gridJugador"-->
+<!--                                          prefWidth="450.0" prefHeight="450.0">-->
+<!--&lt;!&ndash;                                          style="-fx-background-color: #020617; -fx-border-color: #0f172a; -fx-border-width: 6; -fx-background-radius: 8; -fx-border-radius: 8;">&ndash;&gt;-->
+<!--                                    &lt;!&ndash; Las restricciones de filas/columnas se rellenan en el controlador &ndash;&gt;-->
+<!--                                    <columnConstraints>-->
+<!--                                        <ColumnConstraints/>-->
+<!--                                    </columnConstraints>-->
+<!--                                    <rowConstraints>-->
+<!--                                        <RowConstraints/>-->
+<!--                                    </rowConstraints>-->
+<!--                                </GridPane>-->
+<!--                            </children>-->
+<!--                            <style>-->
+<!--                                -fx-background-color: #1f2937;-->
+<!--                                -fx-padding: 15;-->
+<!--                                -fx-background-radius: 12;-->
+<!--                            </style>-->
+<!--                        </VBox>-->
+
+<!--                        &lt;!&ndash; PANEL MÁQUINA &ndash;&gt;-->
+<!--                        <VBox spacing="10.0">-->
+<!--                            <children>-->
+<!--                                <Label text="Tablero de la Máquina"-->
+<!--                                       style="-fx-font-size: 18px; -fx-text-fill: #e5e7eb; -fx-font-weight: bold;"/>-->
+<!--                                <GridPane fx:id="gridMaquina"-->
+<!--                                          prefWidth="450.0" prefHeight="450.0"-->
+<!--                                          style="-fx-background-color: #020617; -fx-border-color: #0f172a; -fx-border-width: 6; -fx-background-radius: 8; -fx-border-radius: 8;">-->
+<!--                                    <columnConstraints>-->
+<!--                                        <ColumnConstraints/>-->
+<!--                                    </columnConstraints>-->
+<!--                                    <rowConstraints>-->
+<!--                                        <RowConstraints/>-->
+<!--                                    </rowConstraints>-->
+<!--                                </GridPane>-->
+<!--                            </children>-->
+<!--                            <style>-->
+<!--                                -fx-background-color: #1f2937;-->
+<!--                                -fx-padding: 15;-->
+<!--                                -fx-background-radius: 12;-->
+<!--                            </style>-->
+<!--                        </VBox>-->
+
+<!--                    </children>-->
+<!--                </HBox>-->
+<!--            </center>-->
+
+<!--            &lt;!&ndash; PIE: MENSAJES Y BOTONES &ndash;&gt;-->
+<!--            <bottom>-->
+<!--                <VBox spacing="8.0" BorderPane.alignment="CENTER">-->
+<!--                    <padding>-->
+<!--                        <Insets top="10" right="15" bottom="15" left="15"/>-->
+<!--                    </padding>-->
+<!--                    <children>-->
+<!--                        <Label fx:id="lblEstado"-->
+<!--                               text="Coloca el cursor sobre el tablero enemigo y dispara."-->
+<!--                               style="-fx-font-size: 14px; -fx-text-fill: #0f172a;"-->
+<!--                        />-->
+
+<!--                        <HBox spacing="10.0">-->
+<!--                            <children>-->
+<!--                                <Button fx:id="btnVolverMenu"-->
+<!--                                        text="Volver al menú"-->
+<!--                                        style="-fx-font-size: 13px; -fx-padding: 8 16 8 16;"/>-->
+<!--                                <Button fx:id="btnRendirse"-->
+<!--                                        text="Rendirse"-->
+<!--                                        style="-fx-font-size: 13px; -fx-padding: 8 16 8 16;"/>-->
+<!--                            </children>-->
+<!--                        </HBox>-->
+<!--                    </children>-->
+<!--                </VBox>-->
+<!--            </bottom>-->
+
+<!--            &lt;!&ndash; COLOR DE FONDO GENERAL &ndash;&gt;-->
+<!--            <style>-->
+<!--                -fx-background-color: #93c5fd;-->
+<!--            </style>-->
+<!--        </BorderPane>-->
+<!--    </children>-->
+<!--</AnchorPane>-->

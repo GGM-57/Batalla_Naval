@@ -115,7 +115,7 @@
 .celda-preview-invalid {
     -fx-background-color: rgba(248, 113, 113, 0.4); /* rojito para posición inválida */
 }
-/*-----------------------------------------css del controlodorJuego---------------------------
+/*-----------------------------------------css del controlodorJuego---------------------------*/
 .celda-batalla {
     -fx-background-color: #111827;   /* gris oscuro */
     -fx-border-color: #1f2933;

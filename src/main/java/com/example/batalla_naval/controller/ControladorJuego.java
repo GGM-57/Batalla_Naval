@@ -28,17 +28,21 @@ import com.example.batalla_naval.util.MusicManager;
 import com.example.batalla_naval.util.TableroUIFactory;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
-
-
 import com.example.batalla_naval.model.SesionJuego;
-
 import java.util.*;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
+import javafx.animation.PauseTransition;
+
 
 
 public class ControladorJuego {
 
     private static final int CELL = 45;
     private static final int TAM = 10;
+    /*  tiempo de espera de la maquina*/
+    private static final double DELAY_MAQUINA_SEG = 2;
 
     @FXML private GridPane gridJugador;
     @FXML private GridPane gridMaquina;
@@ -52,8 +56,13 @@ public class ControladorJuego {
 
     @FXML
     private Label lblTableroJugador;
-    @FXML
 
+
+    @FXML
+    private Label lblCronometro;
+
+    private Timeline cronometro;
+    private int segundos = 0;
 
     private Tablero tableroJugador;
     private Tablero tableroMaquina;
@@ -121,6 +130,9 @@ public class ControladorJuego {
 
         lblTurno.setText("Turno del jugador");
         lblEstado.setText("Haz clic en el tablero de la máquina para disparar.");
+
+        iniciarCronometro();
+        System.out.println("CRONO: iniciado");
     }
 
     // No usamos initialize() para lógica, porque necesitamos primero el tableroJugador
@@ -128,7 +140,12 @@ public class ControladorJuego {
     private void initialize() {
         String nombre = SesionJuego.getNombreJugador();
         lblTurno.setText("Turno de " + nombre);
-        lblTableroJugador.setText("Tablero de " + nombre);
+        if (lblTableroJugador != null) {
+            lblTableroJugador.setText("Tablero de " + nombre);
+        } else {
+            System.out.println("ERROR: lblTableroJugador no está inyectado (fx:id no coincide en VistaBatalla.fxml)");
+        }
+
 
         MusicManager.playLoop(MusicTrack.BATALLA, 0.35);
 
@@ -164,6 +181,7 @@ public class ControladorJuego {
 
             if (!juegoTerminado) {
                 juegoTerminado = true;
+                detenerCronometro();
                 lblTurno.setText("Juego terminado");
                 lblEstado.setText("Te has rendido. La máquina gana.");
                 deshabilitarClicksMaquina();
@@ -279,8 +297,6 @@ public class ControladorJuego {
         if (!turnoJugador || juegoTerminado) {
             return;
         }
-
-        // ⬇️ NUEVO: si ya disparaste aquí, no hagas nada
         if (disparosJugador[fila][col]) {
             lblEstado.setText("Ya disparaste a (" + fila + ", " + col + "). Elige otra casilla.");
             return;
@@ -310,6 +326,7 @@ public class ControladorJuego {
 
         if (tableroMaquina.todosBarcosHundidos(flotaMaquina)) {
             juegoTerminado = true;
+            detenerCronometro();
             lblTurno.setText("Juego terminado");
             lblEstado.setText("¡Has ganado! Hundiste toda la flota enemiga.");
             deshabilitarClicksMaquina();
@@ -320,7 +337,7 @@ public class ControladorJuego {
         turnoJugador = false;
         lblTurno.setText("Turno de la máquina");
 
-        turnoMaquina();
+        simularPensandoMaquina();
     }
 
 
@@ -389,6 +406,7 @@ public class ControladorJuego {
 
         if (tableroJugador.todosBarcosHundidos(flotaJugador)) {
             juegoTerminado = true;
+            detenerCronometro();
             lblTurno.setText("Juego terminado");
             lblEstado.setText("La máquina ha hundido toda tu flota. Has perdido.");
             deshabilitarClicksMaquina();
@@ -399,6 +417,20 @@ public class ControladorJuego {
         turnoJugador = true;
         lblTurno.setText("Turno del jugador");
     }
+    private void simularPensandoMaquina() {
+        if (juegoTerminado) return;
+
+        lblEstado.setText("La máquina está pensando...");
+
+        PauseTransition pause = new PauseTransition(Duration.seconds(DELAY_MAQUINA_SEG));
+        pause.setOnFinished(e -> {
+            if (!juegoTerminado) {
+                turnoMaquina();
+            }
+        });
+        pause.play();
+    }
+
 
     private void actualizarCeldaJugador(int fila, int col, ResultadoDisparo resultado) {
         Pane p = celdasJugador[fila][col];
@@ -447,6 +479,8 @@ public class ControladorJuego {
     }
 
     private void volverAlMenu(ActionEvent event) {
+        detenerCronometro();
+
         try {
             // Ajusta el nombre del FXML si tu pantalla inicial se llama distinto
             FXMLLoader loader = new FXMLLoader(
@@ -499,6 +533,34 @@ public class ControladorJuego {
             MusicManager.playLoop(MusicTrack.PROBLEMAS, 0.35);
         }
     }
+    private void iniciarCronometro() {
+        detenerCronometro(); // evita duplicados
+
+        segundos = 0;
+        if (lblCronometro != null) {
+            lblCronometro.setText("00:00");
+        }
+
+        cronometro = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            segundos++;
+            int min = segundos / 60;
+            int seg = segundos % 60;
+            if (lblCronometro != null) {
+                lblCronometro.setText(String.format("%02d:%02d", min, seg));
+            }
+        }));
+
+        cronometro.setCycleCount(Timeline.INDEFINITE);
+        cronometro.play();
+    }
+
+    private void detenerCronometro() {
+        if (cronometro != null) {
+            cronometro.stop();
+            cronometro = null;
+        }
+    }
+
 
 
 }

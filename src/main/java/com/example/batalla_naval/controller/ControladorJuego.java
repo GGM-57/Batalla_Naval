@@ -10,6 +10,8 @@ import com.example.batalla_naval.util.MusicTrack;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -429,13 +431,43 @@ public class ControladorJuego {
             case TOCADO -> p.setStyle(
                     "-fx-background-color: #f97316; -fx-border-color: #1f2933; -fx-border-width: 1;");
             case HUNDIDO -> {
-                p.setStyle(
-                        "-fx-background-color: #b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
+
+//                p.setStyle(
+//                        "-fx-background-color: #b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
+//                mostrarAnimacionHundimiento(p); /*insertar animacion de explosion*/
               /*marcar el barco undido*/
                 marcarBarcoHundido(tableroJugador, celdasJugador, fila, col);
             }
         }
     }
+
+    //metodo para animacion de explosion en barco hundido
+    private void mostrarAnimacionHundimiento(Pane celda) {
+        try {
+            celda.setStyle("-fx-background-color: transparent; -fx-border-color: #1f2933; -fx-border-width: 1;");
+            celda.getChildren().clear();
+
+            String rutaGif = "/com/example/batalla_naval/images/explosion1.gif"; // Cambia esta ruta
+            Image gifImage = new Image(getClass().getResource(rutaGif).toExternalForm());
+
+
+            ImageView gifView = new ImageView(gifImage);
+
+            gifView.fitWidthProperty().bind(celda.widthProperty());
+            gifView.fitHeightProperty().bind(celda.heightProperty());
+            gifView.setPreserveRatio(false); // Estirar el GIF para cubrir
+
+
+//            celda.getChildren().clear();
+            celda.getChildren().add(gifView);
+
+        } catch (Exception e) {
+            System.err.println("Error al cargar o mostrar el GIF de hundimiento: " + e.getMessage());
+            // En caso de error (ej. GIF no encontrado), ponemos el color rojo como fallback.
+            celda.setStyle("-fx-background-color: #b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
+        }
+    }
+
     private void volverAlMenu(ActionEvent event) {
         try {
             // Ajusta el nombre del FXML si tu pantalla inicial se llama distinto
@@ -461,13 +493,23 @@ public class ControladorJuego {
 
         Barco barcoHundido = celdaImpacto.getBarco();
 
+        if (tablero == tableroJugador) {
+            Node formaBarco = barcoHundido.getForma();
+
+            // Verificamos si la forma existe y si su padre es gridJugador
+            if (formaBarco != null && formaBarco.getParent() instanceof GridPane gridPadre) {
+                gridPadre.getChildren().remove(formaBarco);
+            }
+
+        }
         for (int f = 0; f < TAM; f++) {
             for (int c = 0; c < TAM; c++) {
                 Celda celda = tablero.getCelda(f, c);
                 if (celda.tieneBarco() && celda.getBarco() == barcoHundido) {
                     Pane p = celdas[f][c];
-                    p.setStyle(
-                            "-fx-background-color: #b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
+                    mostrarAnimacionHundimiento(p);
+//                    p.setStyle(
+//                            "-fx-background-color: #b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
                 }
             }
         }

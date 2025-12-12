@@ -57,6 +57,13 @@ public class ControladorJuego {
     @FXML
     private Label lblTableroJugador;
 
+
+    @FXML
+    private Label lblCronometro;
+
+    private Timeline cronometro;
+    private int segundos = 0;
+
     private Tablero tableroJugador;
     private Tablero tableroMaquina;
 

@@ -51,8 +51,10 @@
                         <!-- PANEL JUGADOR -->
                         <VBox spacing="10.0" styleClass="vbox-board">
                             <children>
-                                <Label text="Tablero del Jugador"
+                                <Label fx:id="lblTableroJugador"
+                                       text="Tablero del Jugador"
                                        styleClass="board-title"/>
+
 
                                 <GridPane fx:id="gridJugador"
                                           prefWidth="450.0" prefHeight="450.0"

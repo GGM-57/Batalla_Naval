@@ -1,5 +1,5 @@
 package com.example.batalla_naval.controller;
-
+import com.example.batalla_naval.util.TableroUIFactory;
 import com.example.batalla_naval.model.Barco;
 import com.example.batalla_naval.model.Tablero;
 import javafx.animation.ScaleTransition;
@@ -51,7 +51,7 @@ public class VistaConfiguracionTableroController {
     private int portaavionesColocados = 0;
 
     // Matriz de panes que representan cada celda del GridPane
-    private Pane[][] celdasGraficas = new Pane[10][10];
+    private Pane[][] celdasGraficas;
 
     // Lista de celdas que están actualmente en "preview"
     private final java.util.List<Pane> celdasPreview = new java.util.ArrayList<>();
@@ -93,55 +93,17 @@ public class VistaConfiguracionTableroController {
 
 
 
-        tableroJugadorGrid.setPrefSize(CELL * 10, CELL * 10);
-        tableroJugadorGrid.setMinSize(CELL * 10, CELL * 10);
-        tableroJugadorGrid.setMaxSize(CELL * 10, CELL * 10);
 
-        // fijar columnas y filas a tamaño CELL
-        for (int i = 0; i < 10; i++) {
-            ColumnConstraints cc = new ColumnConstraints();
-            cc.setMinWidth(CELL);
-            cc.setPrefWidth(CELL);
-            cc.setMaxWidth(CELL);
-            tableroJugadorGrid.getColumnConstraints().add(cc);
-
-            RowConstraints rc = new RowConstraints();
-            rc.setMinHeight(CELL);
-            rc.setPrefHeight(CELL);
-            rc.setMaxHeight(CELL);
-            tableroJugadorGrid.getRowConstraints().add(rc);
-        }
-
-
-        System.out.println("Inicializando tablero vista 2");
 
 
         /*crear navios*/
         crearBarcosPanelIzquierdo();
 
         configurarEventosArrastre();
+        celdasGraficas = TableroUIFactory.construirTablero(tableroJugadorGrid, 10, CELL);
+        System.out.println("Inicializando tablero vista 2");
 
-        /*codigo que conecta con el VistaConfiguracionTablero.fxml y
-        VistaConfiguracionTableroEstilos.css para la creacion e
-        independencia de las celdas dentro del gridpane*/
-        for (int fila=0; fila<10; fila++) {
-            for (int columna=0; columna<10; columna++) { /*recorre filas y columnas*/
 
-                Pane celda = new Pane();
-                celda.getStyleClass().add("celda");
-
-                celda.setPrefSize(CELL, CELL);
-                celda.setMinSize(CELL, CELL);
-                celda.setMaxSize(CELL, CELL);
-                /*cada celda 45 porque el tablero esta fijado en 450*/
-
-                tableroJugadorGrid.add(celda, columna, fila);
-                celdasGraficas[fila][columna] = celda;
-                /*la organizacion del tablero de juego:
-                * tablero -> es un grid pane
-                * celda -> es un pane (espacio en blanco donde se puede meter elementos)*/
-            }
-        }
     }
 
     /*metodo de creacion de navios en el panel izquierdo*/

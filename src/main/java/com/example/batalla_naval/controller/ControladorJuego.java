@@ -23,17 +23,13 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import com.example.batalla_naval.util.SoundEffects;
 import com.example.batalla_naval.util.MusicManager;
-<<<<<<< HEAD
 import com.example.batalla_naval.util.TableroUIFactory;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 
 
-
-
-=======
 import com.example.batalla_naval.model.SesionJuego;
->>>>>>> e011935f391ffe0de2ac9e0af12258c674fcd254
+
 import java.util.*;
 
 
@@ -50,21 +46,12 @@ public class ControladorJuego {
     @FXML private Button btnVolverMenu;
     @FXML private Button btnRendirse;
 
-<<<<<<< HEAD
-=======
-    @FXML
-    private Label lblTitulo;
-    @FXML
-    private Label lblTurno;
-    @FXML
-    private Label lblEstado;
+
+
     @FXML
     private Label lblTableroJugador;
     @FXML
-    private Button btnVolverMenu;
-    @FXML
-    private Button btnRendirse;
->>>>>>> e011935f391ffe0de2ac9e0af12258c674fcd254
+
 
     private Tablero tableroJugador;
     private Tablero tableroMaquina;

@@ -6,7 +6,6 @@ import com.example.batalla_naval.model.Coordenada;
 import com.example.batalla_naval.model.Orientacion;
 import com.example.batalla_naval.model.ResultadoDisparo;
 import com.example.batalla_naval.model.Tablero;
-import com.example.batalla_naval.util.MusicManager;
 import com.example.batalla_naval.util.MusicTrack;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -23,6 +22,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
 import com.example.batalla_naval.util.SoundEffects;
+import com.example.batalla_naval.util.MusicManager;
+
 
 
 import java.util.*;
@@ -63,6 +64,7 @@ public class ControladorJuego {
 
 
     private final Random random = new Random();
+    private boolean musicaBatallaIniciada = false;
 
     private boolean turnoJugador = true;
     private boolean juegoTerminado = false;
@@ -311,6 +313,7 @@ public class ControladorJuego {
         switch (resultado) {
             case AGUA ->{
                 lblEstado.setText("Disparaste a (" + fila + ", " + col + "): AGUA.");
+                //SoundEffects.misilFallado();
             }
             case TOCADO ->{
                 lblEstado.setText("Disparaste a (" + fila + ", " + col + "): TOCADO.");
@@ -387,14 +390,20 @@ public class ControladorJuego {
         actualizarCeldaJugador(fila, col, resultado);
 
         switch (resultado) {
-            case AGUA -> lblEstado.setText("La máquina disparó a (" + fila + ", " + col + "): AGUA.");
+            case AGUA -> {
+                lblEstado.setText("La máquina disparó a (" + fila + ", " + col + "): AGUA.");
+                SoundEffects.misilFallado();
+            }
             case TOCADO -> {
                 lblEstado.setText("La máquina te ha TOCADO en (" + fila + ", " + col + ").");
+                SoundEffects.stopAguaSalpicada();
                 SoundEffects.playExplosion1();
             }
             case HUNDIDO -> {
                 lblEstado.setText("La máquina hundió uno de tus barcos.");
+                SoundEffects.stopAguaSalpicada();
                 SoundEffects.playExplosion2();
+                activarMusicaBatalla();
             }
         }
 
@@ -461,6 +470,13 @@ public class ControladorJuego {
                             "-fx-background-color: #b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
                 }
             }
+        }
+    }
+    private void activarMusicaBatalla() {
+        if (!musicaBatallaIniciada) {
+            musicaBatallaIniciada = true;
+            // Cambia este método por el que tengas para el soundtrack de batalla
+            MusicManager.playLoop(MusicTrack.PROBLEMAS, 0.35);
         }
     }
 

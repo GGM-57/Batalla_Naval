@@ -11,6 +11,8 @@ public class SoundEffects {
     private static AudioClip posicionarBarcoSound;
     private static AudioClip explosion1;
     private static AudioClip explosion2;
+    private static AudioClip aguaSalpicada;
+
 
 
     static {
@@ -21,6 +23,7 @@ public class SoundEffects {
         posicionarBarcoSound=loadClip("/com/example/batalla_naval/audios/soundEffects/posicionar.mp3");
         explosion1=loadClip("/com/example/batalla_naval/audios/soundEffects/explosion.mp3");
         explosion2=loadClip("/com/example/batalla_naval/audios/soundEffects/explosion2.mp3");
+        aguaSalpicada=loadClip("/com/example/batalla_naval/audios/soundEffects/salpicadoraDeAgua.mp3");
     }
 
     private static AudioClip loadClip(String path) {
@@ -43,22 +46,44 @@ public class SoundEffects {
             clickSound.play(0.6);
         }
     }
+
     public static void playNegativeClick(){
-        if(clickSound !=null){
+        if(clickNegativeSound !=null){
             clickNegativeSound.play(0.6);
         }
-    }public static void playPosicionarBarco(){
-        if(clickSound !=null){
+    }
+
+    public static void playPosicionarBarco(){
+        if(posicionarBarcoSound !=null){
             posicionarBarcoSound.play(0.6);
         }
     }
+
     public static void playExplosion1(){
-        if(clickSound !=null){
+        if(explosion1 !=null){
             explosion1.play(0.6);
         }
-    } public static void playExplosion2(){
-        if(clickSound !=null){
-            explosion2.play(0.6);
+    }
+
+    public static void playExplosion2(){
+        if(explosion2 !=null){
+            explosion2.play(0.9);
         }
     }
+
+    public static void misilFallado(){
+        if(aguaSalpicada !=null){
+            aguaSalpicada.play(0.9);
+        }
+    }
+
+    public static void stopAguaSalpicada() {
+        if (aguaSalpicada != null) {
+            aguaSalpicada.stop();
+        }
+    }
+
+
 }
+
+

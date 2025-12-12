@@ -6,6 +6,8 @@ import com.example.batalla_naval.model.Coordenada;
 import com.example.batalla_naval.model.Orientacion;
 import com.example.batalla_naval.model.ResultadoDisparo;
 import com.example.batalla_naval.model.Tablero;
+import com.example.batalla_naval.util.MusicManager;
+import com.example.batalla_naval.util.MusicTrack;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -90,16 +92,38 @@ public class ControladorJuego {
     // No usamos initialize() para lógica, porque necesitamos primero el tableroJugador
     @FXML
     private void initialize() {
+        MusicManager.playLoop(MusicTrack.BATALLA, 0.35);
+
 
         btnVolverMenu.setOnMouseEntered(e->{
             SoundEffects.playHover();
         });
 
+        btnVolverMenu.setOnAction(e -> {
+            System.out.println(">>> Sonido del botón presionado");
+            SoundEffects.playClick();
 
-        btnVolverMenu.setOnAction(this::volverAlMenu);
+            SoundEffects.playClick();
+            volverAlMenu(e);
+        });
 
-        // Rendirse
+        btnRendirse.setOnMouseEntered(e->{
+            SoundEffects.playHover();
+
+        });
+
+
+        // CLICK Volver al menú
+        btnVolverMenu.setOnAction(e -> {
+            SoundEffects.playClick();
+            volverAlMenu(e);
+        });
+
+        // CLICK Rendirse
         btnRendirse.setOnAction(e -> {
+
+            SoundEffects.playNegativeClick();
+
             if (!juegoTerminado) {
                 juegoTerminado = true;
                 lblTurno.setText("Juego terminado");
@@ -107,6 +131,7 @@ public class ControladorJuego {
                 deshabilitarClicksMaquina();
             }
         });
+
     }
 
 

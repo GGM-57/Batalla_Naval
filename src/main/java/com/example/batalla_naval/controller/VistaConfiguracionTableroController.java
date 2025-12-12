@@ -18,6 +18,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.RowConstraints;
 import com.example.batalla_naval.util.SoundEffects;
+import com.example.batalla_naval.util.MusicManager;
+
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import com.example.batalla_naval.model.Coordenada;
@@ -73,6 +75,7 @@ public class VistaConfiguracionTableroController {
         });
         btnIniciarBatalla.setOnAction(e -> {
             SoundEffects.playClick();
+            MusicManager.stopMenuMusic();
             try {
                 irALucha(e);
             } catch (IOException ex) {

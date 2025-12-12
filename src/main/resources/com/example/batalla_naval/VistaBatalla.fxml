@@ -31,11 +31,15 @@
                         <Insets top="15" right="15" bottom="10" left="15"/>
                     </padding>
                     <children>
-                        <Label fx:id="lblTitulo"
-                               text="Batalla Naval"/>
-                        <Label fx:id="lblTurno"
-                               text="Turno del jugador"/>
+                        <Label fx:id="lblTitulo" text="Batalla Naval"/>
+
+                        <HBox spacing="12" alignment="CENTER_LEFT">
+                            <Label fx:id="lblTurno" text="Turno del jugador"/>
+                            <Label fx:id="lblCronometro" text="00:00"
+                                   style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
+                        </HBox>
                     </children>
+
                 </VBox>
             </top>
 

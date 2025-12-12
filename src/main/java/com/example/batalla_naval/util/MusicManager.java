@@ -18,7 +18,8 @@ public class MusicManager {
             MusicTrack.MENU,    "/com/example/batalla_naval/audios/soundtracks/ElementalStars.mp3",
             MusicTrack.BATALLA, "/com/example/batalla_naval/audios/soundtracks/pazAntesdelaGuerra.mp3",
             MusicTrack.VICTORIA,"/com/example/batalla_naval/audios/soundtracks/Victory.mp3",
-            MusicTrack.DERROTA, "/com/example/batalla_naval/audios/soundtracks/derrota.mp3"
+            MusicTrack.DERROTA, "/com/example/batalla_naval/audios/soundtracks/derrota.mp3",
+            MusicTrack.PROBLEMAS, "/com/example/batalla_naval/audios/soundtracks/themeProblemas.mp3"
     );
 
     // Para saber qué pista está en loop actualmente (opcional)

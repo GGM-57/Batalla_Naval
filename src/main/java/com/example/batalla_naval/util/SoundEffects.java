@@ -58,7 +58,7 @@ public class SoundEffects {
         }
     } public static void playExplosion2(){
         if(clickSound !=null){
-            explosion2.play(0.6);
+            explosion2.play(0.9);
         }
     }
 }

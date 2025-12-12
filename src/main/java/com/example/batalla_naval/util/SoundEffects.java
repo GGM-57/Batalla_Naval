@@ -12,6 +12,7 @@ public class SoundEffects {
     private static AudioClip explosion1;
     private static AudioClip explosion2;
     private static AudioClip aguaSalpicada;
+    private static AudioClip proyectil;
 
 
 
@@ -24,6 +25,7 @@ public class SoundEffects {
         explosion1=loadClip("/com/example/batalla_naval/audios/soundEffects/explosion.mp3");
         explosion2=loadClip("/com/example/batalla_naval/audios/soundEffects/explosion2.mp3");
         aguaSalpicada=loadClip("/com/example/batalla_naval/audios/soundEffects/salpicadoraDeAgua.mp3");
+        proyectil=loadClip("/com/example/batalla_naval/audios/soundEffects/proyectil.mp3");
     }
 
     private static AudioClip loadClip(String path) {
@@ -80,6 +82,11 @@ public class SoundEffects {
     public static void stopAguaSalpicada() {
         if (aguaSalpicada != null) {
             aguaSalpicada.stop();
+        }
+    }
+    public static void proyectilLanzado() {
+        if (proyectil != null) {
+            proyectil.stop();
         }
     }
 

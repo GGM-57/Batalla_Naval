@@ -313,6 +313,7 @@ public class ControladorJuego {
         switch (resultado) {
             case AGUA ->{
                 lblEstado.setText("Disparaste a (" + fila + ", " + col + "): AGUA.");
+                //SoundEffects.misilFallado();
             }
             case TOCADO ->{
                 lblEstado.setText("Disparaste a (" + fila + ", " + col + "): TOCADO.");
@@ -389,13 +390,18 @@ public class ControladorJuego {
         actualizarCeldaJugador(fila, col, resultado);
 
         switch (resultado) {
-            case AGUA -> lblEstado.setText("La máquina disparó a (" + fila + ", " + col + "): AGUA.");
+            case AGUA -> {
+                lblEstado.setText("La máquina disparó a (" + fila + ", " + col + "): AGUA.");
+                SoundEffects.misilFallado();
+            }
             case TOCADO -> {
                 lblEstado.setText("La máquina te ha TOCADO en (" + fila + ", " + col + ").");
+                SoundEffects.stopAguaSalpicada();
                 SoundEffects.playExplosion1();
             }
             case HUNDIDO -> {
                 lblEstado.setText("La máquina hundió uno de tus barcos.");
+                SoundEffects.stopAguaSalpicada();
                 SoundEffects.playExplosion2();
                 activarMusicaBatalla();
             }

@@ -23,10 +23,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import com.example.batalla_naval.util.SoundEffects;
 import com.example.batalla_naval.util.MusicManager;
-
-
-
+import com.example.batalla_naval.model.SesionJuego;
 import java.util.*;
+
 
 public class ControladorJuego {
 
@@ -44,7 +43,8 @@ public class ControladorJuego {
     private Label lblTurno;
     @FXML
     private Label lblEstado;
-
+    @FXML
+    private Label lblTableroJugador;
     @FXML
     private Button btnVolverMenu;
     @FXML
@@ -96,6 +96,10 @@ public class ControladorJuego {
     // No usamos initialize() para lógica, porque necesitamos primero el tableroJugador
     @FXML
     private void initialize() {
+        String nombre = SesionJuego.getNombreJugador();
+        lblTurno.setText("Turno de " + nombre);
+        lblTableroJugador.setText("Tablero de " + nombre);
+
         MusicManager.playLoop(MusicTrack.BATALLA, 0.35);
 
 

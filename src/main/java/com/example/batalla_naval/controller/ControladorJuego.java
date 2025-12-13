@@ -372,17 +372,21 @@ public class ControladorJuego {
         Pane p= celdasMaquina[fila][col];
 
         switch (resultado) {
-            case AGUA -> p.setStyle(
-                    "-fx-background-color: #020617; -fx-border-color: #1f2933; -fx-border-width: 1;");
-            case TOCADO -> p.setStyle(
-                    "-fx-background-color: #f97316; -fx-border-color: #1f2933; -fx-border-width: 1;");
+            case AGUA -> {
+                p.setStyle("-fx-background-color: #020617; -fx-border-color: #1f2933; -fx-border-width: 1;");
+            }
+            case TOCADO -> {
+                marcarBarcoTocado(tableroMaquina, celdasMaquina, fila, col);
+            }
+
             case HUNDIDO -> {
-                p.setStyle(
-                        "-fx-background-color: #b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
+                p.setStyle("-fx-background-color: #b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
                 marcarBarcoHundido(tableroMaquina, celdasMaquina, fila, col);
             }
         }
     }
+
+
 
     private void deshabilitarClicksMaquina() {
         for (int f= 0; f < TAM; f++) {
@@ -487,13 +491,16 @@ public class ControladorJuego {
         Pane p= celdasJugador[fila][col];
 
         switch (resultado) {
-            case AGUA -> p.setStyle(
-                    "-fx-background-color: #020617; -fx-border-color: #1f2933; -fx-border-width: 1;");
-            case TOCADO -> p.setStyle(
-                    "-fx-background-color: #f97316; -fx-border-color: #1f2933; -fx-border-width: 1;");
-            case HUNDIDO -> {
+            case AGUA -> {
+                    p.setStyle("-fx-background-color: #020617; -fx-border-color: #1f2933; -fx-border-width: 1;");
+            }
+            case TOCADO -> {
+                p.setStyle("-fx-background-color:#f97316; -fx-border-color: #1f2933; -fx-border-width: 1;");
+                marcarBarcoTocado(tableroJugador, celdasJugador, fila, col);
 
-              /*marcar el barco undido*/
+            }
+            case HUNDIDO -> {
+                p.setStyle("-fx-background-color:#b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
                 marcarBarcoHundido(tableroJugador, celdasJugador, fila, col);
             }
         }
@@ -502,8 +509,8 @@ public class ControladorJuego {
 
     private void mostrarAnimacionHundimiento(Pane celda) {
         try {
-            celda.setStyle("-fx-background-color: transparent; -fx-border-color: #1f2933; -fx-border-width: 1;");
             celda.getChildren().clear();
+            celda.setStyle("-fx-background-color:#b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
 
             String rutaGif= "/com/example/batalla_naval/images/explosion1.gif";
             Image gifImage= new Image(getClass().getResource(rutaGif).toExternalForm());
@@ -515,14 +522,32 @@ public class ControladorJuego {
             gifView.fitHeightProperty().bind(celda.heightProperty());
             gifView.setPreserveRatio(false);
 
-
-
             celda.getChildren().add(gifView);
 
         } catch (Exception e) {
             System.err.println("Error al cargar o mostrar el GIF de hundimiento: " + e.getMessage());
-
             celda.setStyle("-fx-background-color: #b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
+        }
+    }
+
+    private void mostrarAnimacionTocado(Pane celda) {
+        try {
+            celda.setStyle("-fx-background-color:#f97316; -fx-border-color: #1f2933; -fx-border-width: 1;");
+
+            String rutaGif = "/com/example/batalla_naval/images/fuego1.gif";
+            Image gifImage = new Image(getClass().getResource(rutaGif).toExternalForm());
+
+            ImageView gifView = new ImageView(gifImage);
+
+            gifView.fitWidthProperty().bind(celda.widthProperty());
+            gifView.fitHeightProperty().bind(celda.heightProperty());
+            gifView.setPreserveRatio(false);
+
+            celda.getChildren().add(gifView);
+
+        } catch (Exception e) {
+            System.err.println("Error al cargar o mostrar el GIF de fuego: " + e.getMessage());
+            celda.setStyle("-fx-background-color: #f97316; -fx-border-color: #1f2933; -fx-border-width: 1;");
         }
     }
 
@@ -575,6 +600,14 @@ public class ControladorJuego {
         }
         marcarHaloHundido(tablero, celdas, barcoHundido);
 
+    }
+
+    private void marcarBarcoTocado(Tablero tablero, Pane[][] celdas, int fila, int col) {
+        Pane p = celdas[fila][col];
+
+        p.setStyle("-fx-background-color: #f97316; -fx-border-color: #1f2933; -fx-border-width: 1;");
+        /*inserta animacion de fuego*/
+        mostrarAnimacionTocado(p);
     }
 
     private void marcarHaloHundido(Tablero tablero, Pane[][] celdas, Barco barcoHundido) {
@@ -678,7 +711,8 @@ public class ControladorJuego {
         }
     }
 
-/*metodo para mostrar el tablero de la maquina en segundo plano. Se conecta con VistaTableroMaquina.FXML y con el ControladorVistaTableroMaquina*/
+/*metodo para mostrar el tablero de la maquina en segundo plano. Se conecta con VistaTableroMaquina.FXML
+ y con el ControladorVistaTableroMaquina*/
     public void handleAccionMaquina(ActionEvent actionEvent) {
         try {
 

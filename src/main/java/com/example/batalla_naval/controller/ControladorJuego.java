@@ -42,6 +42,8 @@ public class ControladorJuego {
 
     private static final int CELL = 45;
     private static final int TAM = 10;
+    /*  tiempo de espera de la maquina*/
+    private static final double DELAY_MAQUINA_SEG = 0.5;
 
     @FXML private GridPane gridJugador;
     @FXML private GridPane gridMaquina;
@@ -451,8 +453,14 @@ public class ControladorJuego {
         if (juegoTerminado) return;
 
         lblEstado.setText("La máquina está pensando...");
-        turnoMaquina();
 
+        PauseTransition pause = new PauseTransition(Duration.seconds(DELAY_MAQUINA_SEG));
+        pause.setOnFinished(e -> {
+            if (!juegoTerminado) {
+                turnoMaquina();
+            }
+        });
+        pause.play();
     }
 
 

@@ -361,10 +361,15 @@ public class ControladorJuego {
 
 
 
-        turnoJugador= false;
-        lblTurno.setText("Turno de la máquina");
+        if (resultado== ResultadoDisparo.AGUA) {
+            turnoJugador= false;
+            lblTurno.setText("Turno de la máquina");
+            simularPensandoMaquina();
+        } else {
+            turnoJugador= true;
+            lblTurno.setText("Tu turno (continúas)");
+        }
 
-        simularPensandoMaquina();
     }
 
 
@@ -451,22 +456,20 @@ public class ControladorJuego {
             }
 
 
-            turnoJugador= true;
-            lblTurno.setText("Turno del jugador");
+
+            if (resultadoFinal== ResultadoDisparo.AGUA) {
+                turnoJugador= true;
+                lblTurno.setText("Turno del jugador");
+            } else {
+
+                turnoJugador= false;
+                lblTurno.setText("Turno de la máquina");
+                simularPensandoMaquina();
+            }
+
+
         });
 
-        turnoJugador= false;
-        lblTurno.setText("Turno de la máquina");
-
-
-        if (tableroJugador.todosBarcosHundidos(flotaJugador)) {
-            juegoTerminado= true;
-            detenerCronometro();
-            lblTurno.setText("Juego terminado");
-            lblEstado.setText("La máquina ha hundido toda tu flota. Has perdido.");
-            deshabilitarClicksMaquina();
-            return;
-        }
 
 
         turnoJugador= true;

@@ -39,6 +39,7 @@ public class ControladorJuego {
     private static final int TAM= 10;
     /*  tiempo de espera de la maquina*/
     private static final double DELAY_MAQUINA_SEG= 0.5;
+    public Button btnAccionMaquina; /*boton para mostrar tablero maquina*/
 
     @FXML private GridPane gridJugador;
     @FXML private GridPane gridMaquina;
@@ -47,6 +48,8 @@ public class ControladorJuego {
     @FXML private Label lblEstado;
     @FXML private Button btnVolverMenu;
     @FXML private Button btnRendirse;
+    /*variable de estado para determinar cuando inicia el juego y habilitar boton de revelar tablero*/
+    @FXML boolean JuegoIniciado =false;
 
 
 
@@ -87,13 +90,12 @@ public class ControladorJuego {
     public void initData(Tablero tableroJugador) {
         this.tableroJugador= tableroJugador;
 
-
+        /*inicializacion de celdas*/
         celdasJugador= TableroUIFactory.construirTablero(gridJugador, TAM, CELL);
         celdasMaquina= TableroUIFactory.construirTablero(gridMaquina, TAM, CELL);
 
+        /*inicializacion de IA*/
         iaMaquina= new ControlIA(TAM);
-
-
 
         gridJugador.setHgap(0);
         gridJugador.setVgap(0);
@@ -109,17 +111,26 @@ public class ControladorJuego {
             }
         }
 
+        /*habilitacion del boton de mostrar tablero maquina*/
+        if (btnAccionMaquina != null) {
+            btnAccionMaquina.setDisable(false);
+        }
+
         /*codigo para dar click en las celdas del enemigo*/
         for (int fila= 0; fila < TAM; fila++) {
             for (int col= 0; col < TAM; col++) {
                 final int f= fila;
                 final int c= col;
-                celdasMaquina[fila][col].setOnMouseClicked(e -> manejarDisparoJugador(f, c));
+                celdasMaquina[fila][col].setOnMouseClicked(e -> {
+                   /*deshabiliatar el boton de revelar tablero del oponente*/
+                    if (btnAccionMaquina != null) {
+                    btnAccionMaquina.setDisable(true);
+                    }
+
+                    manejarDisparoJugador(f, c);
+                });
             }
         }
-
-
-
 
         extraerFlotaJugadorDesdeTablero();
         pintarBarcosJugador();
@@ -131,8 +142,8 @@ public class ControladorJuego {
         lblTurno.setText("Turno del jugador");
         lblEstado.setText("Haz clic en el tablero de la máquina para disparar.");
 
-        iniciarCronometro();
-        System.out.println("CRONO: iniciado");
+//        iniciarCronometro();
+//        System.out.println("CRONO: iniciado");
     }
 
 
@@ -297,6 +308,17 @@ public class ControladorJuego {
         if (!turnoJugador || juegoTerminado) {
             return;
         }
+
+        if (!JuegoIniciado) {
+            JuegoIniciado = true;
+            iniciarCronometro(); /*Inicia el juego y el tiempo*/
+            /*Deshabilita el botón de revelar tablero oponente después del primer disparo*/
+
+            if (btnAccionMaquina != null) {
+                btnAccionMaquina.setDisable(true);
+            }
+        }
+
         if (disparosJugador[fila][col]) {
             lblEstado.setText("Ya disparaste a (" + fila + ", " + col + "). Elige otra casilla.");
             return;
@@ -669,15 +691,13 @@ public class ControladorJuego {
 
             ctrlMaquina.cargarDatosYMostrar(this.tableroMaquina, this.flotaMaquina);
 
-            // 4. Crear el nuevo Stage (Ventana)
+            //Crear el nuevo Stage (Ventana)
             Stage stage = new Stage();
-            stage.setTitle("Tablero de la Máquina (CHEAT MODE)");
+            stage.setTitle("Tablero de la Máquina");
             stage.setScene(new Scene(root));
 
-            // Opcional: Desacoplar la ventana (propiedad MODALITY)
-            // stage.initModality(Modality.NONE); // No bloquea la ventana principal
 
-            // 5. Mostrar la ventana SIN bloquear la principal
+            // Mostrar la ventana SIN bloquear la principal
             stage.show();
 
         } catch (IOException e) {

@@ -56,10 +56,10 @@ public class ControladorVistaTableroMaquina {
             int colInicio = barco.getColumna();
 
             // Clona la forma del barco para evitar mover el original de la vista principal
-            // (La forma del barco es un Group que solo puede estar en un nodo a la vez)
+
             javafx.scene.Group formaBarco = barco.clonarForma();
 
-            // Asegúrate de que el barco clonado no responda a clicks
+
             formaBarco.setOnMouseClicked(null);
 
             // Posicionar el barco clonado en el GridPane
@@ -70,10 +70,9 @@ public class ControladorVistaTableroMaquina {
             GridPane.setValignment(formaBarco, VPos.CENTER);
             GridPane.setColumnSpan(formaBarco, barco.getTamaño());
 
-            // Si quieres que el barco hundido se vea diferente al inicio (opcional)
+
             if (barco.estaHundido()) {
-                // Aplicar algún estilo visual que indique que está hundido
-                // Esto podría ser un cambio de color o un efecto
+
                 formaBarco.setOpacity(0.5);
             }
         }

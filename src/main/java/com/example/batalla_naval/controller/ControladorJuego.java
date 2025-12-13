@@ -1,11 +1,6 @@
 package com.example.batalla_naval.controller;
 
-import com.example.batalla_naval.model.Barco;
-import com.example.batalla_naval.model.Celda;
-import com.example.batalla_naval.model.Coordenada;
-import com.example.batalla_naval.model.Orientacion;
-import com.example.batalla_naval.model.ResultadoDisparo;
-import com.example.batalla_naval.model.Tablero;
+import com.example.batalla_naval.model.*;
 import com.example.batalla_naval.util.MusicTrack;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -28,7 +23,7 @@ import com.example.batalla_naval.util.MusicManager;
 import com.example.batalla_naval.util.TableroUIFactory;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
-import com.example.batalla_naval.model.SesionJuego;
+
 import java.util.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -40,10 +35,10 @@ import javafx.animation.PauseTransition;
 
 public class ControladorJuego {
 
-    private static final int CELL = 45;
-    private static final int TAM = 10;
+    private static final int CELL= 45;
+    private static final int TAM= 10;
     /*  tiempo de espera de la maquina*/
-    private static final double DELAY_MAQUINA_SEG = 0.5;
+    private static final double DELAY_MAQUINA_SEG= 0.5;
 
     @FXML private GridPane gridJugador;
     @FXML private GridPane gridMaquina;
@@ -63,7 +58,8 @@ public class ControladorJuego {
     private Label lblCronometro;
 
     private Timeline cronometro;
-    private int segundos = 0;
+    private int segundos= 0;
+    private ControlIA iaMaquina;
 
     private Tablero tableroJugador;
     private Tablero tableroMaquina;
@@ -71,62 +67,65 @@ public class ControladorJuego {
     private Pane[][] celdasJugador;
     private Pane[][] celdasMaquina;
 
-    private final List<Barco> flotaJugador = new ArrayList<>();
-    private final List<Barco> flotaMaquina = new ArrayList<>();
+    private final List<Barco> flotaJugador= new ArrayList<>();
+    private final List<Barco> flotaMaquina= new ArrayList<>();
 
-    private final boolean[][] disparosMaquina = new boolean[TAM][TAM];
-    private final boolean[][] disparosJugador = new boolean[TAM][TAM];
+    private final boolean[][] disparosJugador= new boolean[TAM][TAM];
+    private static final String STYLE_HALO_SEGURO ="-fx-background-color: #0b1b2a; -fx-border-color: #1f2933; -fx-border-width: 1;";
 
 
-    private final Random random = new Random();
-    private boolean musicaBatallaIniciada = false;
+    private final Random random= new Random();
+    private boolean musicaBatallaIniciada= false;
 
-    private boolean turnoJugador = true;
-    private boolean juegoTerminado = false;
+    private boolean turnoJugador= true;
+    private boolean juegoTerminado= false;
 
-    // ------------------------------------------------------------------
-    // Este método lo llama VistaConfiguracionTableroController
-    // cuando se pulsa "¡A LUCHAR!"
-    // ------------------------------------------------------------------
+
+
+
+
     public void initData(Tablero tableroJugador) {
-        this.tableroJugador = tableroJugador;
+        this.tableroJugador= tableroJugador;
 
-        // Construir grillas visuales
-        celdasJugador = TableroUIFactory.construirTablero(gridJugador, TAM, CELL);
-        celdasMaquina = TableroUIFactory.construirTablero(gridMaquina, TAM, CELL);
 
-        // Asegurar que el grid no tenga separaciones
+        celdasJugador= TableroUIFactory.construirTablero(gridJugador, TAM, CELL);
+        celdasMaquina= TableroUIFactory.construirTablero(gridMaquina, TAM, CELL);
+
+        iaMaquina= new ControlIA(TAM);
+
+
+
         gridJugador.setHgap(0);
         gridJugador.setVgap(0);
         gridMaquina.setHgap(0);
         gridMaquina.setVgap(0);
 
-// Forzar el mismo estilo base en ambos tableros (evita que el enemigo se vea "más oscuro")
-        String base = "-fx-background-color: #111827; -fx-border-color: #1f2933; -fx-border-width: 1;";
-        for (int f = 0; f < TAM; f++) {
-            for (int c = 0; c < TAM; c++) {
+
+        String base= "-fx-background-color: #111827; -fx-border-color: #1f2933; -fx-border-width: 1;";
+        for (int f= 0; f < TAM; f++) {
+            for (int c= 0; c < TAM; c++) {
                 celdasJugador[f][c].setStyle(base);
                 celdasMaquina[f][c].setStyle(base);
             }
         }
 
         /*codigo para dar click en las celdas del enemigo*/
-        for (int fila = 0; fila < TAM; fila++) {
-            for (int col = 0; col < TAM; col++) {
-                final int f = fila;
-                final int c = col;
+        for (int fila= 0; fila < TAM; fila++) {
+            for (int col= 0; col < TAM; col++) {
+                final int f= fila;
+                final int c= col;
                 celdasMaquina[fila][col].setOnMouseClicked(e -> manejarDisparoJugador(f, c));
             }
         }
 
 
 
-        // Dibujar barcos del jugador
+
         extraerFlotaJugadorDesdeTablero();
         pintarBarcosJugador();
 
-        // Crear tablero de la máquina y su flota
-        tableroMaquina = new Tablero(TAM, TAM);
+
+        tableroMaquina= new Tablero(TAM, TAM);
         colocarFlotaMaquinaAleatoria();
 
         lblTurno.setText("Turno del jugador");
@@ -136,10 +135,10 @@ public class ControladorJuego {
         System.out.println("CRONO: iniciado");
     }
 
-    // No usamos initialize() para lógica, porque necesitamos primero el tableroJugador
+
     @FXML
     private void initialize() {
-        String nombre = SesionJuego.getNombreJugador();
+        String nombre= SesionJuego.getNombreJugador();
         lblTurno.setText("Turno de " + nombre);
         if (lblTableroJugador != null) {
             lblTableroJugador.setText("Tablero de " + nombre);
@@ -169,19 +168,19 @@ public class ControladorJuego {
         });
 
 
-        // CLICK Volver al menú
+
         btnVolverMenu.setOnAction(e -> {
             SoundEffects.playClick();
             volverAlMenu(e);
         });
 
-        // CLICK Rendirse
+
         btnRendirse.setOnAction(e -> {
 
             SoundEffects.playNegativeClick();
 
             if (!juegoTerminado) {
-                juegoTerminado = true;
+                juegoTerminado= true;
                 detenerCronometro();
                 lblTurno.setText("Juego terminado");
                 lblEstado.setText("Te has rendido. La máquina gana.");
@@ -194,16 +193,16 @@ public class ControladorJuego {
 
 
 
-    // ------------------------------------------------------------------
-    // Flota del jugador (se extrae del tablero que viene de la config)
-    // ------------------------------------------------------------------
+
+
+
 
     private void extraerFlotaJugadorDesdeTablero() {
-        Set<Barco> set = new HashSet<>();
+        Set<Barco> set= new HashSet<>();
 
-        for (int fila = 0; fila < TAM; fila++) {
-            for (int col = 0; col < TAM; col++) {
-                Celda celda = tableroJugador.getCelda(fila, col);
+        for (int fila= 0; fila < TAM; fila++) {
+            for (int col= 0; col < TAM; col++) {
+                Celda celda= tableroJugador.getCelda(fila, col);
                 if (celda.tieneBarco()) {
                     set.add(celda.getBarco());
                 }
@@ -216,41 +215,41 @@ public class ControladorJuego {
 
     private void pintarBarcosJugador() {
 
-        // Opcional: dejar todas las celdas con estilo base oscuro (sin azul)
-        for (int fila = 0; fila < TAM; fila++) {
-            for (int col = 0; col < TAM; col++) {
-                Pane p = celdasJugador[fila][col];
+
+        for (int fila= 0; fila < TAM; fila++) {
+            for (int col= 0; col < TAM; col++) {
+                Pane p= celdasJugador[fila][col];
                 p.setStyle("-fx-background-color: #111827; -fx-border-color: #1f2933; -fx-border-width: 1;");
             }
         }
 
-        // Poner cada barco como una sola figura en el GridPane
+
         for (Barco barco : flotaJugador) {
 
-            int filaInicio = barco.getFila();
-            int colInicio  = barco.getColumna();
+            int filaInicio= barco.getFila();
+            int colInicio = barco.getColumna();
 
-            // Dibujo original del barco (el mismo de la pantalla de configuración)
-            javafx.scene.Group forma = barco.getForma();
 
-            // Importante: quitar interacción (no queremos rotarlo en batalla)
+            javafx.scene.Group forma= barco.getForma();
+
+
             forma.setOnMouseClicked(null);
 
-            // Añadir al grid del jugador en la celda inicial
-// Resetear offsets (muy importante para que no quede corrido)
+
+
             forma.setTranslateX(0);
             forma.setTranslateY(0);
             forma.setLayoutX(0);
             forma.setLayoutY(0);
 
-// Añadir al grid del jugador
+
             gridJugador.add(forma, colInicio, filaInicio);
 
-// Centrar dentro de la celda (o del área que ocupa)
+
             GridPane.setHalignment(forma, HPos.CENTER);
             GridPane.setValignment(forma, VPos.CENTER);
 
-            // Hacer que ocupe varias celdas según su orientación y tamaño
+
             GridPane.setColumnSpan(forma, barco.getTamaño());
 
         }
@@ -258,9 +257,9 @@ public class ControladorJuego {
 
 
 
-    // ------------------------------------------------------------------
-    // Flota de la máquina (aleatoria)
-    // ------------------------------------------------------------------
+
+
+
 
     private void colocarFlotaMaquinaAleatoria() {
         colocarBarcosDeTipoMaquina("Fragata", 1, 4);
@@ -270,19 +269,19 @@ public class ControladorJuego {
     }
 
     private void colocarBarcosDeTipoMaquina(String tipo, int tamaño, int cantidad) {
-        int colocados = 0;
+        int colocados= 0;
 
         while (colocados < cantidad) {
-            Barco barco = new Barco(tipo, tamaño);
+            Barco barco= new Barco(tipo, tamaño);
 
-            int fila = random.nextInt(TAM);
-            int col = random.nextInt(TAM);
+            int fila= random.nextInt(TAM);
+            int col= random.nextInt(TAM);
 
-            // Por ahora mantenemos orientación horizontal
-            Orientacion orientacion = Orientacion.HORIZONTAL;
-            Coordenada inicio = new Coordenada(fila, col);
 
-            boolean ok = tableroMaquina.ubicarBarco(barco, inicio, orientacion);
+            Orientacion orientacion= Orientacion.HORIZONTAL;
+            Coordenada inicio= new Coordenada(fila, col);
+
+            boolean ok= tableroMaquina.ubicarBarco(barco, inicio, orientacion);
             if (ok) {
                 flotaMaquina.add(barco);
                 colocados++;
@@ -290,9 +289,9 @@ public class ControladorJuego {
         }
     }
 
-    // ------------------------------------------------------------------
-    // Turno del jugador: disparo sobre gridMaquina
-    // ------------------------------------------------------------------
+
+
+
 
     private void manejarDisparoJugador(int fila, int col) {
         if (!turnoJugador || juegoTerminado) {
@@ -302,17 +301,17 @@ public class ControladorJuego {
             lblEstado.setText("Ya disparaste a (" + fila + ", " + col + "). Elige otra casilla.");
             return;
         }
-        disparosJugador[fila][col] = true;
+        disparosJugador[fila][col]= true;
 
-        Coordenada objetivo = new Coordenada(fila, col);
-        ResultadoDisparo resultado = tableroMaquina.recibirDisparo(objetivo);
+        Coordenada objetivo= new Coordenada(fila, col);
+        ResultadoDisparo resultado= tableroMaquina.recibirDisparo(objetivo);
 
         actualizarCeldaMaquina(fila, col, resultado);
 
         switch (resultado) {
             case AGUA ->{
                 lblEstado.setText("Disparaste a (" + fila + ", " + col + "): AGUA.");
-                //SoundEffects.misilFallado();
+
             }
             case TOCADO ->{
                 lblEstado.setText("Disparaste a (" + fila + ", " + col + "): TOCADO.");
@@ -326,21 +325,21 @@ public class ControladorJuego {
         }
 
         if (tableroMaquina.todosBarcosHundidos(flotaMaquina)) {
-            juegoTerminado = true;
+            juegoTerminado= true;
             detenerCronometro();
             deshabilitarClicksMaquina();
 
-            String tiempo = (lblCronometro != null) ? lblCronometro.getText() : "00:00";
-            String nombre = SesionJuego.getNombreJugador();
-            String resumen = "¡" + nombre + " ganaste! Tiempo: " + tiempo;
+            String tiempo= (lblCronometro != null) ? lblCronometro.getText() : "00:00";
+            String nombre= SesionJuego.getNombreJugador();
+            String resumen= "¡" + nombre + " ganaste! Tiempo: " + tiempo;
 
             NavegadorEscenas.irAVictoria(gridJugador, resumen);
             return;
         }
 
 
-        // Pasar turno a la máquina
-        turnoJugador = false;
+
+        turnoJugador= false;
         lblTurno.setText("Turno de la máquina");
 
         simularPensandoMaquina();
@@ -348,7 +347,7 @@ public class ControladorJuego {
 
 
     private void actualizarCeldaMaquina(int fila, int col, ResultadoDisparo resultado) {
-        Pane p = celdasMaquina[fila][col];
+        Pane p= celdasMaquina[fila][col];
 
         switch (resultado) {
             case AGUA -> p.setStyle(
@@ -358,55 +357,48 @@ public class ControladorJuego {
             case HUNDIDO -> {
                 p.setStyle(
                         "-fx-background-color: #b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
-                // PINTAR TODO EL BARCO HUNDIDO EN ROJO
                 marcarBarcoHundido(tableroMaquina, celdasMaquina, fila, col);
             }
         }
     }
 
     private void deshabilitarClicksMaquina() {
-        for (int f = 0; f < TAM; f++) {
-            for (int c = 0; c < TAM; c++) {
+        for (int f= 0; f < TAM; f++) {
+            for (int c= 0; c < TAM; c++) {
                 celdasMaquina[f][c].setOnMouseClicked(null);
             }
         }
     }
 
-    // ------------------------------------------------------------------
-    // Turno de la máquina (IA muy simple: disparo aleatorio)
-    // ------------------------------------------------------------------
+
+
+
 
     private void turnoMaquina() {
         if (juegoTerminado) return;
 
-        int fila, col;
+        Coordenada objetivo= iaMaquina.elegirDisparo();
+        int fila= objetivo.getFila();
+        int col = objetivo.getColumna();
+        ResultadoDisparo resultado= tableroJugador.recibirDisparo(objetivo);
 
-        // Buscar casilla donde todavía no haya disparado
-        do {
-            fila = random.nextInt(TAM);
-            col = random.nextInt(TAM);
-        } while (disparosMaquina[fila][col]);
+        iaMaquina.informarResultado(tableroJugador, objetivo, resultado);
 
-        disparosMaquina[fila][col] = true;
 
-        Coordenada objetivo = new Coordenada(fila, col);
-        ResultadoDisparo resultado = tableroJugador.recibirDisparo(objetivo);
+        final int filaFinal= fila;
+        final int colFinal= col;
+        final ResultadoDisparo resultadoFinal= resultado;
 
-// ✅ Copias finales para usar en lambda
-        final int filaFinal = fila;
-        final int colFinal = col;
-        final ResultadoDisparo resultadoFinal = resultado;
 
-// ✅ Sonido del proyectil primero
         SoundEffects.proyectilLanzado();
 
-// ✅ Esperar y luego aplicar el daño + sonido de impacto
+
         reproducirImpactoConRetraso(() -> {
 
-            // 1) Pintar el daño DESPUÉS del tiempo
+
             actualizarCeldaJugador(filaFinal, colFinal, resultadoFinal);
 
-            // 2) Texto + sonidos de impacto
+
             switch (resultadoFinal) {
                 case AGUA -> {
                     lblEstado.setText("La máquina disparó a (" + filaFinal + ", " + colFinal + "): AGUA.");
@@ -423,26 +415,26 @@ public class ControladorJuego {
                 }
             }
 
-            // 3) Verificar fin del juego (después de aplicar daño)
+
             if (tableroJugador.todosBarcosHundidos(flotaJugador)) {
-                juegoTerminado = true;
+                juegoTerminado= true;
                 lblTurno.setText("Juego terminado");
                 lblEstado.setText("La máquina ha hundido toda tu flota. Has perdido.");
                 deshabilitarClicksMaquina();
                 return;
             }
 
-            // 4) Regresar turno al jugador
-            turnoJugador = true;
+
+            turnoJugador= true;
             lblTurno.setText("Turno del jugador");
         });
 
-        turnoJugador = false;
+        turnoJugador= false;
         lblTurno.setText("Turno de la máquina");
 
 
         if (tableroJugador.todosBarcosHundidos(flotaJugador)) {
-            juegoTerminado = true;
+            juegoTerminado= true;
             detenerCronometro();
             lblTurno.setText("Juego terminado");
             lblEstado.setText("La máquina ha hundido toda tu flota. Has perdido.");
@@ -450,8 +442,8 @@ public class ControladorJuego {
             return;
         }
 
-        // Regresa el turno al jugador
-        turnoJugador = true;
+
+        turnoJugador= true;
         lblTurno.setText("Turno del jugador");
     }
     private void simularPensandoMaquina() {
@@ -459,7 +451,7 @@ public class ControladorJuego {
 
         lblEstado.setText("La máquina está pensando...");
 
-        PauseTransition pause = new PauseTransition(Duration.seconds(DELAY_MAQUINA_SEG));
+        PauseTransition pause= new PauseTransition(Duration.seconds(DELAY_MAQUINA_SEG));
         pause.setOnFinished(e -> {
             if (!juegoTerminado) {
                 turnoMaquina();
@@ -470,7 +462,7 @@ public class ControladorJuego {
 
 
     private void actualizarCeldaJugador(int fila, int col, ResultadoDisparo resultado) {
-        Pane p = celdasJugador[fila][col];
+        Pane p= celdasJugador[fila][col];
 
         switch (resultado) {
             case AGUA -> p.setStyle(
@@ -479,38 +471,35 @@ public class ControladorJuego {
                     "-fx-background-color: #f97316; -fx-border-color: #1f2933; -fx-border-width: 1;");
             case HUNDIDO -> {
 
-//                p.setStyle(
-//                        "-fx-background-color: #b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
-//                mostrarAnimacionHundimiento(p); /*insertar animacion de explosion*/
               /*marcar el barco undido*/
                 marcarBarcoHundido(tableroJugador, celdasJugador, fila, col);
             }
         }
     }
 
-    //metodo para animacion de explosion en barco hundido
+
     private void mostrarAnimacionHundimiento(Pane celda) {
         try {
             celda.setStyle("-fx-background-color: transparent; -fx-border-color: #1f2933; -fx-border-width: 1;");
             celda.getChildren().clear();
 
-            String rutaGif = "/com/example/batalla_naval/images/explosion1.gif"; // Cambia esta ruta
-            Image gifImage = new Image(getClass().getResource(rutaGif).toExternalForm());
+            String rutaGif= "/com/example/batalla_naval/images/explosion1.gif";
+            Image gifImage= new Image(getClass().getResource(rutaGif).toExternalForm());
 
 
-            ImageView gifView = new ImageView(gifImage);
+            ImageView gifView= new ImageView(gifImage);
 
             gifView.fitWidthProperty().bind(celda.widthProperty());
             gifView.fitHeightProperty().bind(celda.heightProperty());
-            gifView.setPreserveRatio(false); // Estirar el GIF para cubrir
+            gifView.setPreserveRatio(false);
 
 
-//            celda.getChildren().clear();
+
             celda.getChildren().add(gifView);
 
         } catch (Exception e) {
             System.err.println("Error al cargar o mostrar el GIF de hundimiento: " + e.getMessage());
-            // En caso de error (ej. GIF no encontrado), ponemos el color rojo como fallback.
+
             celda.setStyle("-fx-background-color: #b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
         }
     }
@@ -519,15 +508,15 @@ public class ControladorJuego {
         detenerCronometro();
 
         try {
-            // Ajusta el nombre del FXML si tu pantalla inicial se llama distinto
-            FXMLLoader loader = new FXMLLoader(
+
+            FXMLLoader loader= new FXMLLoader(
                     getClass().getResource("/com/example/batalla_naval/VistaInicio.fxml")
             );
-            Parent root = loader.load();
+            Parent root= loader.load();
 
-            Stage stage = (Stage) ((Node) event.getSource())
+            Stage stage= (Stage) ((Node) event.getSource())
                     .getScene().getWindow();
-            Scene scene = new Scene(root);
+            Scene scene= new Scene(root);
             stage.setScene(scene);
             stage.show();
 
@@ -537,51 +526,85 @@ public class ControladorJuego {
         }
     }
     private void marcarBarcoHundido(Tablero tablero, Pane[][] celdas, int fila, int col) {
-        Celda celdaImpacto = tablero.getCelda(fila, col);
+        Celda celdaImpacto= tablero.getCelda(fila, col);
         if (!celdaImpacto.tieneBarco()) return;
 
-        Barco barcoHundido = celdaImpacto.getBarco();
+        Barco barcoHundido= celdaImpacto.getBarco();
 
-        if (tablero == tableroJugador) {
-            Node formaBarco = barcoHundido.getForma();
+        if (tablero==tableroJugador) {
+            Node formaBarco= barcoHundido.getForma();
 
-            // Verificamos si la forma existe y si su padre es gridJugador
+
             if (formaBarco != null && formaBarco.getParent() instanceof GridPane gridPadre) {
                 gridPadre.getChildren().remove(formaBarco);
             }
 
         }
-        for (int f = 0; f < TAM; f++) {
-            for (int c = 0; c < TAM; c++) {
-                Celda celda = tablero.getCelda(f, c);
-                if (celda.tieneBarco() && celda.getBarco() == barcoHundido) {
-                    Pane p = celdas[f][c];
+        for (int f= 0; f < TAM; f++) {
+            for (int c= 0; c < TAM; c++) {
+                Celda celda= tablero.getCelda(f, c);
+                if (celda.tieneBarco() && celda.getBarco()==barcoHundido) {
+                    Pane p= celdas[f][c];
                     mostrarAnimacionHundimiento(p);
-//                    p.setStyle(
-//                            "-fx-background-color: #b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
+
+
+                }
+            }
+        }
+        marcarHaloHundido(tablero, celdas, barcoHundido);
+
+    }
+
+    private void marcarHaloHundido(Tablero tablero, Pane[][] celdas, Barco barcoHundido) {
+        for (int f= 0; f < TAM; f++) {
+            for (int c= 0; c < TAM; c++) {
+                Celda celda= tablero.getCelda(f, c);
+                if (celda.tieneBarco() && celda.getBarco()==barcoHundido) {
+
+                    for (int df= -1; df <= 1; df++) {
+                        for (int dc= -1; dc <= 1; dc++) {
+                            int ff= f + df;
+                            int cc= c + dc;
+                            if (ff < 0 || ff >= TAM || cc < 0 || cc >= TAM) continue;
+
+
+                            if (!tablero.getCelda(ff, cc).tieneBarco()) {
+                                Pane p= celdas[ff][cc];
+
+
+                                String s= p.getStyle();
+                                if (s != null && (s.contains("#f97316") || s.contains("#b91c1c"))) continue;
+
+                                p.setStyle(STYLE_HALO_SEGURO);
+                            }
+                        }
+                    }
                 }
             }
         }
     }
+
+
+
     private void activarMusicaBatalla() {
         if (!musicaBatallaIniciada) {
-            musicaBatallaIniciada = true;
-            // Cambia este método por el que tengas para el soundtrack de batalla
+            musicaBatallaIniciada= true;
+
             MusicManager.playLoop(MusicTrack.PROBLEMAS, 0.35);
         }
     }
     private void iniciarCronometro() {
-        detenerCronometro(); // evita duplicados
+        detenerCronometro();
 
-        segundos = 0;
+        segundos= 0;
         if (lblCronometro != null) {
             lblCronometro.setText("00:00");
         }
 
-        cronometro = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+        cronometro= new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             segundos++;
-            int min = segundos / 60;
-            int seg = segundos % 60;
+            int min= segundos / 60;
+            int seg= segundos % 60;
             if (lblCronometro != null) {
                 lblCronometro.setText(String.format("%02d:%02d", min, seg));
             }
@@ -594,36 +617,36 @@ public class ControladorJuego {
     private void detenerCronometro() {
         if (cronometro != null) {
             cronometro.stop();
-            cronometro = null;
+            cronometro= null;
         }
     }
 
 
 
     private void reproducirImpactoConRetraso(Runnable sonidoExplosion) {
-        SoundEffects.proyectilLanzado(); // 1. sonido del misil
+        SoundEffects.proyectilLanzado();
 
-        PauseTransition pausa = new PauseTransition(Duration.seconds(1.5));
+        PauseTransition pausa= new PauseTransition(Duration.seconds(1.5));
         pausa.setOnFinished(e -> sonidoExplosion.run());
         pausa.play();
     }
     private void mostrarPantallaVictoria() {
         try {
-            // Detalles para el mensaje
-            String tiempo = (lblCronometro != null) ? lblCronometro.getText() : "00:00";
-            String nombre = SesionJuego.getNombreJugador();
 
-            FXMLLoader loader = new FXMLLoader(
+            String tiempo= (lblCronometro != null) ? lblCronometro.getText() : "00:00";
+            String nombre= SesionJuego.getNombreJugador();
+
+            FXMLLoader loader= new FXMLLoader(
                     getClass().getResource("/com/example/batalla_naval/VistaVictoria.fxml")
             );
-            Parent root = loader.load();
+            Parent root= loader.load();
 
-            // Pasarle texto al controlador de victoria
-            ControladorVictoria ctrl = loader.getController();
+
+            ControladorVictoria ctrl= loader.getController();
             ctrl.setResumen("¡" + nombre + " ganaste! Tiempo: " + tiempo);
 
-            // Cambiar escena usando el mismo stage actual
-            Stage stage = (Stage) gridJugador.getScene().getWindow();
+
+            Stage stage= (Stage) gridJugador.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
 

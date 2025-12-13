@@ -32,7 +32,7 @@ public class ControladorVictoria {
 
     @FXML
     private void initialize() {
-        // Sonido / música al entrar
+
         try {
             MusicManager.playLoop(MusicTrack.VICTORIA, 0.50);
         } catch (Exception ignored) { }
@@ -46,11 +46,11 @@ public class ControladorVictoria {
     private void iniciarConfetti() {
         GraphicsContext gc = canvasConfetti.getGraphicsContext2D();
 
-        // fondo negro inicial
+
         gc.setFill(Color.rgb(0, 0, 0, 1.0));
         gc.fillRect(0, 0, canvasConfetti.getWidth(), canvasConfetti.getHeight());
 
-        // burst inicial (explosión de confetti)
+
         for (int i = 0; i < 260; i++) {
             particulas.add(Particula.random(random, canvasConfetti.getWidth(), canvasConfetti.getHeight(), true));
         }
@@ -60,15 +60,15 @@ public class ControladorVictoria {
 
             @Override
             public void handle(long now) {
-                if (last == 0) last = now;
+                if (last==0) last = now;
                 double dt = (now - last) / 1_000_000_000.0;
                 last = now;
 
-                // Fade para “estela”
+
                 gc.setFill(Color.rgb(0, 0, 0, 0.10));
                 gc.fillRect(0, 0, canvasConfetti.getWidth(), canvasConfetti.getHeight());
 
-                // spawnea confetti adicional
+
                 if (particulas.size() < 420 && random.nextDouble() < 0.35) {
                     particulas.add(Particula.random(random, canvasConfetti.getWidth(), canvasConfetti.getHeight(), false));
                 }
@@ -98,7 +98,7 @@ public class ControladorVictoria {
     private void onReintentar() {
         SoundEffects.playClick();
         detener();
-        // Ajusta a tu flujo real:
+
         NavegadorEscenas.irAVista(canvasConfetti, "/com/example/batalla_naval/VistaConfiguracionTablero.fxml");
 
     }
@@ -124,7 +124,7 @@ public class ControladorVictoria {
     }
 
 
-    // ====== Partícula confetti ======
+
     private static class Particula {
         double x, y, vx, vy;
         double w, h;
@@ -133,7 +133,7 @@ public class ControladorVictoria {
         Color color;
 
         void update(double dt) {
-            vy += 520 * dt; // gravedad
+            vy += 520 * dt;
             vx *= Math.pow(0.92, dt * 60);
             vy *= Math.pow(0.985, dt * 60);
 
@@ -157,7 +157,7 @@ public class ControladorVictoria {
             double speed = burst ? (340 + r.nextDouble() * 520) : (180 + r.nextDouble() * 420);
             double angle = burst ? Math.toRadians(220 + r.nextDouble() * 100) : Math.toRadians(80 + r.nextDouble() * 20);
 
-            // pequeño “desorden” para que se vea natural
+
             p.vx = Math.cos(angle) * speed * (r.nextBoolean() ? 1 : -1);
             p.vy = Math.sin(angle) * speed;
 

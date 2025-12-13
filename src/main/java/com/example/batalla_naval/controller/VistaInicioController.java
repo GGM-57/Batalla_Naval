@@ -30,7 +30,7 @@ public class VistaInicioController {
 
     @FXML
     private void initialize() {
-        //agregar logica
+
 
         MusicManager.playMenuMusic();
         jugarButton.setOnMouseEntered(e -> SoundEffects.playHover());

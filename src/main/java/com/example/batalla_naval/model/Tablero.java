@@ -31,6 +31,10 @@ public class Tablero {
     public Celda getCelda(int fila, int columna) {
         return grilla[fila][columna];
     }
+    private boolean dentro(int f, int c) {
+        return f >= 0 && f < filas && c >= 0 && c < columnas;
+    }
+
 
     // Validar si se puede ubicar el barco
     public boolean puedeUbicarBarco(Barco barco, Coordenada inicio, Orientacion orientacion) {
@@ -38,19 +42,36 @@ public class Tablero {
         int columna = inicio.getColumna();
         int tamanio = barco.getTamanio();
 
-        if (orientacion == Orientacion.VERTICAL) {
-            if (fila + tamanio > filas) return false;
-            for (int i = 0; i < tamanio; i++) {
-                if (grilla[fila + i][columna].tieneBarco()) return false;
-            }
-        } else { // HORIZONTAL
-            if (columna + tamanio > columnas) return false;
-            for (int i = 0; i < tamanio; i++) {
-                if (grilla[fila][columna + i].tieneBarco()) return false;
+        // 1) Primero: validar que el barco cabe y que NO choca directamente
+        for (int i = 0; i < tamanio; i++) {
+            int f = (orientacion == Orientacion.VERTICAL) ? fila + i : fila;
+            int c = (orientacion == Orientacion.HORIZONTAL) ? columna + i : columna;
+
+            if (!dentro(f, c)) return false;                 // se sale
+            if (grilla[f][c].tieneBarco()) return false;     // choque directo
+        }
+
+        // 2) Regla clásica: NO puede haber barcos adyacentes (ni diagonales)
+        for (int i = 0; i < tamanio; i++) {
+            int f = (orientacion == Orientacion.VERTICAL) ? fila + i : fila;
+            int c = (orientacion == Orientacion.HORIZONTAL) ? columna + i : columna;
+
+            for (int df = -1; df <= 1; df++) {
+                for (int dc = -1; dc <= 1; dc++) {
+                    int ff = f + df;
+                    int cc = c + dc;
+
+                    if (!dentro(ff, cc)) continue;
+
+                    // Si hay cualquier barco alrededor, es inválido
+                    if (grilla[ff][cc].tieneBarco()) return false;
+                }
             }
         }
+
         return true;
     }
+
 
     // Colocar barco si es válido
     public boolean ubicarBarco(Barco barco, Coordenada inicio, Orientacion orientacion) {
@@ -61,6 +82,9 @@ public class Tablero {
         int fila = inicio.getFila();
         int columna = inicio.getColumna();
         int tamanio = barco.getTamanio();
+
+        barco.getPosiciones().clear();
+
 
         for (int i = 0; i < tamanio; i++) {
             int f = (orientacion == Orientacion.VERTICAL) ? fila + i : fila;
@@ -104,6 +128,11 @@ public class Tablero {
         }
         return true;
     }
+
+    public Celda[][] getGrilla() {
+        return grilla;
+    }
+
 
     // Solo para debug
     public void imprimirTableroDebug() {

@@ -86,7 +86,7 @@ public class SoundEffects {
     }
     public static void proyectilLanzado() {
         if (proyectil != null) {
-            proyectil.stop();
+            proyectil.play(0.9);
         }
     }
 

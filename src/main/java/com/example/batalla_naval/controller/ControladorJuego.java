@@ -37,12 +37,11 @@ import javafx.animation.PauseTransition;
 
 
 
+
 public class ControladorJuego {
 
     private static final int CELL = 45;
     private static final int TAM = 10;
-    /*  tiempo de espera de la maquina*/
-    private static final double DELAY_MAQUINA_SEG = 2;
 
     @FXML private GridPane gridJugador;
     @FXML private GridPane gridMaquina;
@@ -386,23 +385,54 @@ public class ControladorJuego {
         Coordenada objetivo = new Coordenada(fila, col);
         ResultadoDisparo resultado = tableroJugador.recibirDisparo(objetivo);
 
-        actualizarCeldaJugador(fila, col, resultado);
+// ✅ Copias finales para usar en lambda
+        final int filaFinal = fila;
+        final int colFinal = col;
+        final ResultadoDisparo resultadoFinal = resultado;
 
-        switch (resultado) {
-            case AGUA -> {
-                lblEstado.setText("La máquina disparó a (" + fila + ", " + col + "): AGUA.");
-            }
-            case TOCADO -> {
-                lblEstado.setText("La máquina te ha TOCADO en (" + fila + ", " + col + ").");
+// ✅ Sonido del proyectil primero
+        SoundEffects.proyectilLanzado();
 
-                SoundEffects.playExplosion1();
+// ✅ Esperar y luego aplicar el daño + sonido de impacto
+        reproducirImpactoConRetraso(() -> {
+
+            // 1) Pintar el daño DESPUÉS del tiempo
+            actualizarCeldaJugador(filaFinal, colFinal, resultadoFinal);
+
+            // 2) Texto + sonidos de impacto
+            switch (resultadoFinal) {
+                case AGUA -> {
+                    lblEstado.setText("La máquina disparó a (" + filaFinal + ", " + colFinal + "): AGUA.");
+                    SoundEffects.misilFallado();
+                }
+                case TOCADO -> {
+                    lblEstado.setText("La máquina te ha TOCADO en (" + filaFinal + ", " + colFinal + ").");
+                    SoundEffects.playExplosion1();
+                }
+                case HUNDIDO -> {
+                    lblEstado.setText("La máquina hundió uno de tus barcos.");
+                    SoundEffects.playExplosion2();
+                    activarMusicaBatalla();
+                }
             }
-            case HUNDIDO -> {
-                lblEstado.setText("La máquina hundió uno de tus barcos.");
-                SoundEffects.playExplosion2();
-                activarMusicaBatalla();
+
+            // 3) Verificar fin del juego (después de aplicar daño)
+            if (tableroJugador.todosBarcosHundidos(flotaJugador)) {
+                juegoTerminado = true;
+                lblTurno.setText("Juego terminado");
+                lblEstado.setText("La máquina ha hundido toda tu flota. Has perdido.");
+                deshabilitarClicksMaquina();
+                return;
             }
-        }
+
+            // 4) Regresar turno al jugador
+            turnoJugador = true;
+            lblTurno.setText("Turno del jugador");
+        });
+
+        turnoJugador = false;
+        lblTurno.setText("Turno de la máquina");
+
 
         if (tableroJugador.todosBarcosHundidos(flotaJugador)) {
             juegoTerminado = true;
@@ -421,14 +451,8 @@ public class ControladorJuego {
         if (juegoTerminado) return;
 
         lblEstado.setText("La máquina está pensando...");
+        turnoMaquina();
 
-        PauseTransition pause = new PauseTransition(Duration.seconds(DELAY_MAQUINA_SEG));
-        pause.setOnFinished(e -> {
-            if (!juegoTerminado) {
-                turnoMaquina();
-            }
-        });
-        pause.play();
     }
 
 
@@ -561,6 +585,15 @@ public class ControladorJuego {
         }
     }
 
+
+
+    private void reproducirImpactoConRetraso(Runnable sonidoExplosion) {
+        SoundEffects.proyectilLanzado(); // 1. sonido del misil
+
+        PauseTransition pausa = new PauseTransition(Duration.seconds(1.5));
+        pausa.setOnFinished(e -> sonidoExplosion.run());
+        pausa.play();
+    }
 
 
 }

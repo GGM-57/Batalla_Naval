@@ -328,11 +328,16 @@ public class ControladorJuego {
         if (tableroMaquina.todosBarcosHundidos(flotaMaquina)) {
             juegoTerminado = true;
             detenerCronometro();
-            lblTurno.setText("Juego terminado");
-            lblEstado.setText("¡Has ganado! Hundiste toda la flota enemiga.");
             deshabilitarClicksMaquina();
+
+            String tiempo = (lblCronometro != null) ? lblCronometro.getText() : "00:00";
+            String nombre = SesionJuego.getNombreJugador();
+            String resumen = "¡" + nombre + " ganaste! Tiempo: " + tiempo;
+
+            NavegadorEscenas.irAVictoria(gridJugador, resumen);
             return;
         }
+
 
         // Pasar turno a la máquina
         turnoJugador = false;
@@ -602,6 +607,32 @@ public class ControladorJuego {
         pausa.setOnFinished(e -> sonidoExplosion.run());
         pausa.play();
     }
+    private void mostrarPantallaVictoria() {
+        try {
+            // Detalles para el mensaje
+            String tiempo = (lblCronometro != null) ? lblCronometro.getText() : "00:00";
+            String nombre = SesionJuego.getNombreJugador();
+
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/example/batalla_naval/VistaVictoria.fxml")
+            );
+            Parent root = loader.load();
+
+            // Pasarle texto al controlador de victoria
+            ControladorVictoria ctrl = loader.getController();
+            ctrl.setResumen("¡" + nombre + " ganaste! Tiempo: " + tiempo);
+
+            // Cambiar escena usando el mismo stage actual
+            Stage stage = (Stage) gridJugador.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            lblEstado.setText("Error al cargar pantalla de victoria.");
+        }
+    }
+
 
 
 }

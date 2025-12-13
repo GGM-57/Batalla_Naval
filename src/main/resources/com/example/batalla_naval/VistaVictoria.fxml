@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.image.Image?>
+
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.batalla_naval.controller.ControladorVictoria"
+            prefWidth="1080.0" prefHeight="720.0"
+            stylesheets="@VistaVictoria.css">
+
+    <children>
+
+        <!-- Fondo -->
+        <ImageView fitWidth="1080.0" fitHeight="720.0" preserveRatio="false"
+                   opacity="0.25"
+                   AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <image>
+                <Image url="@images/imageCenterWaves.png"/>
+            </image>
+        </ImageView>
+
+
+        <!-- Confetti (se dibuja por código en el controller) -->
+        <Canvas fx:id="canvasConfetti"
+                width="1080.0" height="720.0"
+                AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"/>
+
+        <!-- Panel central -->
+        <StackPane AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <VBox spacing="18" alignment="CENTER" maxWidth="720"
+                  styleClass="panel-win">
+
+                <Label text="¡VICTORIA!" styleClass="title-win">
+                    <effect>
+                        <DropShadow radius="20" offsetX="0" offsetY="0"/>
+                    </effect>
+                </Label>
+
+                <Label fx:id="lblResumen"
+                       text="Hundiste toda la flota enemiga."
+                       wrapText="true"
+                       styleClass="subtitle-win"/>
+
+                <HBox spacing="14" alignment="CENTER">
+                    <Button text="Jugar de nuevo" onAction="#onReintentar"
+                            styleClass="btn-primary"/>
+                    <Button text="Menú principal" onAction="#onMenu"
+                            styleClass="btn-secondary"/>
+                    <Button text="Salir" onAction="#onSalir"
+                            styleClass="btn-secondary"/>
+                </HBox>
+
+            </VBox>
+        </StackPane>
+
+    </children>
+</AnchorPane>

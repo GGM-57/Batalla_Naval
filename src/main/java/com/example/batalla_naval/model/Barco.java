@@ -5,6 +5,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 
@@ -609,5 +610,84 @@ public class Barco {
                 rotarNavio();
             }
         });
+    }
+
+    /*Metodo que se conecta con VistaTableroMaquina.fxml y
+    ControladorVistaTableroMAquina y ControladorJuego para mostrar el
+    tablero de la maquina en segundo plano
+    Crea una copia visual (deep copy) de la forma Group del barco
+    para que pueda ser mostrada en una ventana separada sin conflictos.*/
+    public Group clonarForma() {
+        Group nuevaForma = new Group();
+
+        if (this.forma == null) {
+            return nuevaForma;
+        }
+
+        /*Clonar cada nodo hijo (Rectangle, Polygon, Line)*/
+        for (Node nodoOriginal : this.forma.getChildren()) {
+            Node nodoClonado = null;
+
+            /*Clonar Rectángulos*/
+            if (nodoOriginal instanceof Rectangle originalRect) {
+                Rectangle nuevaRect = new Rectangle(originalRect.getWidth(), originalRect.getHeight());
+
+                /*Copiar colores y bordes*/
+                nuevaRect.setFill(originalRect.getFill());
+                nuevaRect.setStroke(originalRect.getStroke());
+                nuevaRect.setStrokeWidth(originalRect.getStrokeWidth());
+
+                /*Copiar posición y arcos (si los tiene)*/
+                nuevaRect.setTranslateX(originalRect.getTranslateX());
+                nuevaRect.setTranslateY(originalRect.getTranslateY());
+                nuevaRect.setArcWidth(originalRect.getArcWidth());
+                nuevaRect.setArcHeight(originalRect.getArcHeight());
+
+                nodoClonado = nuevaRect;
+
+                /*Clonar poligonos*/
+            } else if (nodoOriginal instanceof Polygon originalPoly) {
+                Polygon nuevaPoly = new Polygon();
+
+                /*Copiar los puntos que definen la forma*/
+                nuevaPoly.getPoints().addAll(originalPoly.getPoints());
+
+                /*Copiar colores y bordes*/
+                nuevaPoly.setFill(originalPoly.getFill());
+                nuevaPoly.setStroke(originalPoly.getStroke());
+                nuevaPoly.setStrokeWidth(originalPoly.getStrokeWidth());
+
+                /*Copiar posición*/
+                nuevaPoly.setTranslateX(originalPoly.getTranslateX());
+                nuevaPoly.setTranslateY(originalPoly.getTranslateY());
+
+                nodoClonado = nuevaPoly;
+
+                /*Clonar Líneas ---*/
+            } else if (nodoOriginal instanceof Line originalLine) {
+                /*Copiar puntos de inicio y fin*/
+                Line nuevaLine = new Line(originalLine.getStartX(), originalLine.getStartY(), originalLine.getEndX(), originalLine.getEndY());
+
+                /*Copiar estilo*/
+                nuevaLine.setStroke(originalLine.getStroke());
+                nuevaLine.setStrokeWidth(originalLine.getStrokeWidth());
+
+                /*Copiar posición*/
+                nuevaLine.setTranslateX(originalLine.getTranslateX());
+                nuevaLine.setTranslateY(originalLine.getTranslateY());
+
+                nodoClonado = nuevaLine;
+            }
+
+            /*Agregar la copia al nuevo Group*/
+            if (nodoClonado != null) {
+                // Copiar propiedades genéricas de Node (como Opacity, etc.)
+                nodoClonado.setOpacity(nodoOriginal.getOpacity());
+
+                nuevaForma.getChildren().add(nodoClonado);
+            }
+        }
+
+        return nuevaForma;
     }
 }

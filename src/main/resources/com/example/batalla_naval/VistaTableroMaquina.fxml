@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.GridPane?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.batalla_naval.controller.ControladorVistaTableroMaquina"
+            prefHeight="400.0" prefWidth="400.0">
+
+    <GridPane fx:id="gridTableroMaquina" layoutX="50" layoutY="50" />
+
+</AnchorPane>

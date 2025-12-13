@@ -656,6 +656,33 @@ public class ControladorJuego {
         }
     }
 
+/*metodo para mostrar el tablero de la maquina en segundo plano. Se conecta con VistaTableroMaquina.FXML y con el ControladorVistaTableroMaquina*/
+    public void handleAccionMaquina(ActionEvent actionEvent) {
+        try {
 
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/example/batalla_naval/VistaTableroMaquina.fxml")
+            );
+            Parent root = loader.load();
 
+            ControladorVistaTableroMaquina ctrlMaquina = loader.getController();
+
+            ctrlMaquina.cargarDatosYMostrar(this.tableroMaquina, this.flotaMaquina);
+
+            // 4. Crear el nuevo Stage (Ventana)
+            Stage stage = new Stage();
+            stage.setTitle("Tablero de la Máquina (CHEAT MODE)");
+            stage.setScene(new Scene(root));
+
+            // Opcional: Desacoplar la ventana (propiedad MODALITY)
+            // stage.initModality(Modality.NONE); // No bloquea la ventana principal
+
+            // 5. Mostrar la ventana SIN bloquear la principal
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            lblEstado.setText("Error al cargar la vista del tablero de la máquina.");
+        }
+    }
 }

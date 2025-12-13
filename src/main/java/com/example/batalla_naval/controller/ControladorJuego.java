@@ -537,7 +537,7 @@ public class ControladorJuego {
         try {
             celda.setStyle("-fx-background-color:#f97316; -fx-border-color: #1f2933; -fx-border-width: 1;");
 
-            String rutaGif = "/com/example/batalla_naval/images/fuego1.gif";
+            String rutaGif = "/com/example/batalla_naval/images/fuego2.gif";
             Image gifImage = new Image(getClass().getResource(rutaGif).toExternalForm());
 
             ImageView gifView = new ImageView(gifImage);

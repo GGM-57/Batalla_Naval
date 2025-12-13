@@ -172,7 +172,15 @@ public class Barco {
     private Group crearFragata() {
         Group g = new Group();
 
-        Rectangle cuerpo = new Rectangle(40, 18);
+
+        double longitudCuerpo = 35.0;
+
+        double extensionProa = 5.0;
+
+        double alturaCuerpo = 18.0;
+
+        // 1. CUERPO
+        Rectangle cuerpo = new Rectangle(longitudCuerpo, alturaCuerpo);
         cuerpo.setArcWidth(10);
         cuerpo.setArcHeight(10);
         cuerpo.setFill(Color.web("#334155"));
@@ -180,44 +188,100 @@ public class Barco {
         cuerpo.setStrokeWidth(1.8);
         g.getChildren().add(cuerpo);
 
+        // 2. PROA (Triángulo)
         Polygon proa = new Polygon();
+
         proa.getPoints().addAll(
-                40.0, 0.0,
-                40.0, 18.0,
-                54.0, 9.0
+                longitudCuerpo, 0.0,
+                longitudCuerpo, alturaCuerpo,
+                longitudCuerpo + extensionProa, alturaCuerpo / 2.0
         );
         proa.setFill(Color.web("#475569"));
         proa.setStroke(Color.BLACK);
         proa.setStrokeWidth(1.5);
         g.getChildren().add(proa);
 
+        // 3. LÍNEA DECORATIVA
         javafx.scene.shape.Line lineaDecorativa = new javafx.scene.shape.Line();
         lineaDecorativa.setStartX(0);
         lineaDecorativa.setStartY(12);
-        lineaDecorativa.setEndX(40);
+        lineaDecorativa.setEndX(longitudCuerpo);
         lineaDecorativa.setEndY(12);
         lineaDecorativa.setStroke(Color.web("#93C5FD"));
         lineaDecorativa.setStrokeWidth(2);
         g.getChildren().add(lineaDecorativa);
 
+        // 4. CABINA
         Rectangle cabina = new Rectangle(14, 10);
         cabina.setFill(Color.web("#E5E7EB"));
         cabina.setStroke(Color.BLACK);
         cabina.setStrokeWidth(1.2);
-        cabina.setTranslateX(6);
+        cabina.setTranslateX(4);
         cabina.setTranslateY(3);
         g.getChildren().add(cabina);
 
+        // 5. VENTANA
         Rectangle ventana = new Rectangle(6, 5);
         ventana.setFill(Color.web("#60A5FA"));
         ventana.setStroke(Color.BLACK);
         ventana.setStrokeWidth(1);
-        ventana.setTranslateX(9);
+        ventana.setTranslateX(7);
         ventana.setTranslateY(5);
         g.getChildren().add(ventana);
 
+
         return g;
     }
+
+//    private Group crearFragata() {
+//        Group g = new Group();
+//
+//        Rectangle cuerpo = new Rectangle(40, 18);
+//        cuerpo.setArcWidth(10);
+//        cuerpo.setArcHeight(10);
+//        cuerpo.setFill(Color.web("#334155"));
+//        cuerpo.setStroke(Color.BLACK);
+//        cuerpo.setStrokeWidth(1.8);
+//        g.getChildren().add(cuerpo);
+//
+//        Polygon proa = new Polygon();
+//        proa.getPoints().addAll(
+//                40.0, 0.0,
+//                40.0, 18.0,
+//                54.0, 9.0
+//        );
+//        proa.setFill(Color.web("#475569"));
+//        proa.setStroke(Color.BLACK);
+//        proa.setStrokeWidth(1.5);
+//        g.getChildren().add(proa);
+//
+//        javafx.scene.shape.Line lineaDecorativa = new javafx.scene.shape.Line();
+//        lineaDecorativa.setStartX(0);
+//        lineaDecorativa.setStartY(12);
+//        lineaDecorativa.setEndX(40);
+//        lineaDecorativa.setEndY(12);
+//        lineaDecorativa.setStroke(Color.web("#93C5FD"));
+//        lineaDecorativa.setStrokeWidth(2);
+//        g.getChildren().add(lineaDecorativa);
+//
+//        Rectangle cabina = new Rectangle(14, 10);
+//        cabina.setFill(Color.web("#E5E7EB"));
+//        cabina.setStroke(Color.BLACK);
+//        cabina.setStrokeWidth(1.2);
+//        cabina.setTranslateX(6);
+//        cabina.setTranslateY(3);
+//        g.getChildren().add(cabina);
+//
+//        Rectangle ventana = new Rectangle(6, 5);
+//        ventana.setFill(Color.web("#60A5FA"));
+//        ventana.setStroke(Color.BLACK);
+//        ventana.setStrokeWidth(1);
+//        ventana.setTranslateX(9);
+//        ventana.setTranslateY(5);
+//        g.getChildren().add(ventana);
+//
+//        return g;
+//    }
 
     /* Destructor (2 celdas) */
     private Group crearDestructor() {

@@ -1,0 +1,5 @@
+module:com.example.batalla_naval
+com.example.batalla_naval
+com.example.batalla_naval.controller
+com.example.batalla_naval.model
+com.example.batalla_naval.util

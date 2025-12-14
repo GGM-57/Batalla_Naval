@@ -27,6 +27,11 @@ import com.example.batalla_naval.model.Coordenada;
 import com.example.batalla_naval.model.Orientacion;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.StackPane;
+import javafx.geometry.Pos;
+import javafx.scene.transform.Rotate;
+import javafx.geometry.Bounds;
+
 
 import java.io.IOException;
 
@@ -357,9 +362,9 @@ public class VistaConfiguracionTableroController {
                 Barco barco = new Barco(tipo, tamaño);
 
 
+                int columna = (int) (event.getX()/CELL);
+                int fila    = (int) (event.getY()/CELL);
 
-                int columna = (int) (event.getX()/45);
-                int fila    = (int) (event.getY()/45);
 
 
                 if (fila < 0 || fila >= tableroJugador.getFilas()
@@ -390,24 +395,21 @@ public class VistaConfiguracionTableroController {
                     SoundEffects.playPosicionarBarco();
                     informationLabel.setText("✔ Barco colocado en (" + fila + ", " + columna + ")");
 
-                    barco.getForma().setTranslateX(0);
-                    barco.getForma().setTranslateY(0);
-                    tableroJugadorGrid.add(barco.getForma(), columna, fila);
 
-                    if (orientacion == Orientacion.VERTICAL) {
-                        barco.getForma().setRotate(90);
-                    } else {
-                        barco.getForma().setRotate(0);
-                    }
+                    StackPane contenedor = crearContenedorBarco(barco, orientacion);
+
+
+                    tableroJugadorGrid.add(contenedor, columna, fila);
 
 
                     if (orientacion == Orientacion.HORIZONTAL) {
-                        GridPane.setColumnSpan(barco.getForma(), barco.getTamanio());
-                        GridPane.setRowSpan(barco.getForma(), 1);
+                        GridPane.setColumnSpan(contenedor, barco.getTamanio());
+                        GridPane.setRowSpan(contenedor, 1);
                     } else {
-                        GridPane.setRowSpan(barco.getForma(), barco.getTamanio());
-                        GridPane.setColumnSpan(barco.getForma(), 1);
+                        GridPane.setRowSpan(contenedor, barco.getTamanio());
+                        GridPane.setColumnSpan(contenedor, 1);
                     }
+
 
 
                     event.setDropCompleted(true);
@@ -515,6 +517,40 @@ public class VistaConfiguracionTableroController {
         stage.setScene(scene);
         stage.show();
     }
+
+    private StackPane crearContenedorBarco(Barco barco, Orientacion orientacion) {
+
+
+        int t = barco.getTamanio();
+        double w = (orientacion == Orientacion.HORIZONTAL) ? (t * CELL) : CELL;
+        double h = (orientacion == Orientacion.HORIZONTAL) ? CELL : (t * CELL);
+
+        StackPane box = new StackPane();
+        box.setPrefSize(w, h);
+        box.setMinSize(w, h);
+        box.setMaxSize(w, h);
+        box.setAlignment(Pos.CENTER);
+
+
+        var node = barco.getForma();
+
+
+        node.getTransforms().clear();
+        node.setRotate(0);
+        node.setTranslateX(0);
+        node.setTranslateY(0);
+
+        if (orientacion == Orientacion.VERTICAL) {
+            Bounds b = node.getBoundsInLocal();
+            double pivotX = b.getMinX() + b.getWidth() / 2.0;
+            double pivotY = b.getMinY() + b.getHeight() / 2.0;
+            node.getTransforms().add(new Rotate(90, pivotX, pivotY));
+        }
+
+        box.getChildren().add(node);
+        return box;
+    }
+
 
 
 }

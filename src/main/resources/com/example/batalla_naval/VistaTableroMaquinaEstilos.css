@@ -1,60 +1,65 @@
-/* ================================
-   ESTILOS BASE DE LA VENTANA
-================================ */
+.enemy-root {
+    -fx-background-color: linear-gradient(to bottom, #06090f, #0b1020);
+}
 
+/* HEADER */
+.header {
+    -fx-padding: 14 20;
+    -fx-background-color: rgba(10,14,24,0.55);
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-border-color: rgba(255,255,255,0.08);
+}
 
-.tablero-maquina-pane {
-    -fx-background-color: #9ec3d1;
-    -fx-font-family: "Arial Rounded MT Bold", Arial, sans-serif;
+.title {
+    -fx-text-fill: #E6EAF2;
+    -fx-font-size: 22px;
+    -fx-font-weight: 900;
+}
+
+.subtitle {
+    -fx-text-fill: rgba(230,234,242,0.70);
+    -fx-font-size: 13px;
+}
+
+/* CONTENEDOR DEL TABLERO */
+.board-container {
     -fx-padding: 20;
-}
-
-/* ================================
-   ESTILOS DEL GRIDPANE (EL TABLERO)
-================================ */
-
-.tablero-grid {
-
-    -fx-background-color: #7bb5cc;
-    -fx-border-color: #2f5569;
-    -fx-border-width: 3;
-    -fx-border-radius: 5;
-    -fx-background-radius: 5;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 10, 0.4, 3, 3); /* Sombra más fuerte para que parezca elevado */
-}
-
-/* ================================
-   ESTILOS DE LAS CELDAS INDIVIDUALES
-================================ */
-
-
-.celda-base {
-    -fx-background-color: #a4d3e8;
-    -fx-border-color: #6a9eb5;
+    -fx-background-color: rgba(8,10,16,0.6);
+    -fx-background-radius: 18;
+    -fx-border-radius: 18;
+    -fx-border-color: rgba(255,255,255,0.10);
     -fx-border-width: 1;
 }
 
-
-.celda-agua {
-    -fx-background-color: #3b82f6;
-    -fx-border-color: #1e3a8a;
+/* GRID */
+.enemy-grid {
+    -fx-background-color: #0b1220;
+    -fx-border-color: rgba(255,255,255,0.12);
+    -fx-border-width: 1;
 }
 
-
-.celda-tocado {
-    -fx-background-color: #dc2626;
-    -fx-border-color: #991b1b;
-}
-
-
-.celda-hundido {
-    -fx-background-color: #7f1d1d;
-    -fx-border-color: #450a0a;
-}
-
-
-.label-coordenada {
+/* BOTÓN */
+.btn-primary {
+    -fx-padding: 10 22;
     -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #1d1d1d;
+    -fx-font-weight: 800;
+    -fx-text-fill: #F2F4F8;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-background-color: linear-gradient(
+        to bottom,
+        rgba(80,160,140,0.55),
+        rgba(30,90,80,0.65)
+    );
+    -fx-border-color: rgba(255,255,255,0.2);
+    -fx-cursor: hand;
+}
+
+.btn-primary:hover {
+    -fx-background-color: linear-gradient(
+        to bottom,
+        rgba(100,190,165,0.65),
+        rgba(40,110,95,0.75)
+    );
 }

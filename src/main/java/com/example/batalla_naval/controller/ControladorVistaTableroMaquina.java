@@ -2,12 +2,21 @@ package com.example.batalla_naval.controller;
 import com.example.batalla_naval.model.Barco;
 import com.example.batalla_naval.model.Celda;
 import com.example.batalla_naval.model.Tablero;
+import com.example.batalla_naval.util.SoundEffects;
 import com.example.batalla_naval.util.TableroUIFactory;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.event.ActionEvent;
+import javafx.stage.Stage;
+
 import java.util.List;
 
 public class ControladorVistaTableroMaquina {
@@ -19,6 +28,7 @@ public class ControladorVistaTableroMaquina {
 
     @FXML
     private GridPane gridTableroMaquina;
+    @FXML  private Button btnHecho;
 
 
     private Pane[][] celdasTablero;
@@ -26,6 +36,9 @@ public class ControladorVistaTableroMaquina {
     @FXML
     public void initialize() {
 
+        btnHecho.setOnMouseEntered(e->{
+            SoundEffects.playHover();
+        });
         celdasTablero = TableroUIFactory.construirTablero(gridTableroMaquina, TAM, CELL);
 
 
@@ -35,6 +48,14 @@ public class ControladorVistaTableroMaquina {
                 celdasTablero[f][c].setStyle(base);
             }
         }
+    }
+
+
+    @FXML
+    private void onVolverConfiguracion(ActionEvent event) {
+        SoundEffects.playNegativeClick();
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.close();
     }
 
     /**

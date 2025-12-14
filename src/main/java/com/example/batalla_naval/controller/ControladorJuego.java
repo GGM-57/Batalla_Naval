@@ -16,6 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
 import com.example.batalla_naval.util.SoundEffects;
@@ -44,7 +45,7 @@ public class ControladorJuego {
     private static final int TAM= 10;
     /*  tiempo de espera de la maquina*/
     private static final double DELAY_MAQUINA_SEG= 0.5;
-    public Button btnAccionMaquina; /*boton para mostrar tablero maquina*/
+    public Button btnVstaBarcosEnemigos; /*boton para mostrar tablero maquina*/
 
     @FXML private GridPane gridJugador;
     @FXML private GridPane gridMaquina;
@@ -117,8 +118,8 @@ public class ControladorJuego {
         }
 
         /*habilitacion del boton de mostrar tablero maquina*/
-        if (btnAccionMaquina != null) {
-            btnAccionMaquina.setDisable(false);
+        if (btnVstaBarcosEnemigos != null) {
+            btnVstaBarcosEnemigos.setDisable(false);
         }
 
         /*codigo para dar click en las celdas del enemigo*/
@@ -128,8 +129,8 @@ public class ControladorJuego {
                 final int c= col;
                 celdasMaquina[fila][col].setOnMouseClicked(e -> {
                    /*deshabiliatar el boton de revelar tablero del oponente*/
-                    if (btnAccionMaquina != null) {
-                    btnAccionMaquina.setDisable(true);
+                    if (btnVstaBarcosEnemigos != null) {
+                    btnVstaBarcosEnemigos.setDisable(true);
                     }
 
                     manejarDisparoJugador(f, c);
@@ -154,6 +155,7 @@ public class ControladorJuego {
 
     @FXML
     private void initialize() {
+        btnVstaBarcosEnemigos.setOnMouseEntered(e->{SoundEffects.playHover();});
         String nombre= SesionJuego.getNombreJugador();
         lblTurno.setText("Turno de " + nombre);
         if (lblTableroJugador != null) {
@@ -323,8 +325,8 @@ public class ControladorJuego {
             iniciarCronometro(); /*Inicia el juego y el tiempo*/
             /*Deshabilita el botón de revelar tablero oponente después del primer disparo*/
 
-            if (btnAccionMaquina != null) {
-                btnAccionMaquina.setDisable(true);
+            if (btnVstaBarcosEnemigos != null) {
+                btnVstaBarcosEnemigos.setDisable(true);
             }
         }
 
@@ -768,30 +770,38 @@ public class ControladorJuego {
 
 /*metodo para mostrar el tablero de la maquina en segundo plano. Se conecta con VistaTableroMaquina.FXML
  y con el ControladorVistaTableroMaquina*/
-    public void handleAccionMaquina(ActionEvent actionEvent) {
-        try {
 
+
+    public void onVstaBarcosEnemigos(ActionEvent actionEvent) {
+        SoundEffects.playClick();
+        try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/example/batalla_naval/VistaTableroMaquina.fxml")
             );
             Parent root = loader.load();
 
-            ControladorVistaTableroMaquina ctrlMaquina = loader.getController();
+            ControladorVistaTableroMaquina ctrl = loader.getController();
+            ctrl.cargarDatosYMostrar(this.tableroMaquina, this.flotaMaquina);
 
-            ctrlMaquina.cargarDatosYMostrar(this.tableroMaquina, this.flotaMaquina);
-
+            Stage owner = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
 
             Stage stage = new Stage();
-            stage.setTitle("Tablero de la Máquina");
-            stage.setScene(new Scene(root));
+            stage.initOwner(owner);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setTitle("Reconocimiento del Enemigo");
 
+            stage.setScene(new Scene(root, 1080, 720));
+            stage.setResizable(false);
+            stage.centerOnScreen();
 
-
-            stage.show();
+            stage.showAndWait();
 
         } catch (IOException e) {
             e.printStackTrace();
             lblEstado.setText("Error al cargar la vista del tablero de la máquina.");
         }
     }
+
+
+
 }

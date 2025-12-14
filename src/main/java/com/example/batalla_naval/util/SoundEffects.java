@@ -45,25 +45,25 @@ public class SoundEffects {
 
     public static void playClick() {
         if (clickSound != null){
-            clickSound.play(0.6);
+            clickSound.play(0.9);
         }
     }
 
     public static void playNegativeClick(){
         if(clickNegativeSound !=null){
-            clickNegativeSound.play(0.6);
+            clickNegativeSound.play(0.9);
         }
     }
 
     public static void playPosicionarBarco(){
         if(posicionarBarcoSound !=null){
-            posicionarBarcoSound.play(0.6);
+            posicionarBarcoSound.play(0.9);
         }
     }
 
     public static void playExplosion1(){
         if(explosion1 !=null){
-            explosion1.play(0.6);
+            explosion1.play(0.9);
         }
     }
 
@@ -79,11 +79,6 @@ public class SoundEffects {
         }
     }
 
-    public static void stopAguaSalpicada() {
-        if (aguaSalpicada != null) {
-            aguaSalpicada.stop();
-        }
-    }
     public static void proyectilLanzado() {
         if (proyectil != null) {
             proyectil.play(0.9);

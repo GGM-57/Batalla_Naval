@@ -11,142 +11,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.batalla_naval.controller.ControladorJuego"
-            prefWidth="1080.0" prefHeight="720.0"
-            stylesheets="@VistaBatalla.css">
-
-    <children>
-        <BorderPane prefWidth="1080.0" prefHeight="720.0"
-                    AnchorPane.topAnchor="0.0"
-                    AnchorPane.bottomAnchor="0.0"
-                    AnchorPane.leftAnchor="0.0"
-                    AnchorPane.rightAnchor="0.0">
-
-            <top>
-                <VBox spacing="4.0" BorderPane.alignment="CENTER">
-                    <padding>
-                        <Insets top="15" right="15" bottom="10" left="15"/>
-                    </padding>
-                    <children>
-                        <Label fx:id="lblTitulo" text="Batalla Naval"/>
-
-                        <HBox spacing="12" alignment="CENTER_LEFT">
-                            <Label fx:id="lblTurno" text="Turno del jugador"/>
-                            <Label fx:id="lblCronometro" text="00:00"
-                                   style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
-                        </HBox>
-                    </children>
-
-                </VBox>
-            </top>
-
-            <center>
-                <HBox spacing="30.0" BorderPane.alignment="CENTER">
-                    <padding>
-                        <Insets top="10" right="15" bottom="10" left="15"/>
-                    </padding>
-
-                    <children>
-
-                        <VBox spacing="10.0" styleClass="vbox-board">
-                            <children>
-                                <Label fx:id="lblTableroJugador"
-                                       text="Tablero del Jugador"
-                                       styleClass="board-title"/>
-
-
-                                <GridPane fx:id="gridJugador"
-                                          prefWidth="450.0" prefHeight="450.0"
-                                          styleClass="grid-board">
-
-                                    <columnConstraints>
-                                        <ColumnConstraints/>
-                                        <ColumnConstraints/>
-                                        <ColumnConstraints/>
-                                    </columnConstraints>
-
-                                    <rowConstraints>
-                                        <RowConstraints/>
-                                        <RowConstraints/>
-                                        <RowConstraints/>
-                                    </rowConstraints>
-
-                                </GridPane>
-                            </children>
-                        </VBox>
-
-                        <VBox spacing="10.0" styleClass="vbox-board" alignment="CENTER">
-                            <children>
-                                <Label text="Tablero de la Máquina"
-                                       styleClass="board-title"/>
-
-                                <GridPane fx:id="gridMaquina"
-                                          prefWidth="450.0" prefHeight="450.0"
-                                          styleClass="grid-board">
-
-                                    <columnConstraints>
-                                        <ColumnConstraints/>
-                                        <ColumnConstraints/>
-                                        <ColumnConstraints/>
-                                    </columnConstraints>
-
-                                    <rowConstraints>
-                                        <RowConstraints/>
-                                        <RowConstraints/>
-                                        <RowConstraints/>
-                                    </rowConstraints>
-
-                                </GridPane>
-
-                                <Button fx:id="btnAccionMaquina"
-                                        text="Revelar tablero"
-                                        onAction="#handleAccionMaquina"/>
-
-                            </children>
-                        </VBox>
-
-                    </children>
-                </HBox>
-            </center>
-
-            <bottom>
-                <VBox spacing="8.0" BorderPane.alignment="CENTER">
-                    <padding>
-                        <Insets top="10" right="15" bottom="15" left="15"/>
-                    </padding>
-
-                    <children>
-
-                        <Label fx:id="lblEstado"
-                               text="Coloca el cursor sobre el tablero enemigo y dispara."/>
-
-                        <HBox spacing="10.0">
-                            <children>
-                                <Button fx:id="btnVolverMenu"
-                                        text="Volver al menú"/>
-
-                                <Button fx:id="btnRendirse"
-                                        text="Rendirse"/>
-                            </children>
-                        </HBox>
-
-                    </children>
-                </VBox>
-            </bottom>
-
-        </BorderPane>
-    </children>
-</AnchorPane>
-
-
-
-
-
-
 <!--<?xml version="1.0" encoding="UTF-8"?>-->
-
 <!--<?import javafx.geometry.Insets?>-->
 <!--<?import javafx.scene.control.Button?>-->
 <!--<?import javafx.scene.control.Label?>-->
@@ -157,20 +22,17 @@
 <!--<?import javafx.scene.layout.HBox?>-->
 <!--<?import javafx.scene.layout.RowConstraints?>-->
 <!--<?import javafx.scene.layout.VBox?>-->
-
 <!--<AnchorPane xmlns="http://javafx.com/javafx"-->
 <!--            xmlns:fx="http://javafx.com/fxml"-->
 <!--            fx:controller="com.example.batalla_naval.controller.ControladorJuego"-->
 <!--            prefWidth="1080.0" prefHeight="720.0"-->
 <!--            stylesheets="@VistaBatalla.css">-->
-
 <!--    <children>-->
 <!--        <BorderPane prefWidth="1080.0" prefHeight="720.0"-->
 <!--                    AnchorPane.topAnchor="0.0"-->
 <!--                    AnchorPane.bottomAnchor="0.0"-->
 <!--                    AnchorPane.leftAnchor="0.0"-->
 <!--                    AnchorPane.rightAnchor="0.0">-->
-
 <!--            &lt;!&ndash; ===== CABECERA ===== &ndash;&gt;-->
 <!--            <top>-->
 <!--                <VBox spacing="4.0" BorderPane.alignment="CENTER">-->
@@ -179,118 +41,91 @@
 <!--                    </padding>-->
 <!--                    <children>-->
 <!--                        <Label fx:id="lblTitulo" text="Batalla Naval"/>-->
-
 <!--                        <HBox spacing="12" alignment="CENTER_LEFT">-->
 <!--                            <Label fx:id="lblTurno" text="Turno del jugador"/>-->
 <!--                            <Label fx:id="lblCronometro" text="00:00"-->
 <!--                                   style="-fx-font-size: 22px; -fx-font-weight: bold;"/>-->
 <!--                        </HBox>-->
 <!--                    </children>-->
-
 <!--                </VBox>-->
 <!--            </top>-->
-
 <!--            &lt;!&ndash; ===== CENTRO: TABLEROS ===== &ndash;&gt;-->
 <!--            <center>-->
 <!--                <HBox spacing="30.0" BorderPane.alignment="CENTER">-->
 <!--                    <padding>-->
 <!--                        <Insets top="10" right="15" bottom="10" left="15"/>-->
 <!--                    </padding>-->
-
 <!--                    <children>-->
-
 <!--                        &lt;!&ndash; PANEL JUGADOR &ndash;&gt;-->
 <!--                        <VBox spacing="10.0" styleClass="vbox-board">-->
 <!--                            <children>-->
 <!--                                <Label fx:id="lblTableroJugador"-->
 <!--                                       text="Tablero del Jugador"-->
 <!--                                       styleClass="board-title"/>-->
-
-
 <!--                                <GridPane fx:id="gridJugador"-->
 <!--                                          prefWidth="450.0" prefHeight="450.0"-->
 <!--                                          styleClass="grid-board">-->
-
 <!--                                    <columnConstraints>-->
 <!--                                        <ColumnConstraints/>-->
 <!--                                        <ColumnConstraints/>-->
 <!--                                        <ColumnConstraints/>-->
 <!--                                    </columnConstraints>-->
-
 <!--                                    <rowConstraints>-->
 <!--                                        <RowConstraints/>-->
 <!--                                        <RowConstraints/>-->
 <!--                                        <RowConstraints/>-->
 <!--                                    </rowConstraints>-->
-
 <!--                                </GridPane>-->
 <!--                            </children>-->
 <!--                        </VBox>-->
-
 <!--                        &lt;!&ndash; PANEL MÁQUINA &ndash;&gt;-->
 <!--                        <VBox spacing="10.0" styleClass="vbox-board">-->
 <!--                            <children>-->
 <!--                                <Label text="Tablero de la Máquina"-->
 <!--                                       styleClass="board-title"/>-->
-
 <!--                                <GridPane fx:id="gridMaquina"-->
 <!--                                          prefWidth="450.0" prefHeight="450.0"-->
 <!--                                          styleClass="grid-board">-->
-
 <!--                                    <columnConstraints>-->
 <!--                                        <ColumnConstraints/>-->
 <!--                                        <ColumnConstraints/>-->
 <!--                                        <ColumnConstraints/>-->
 <!--                                    </columnConstraints>-->
-
 <!--                                    <rowConstraints>-->
 <!--                                        <RowConstraints/>-->
 <!--                                        <RowConstraints/>-->
 <!--                                        <RowConstraints/>-->
 <!--                                    </rowConstraints>-->
-
 <!--                                </GridPane>-->
 <!--                            </children>-->
 <!--                        </VBox>-->
-
 <!--                    </children>-->
 <!--                </HBox>-->
 <!--            </center>-->
-
 <!--            &lt;!&ndash; ===== PIE DE PÁGINA ===== &ndash;&gt;-->
 <!--            <bottom>-->
 <!--                <VBox spacing="8.0" BorderPane.alignment="CENTER">-->
 <!--                    <padding>-->
 <!--                        <Insets top="10" right="15" bottom="15" left="15"/>-->
 <!--                    </padding>-->
-
 <!--                    <children>-->
-
 <!--                        <Label fx:id="lblEstado"-->
 <!--                               text="Coloca el cursor sobre el tablero enemigo y dispara."/>-->
-
 <!--                        <HBox spacing="10.0">-->
 <!--                            <children>-->
 <!--                                <Button fx:id="btnVolverMenu"-->
 <!--                                        text="Volver al menú"/>-->
-
 <!--                                <Button fx:id="btnRendirse"-->
 <!--                                        text="Rendirse"/>-->
 <!--                            </children>-->
 <!--                        </HBox>-->
-
 <!--                    </children>-->
 <!--                </VBox>-->
 <!--            </bottom>-->
-
 <!--        </BorderPane>-->
 <!--    </children>-->
 <!--</AnchorPane>-->
-
-
-
-        <!--<?xml version="1.0" encoding="UTF-8"?>-->
-
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
 <!--<?import javafx.geometry.Insets?>-->
 <!--<?import javafx.scene.control.Button?>-->
 <!--<?import javafx.scene.control.Label?>-->
@@ -301,17 +136,14 @@
 <!--<?import javafx.scene.layout.HBox?>-->
 <!--<?import javafx.scene.layout.RowConstraints?>-->
 <!--<?import javafx.scene.layout.VBox?>-->
-
 <!--<AnchorPane xmlns="http://javafx.com/javafx"-->
 <!--            xmlns:fx="http://javafx.com/fxml"-->
 <!--            fx:controller="com.example.batalla_naval.controller.ControladorJuego"-->
 <!--            prefWidth="1080.0" prefHeight="720.0">-->
-
 <!--    <children>-->
 <!--        <BorderPane prefWidth="1080.0" prefHeight="720.0"-->
 <!--                    AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"-->
 <!--                    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">-->
-
 <!--            &lt;!&ndash; CABECERA &ndash;&gt;-->
 <!--            <top>-->
 <!--                <VBox spacing="4.0" BorderPane.alignment="CENTER">-->
@@ -322,15 +154,12 @@
 <!--                        <Label fx:id="lblTitulo"-->
 <!--                               text="Batalla Naval"/>-->
 <!--&lt;!&ndash;                               style="-fx-font-size: 28px; -fx-text-fill: #0f172a; -fx-font-weight: bold;"&ndash;&gt;-->
-
 <!--                        <Label fx:id="lblTurno"-->
 <!--                               text="Turno del jugador"/>-->
 <!--&lt;!&ndash;                               style="-fx-font-size: 16px; -fx-text-fill: #1f2933;"&ndash;&gt;-->
-
 <!--                    </children>-->
 <!--                </VBox>-->
 <!--            </top>-->
-
 <!--            &lt;!&ndash; CENTRO: DOS TABLEROS &ndash;&gt;-->
 <!--            <center>-->
 <!--                <HBox spacing="30.0" BorderPane.alignment="CENTER">-->
@@ -338,7 +167,6 @@
 <!--                        <Insets top="10" right="15" bottom="10" left="15"/>-->
 <!--                    </padding>-->
 <!--                    <children>-->
-
 <!--                        &lt;!&ndash; PANEL JUGADOR &ndash;&gt;-->
 <!--                        <VBox spacing="10.0">-->
 <!--                            <children>-->
@@ -362,7 +190,6 @@
 <!--                                -fx-background-radius: 12;-->
 <!--                            </style>-->
 <!--                        </VBox>-->
-
 <!--                        &lt;!&ndash; PANEL MÁQUINA &ndash;&gt;-->
 <!--                        <VBox spacing="10.0">-->
 <!--                            <children>-->
@@ -385,11 +212,9 @@
 <!--                                -fx-background-radius: 12;-->
 <!--                            </style>-->
 <!--                        </VBox>-->
-
 <!--                    </children>-->
 <!--                </HBox>-->
 <!--            </center>-->
-
 <!--            &lt;!&ndash; PIE: MENSAJES Y BOTONES &ndash;&gt;-->
 <!--            <bottom>-->
 <!--                <VBox spacing="8.0" BorderPane.alignment="CENTER">-->
@@ -401,7 +226,6 @@
 <!--                               text="Coloca el cursor sobre el tablero enemigo y dispara."-->
 <!--                               style="-fx-font-size: 14px; -fx-text-fill: #0f172a;"-->
 <!--                        />-->
-
 <!--                        <HBox spacing="10.0">-->
 <!--                            <children>-->
 <!--                                <Button fx:id="btnVolverMenu"-->
@@ -415,7 +239,6 @@
 <!--                    </children>-->
 <!--                </VBox>-->
 <!--            </bottom>-->
-
 <!--            &lt;!&ndash; COLOR DE FONDO GENERAL &ndash;&gt;-->
 <!--            <style>-->
 <!--                -fx-background-color: #93c5fd;-->
@@ -423,3 +246,111 @@
 <!--        </BorderPane>-->
 <!--    </children>-->
 <!--</AnchorPane>-->
+
+<AnchorPane prefHeight="720.0" prefWidth="1080.0" stylesheets="@VistaBatalla.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.batalla_naval.controller.ControladorJuego">
+
+    <children>
+        <BorderPane prefHeight="720.0" prefWidth="1080.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+
+            <top>
+                <VBox spacing="4.0" BorderPane.alignment="CENTER">
+                    <padding>
+                        <Insets bottom="10" left="15" right="15" top="15" />
+                    </padding>
+                    <children>
+                        <Label fx:id="lblTitulo" text="Batalla Naval" />
+
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <Label fx:id="lblTurno" text="Turno del jugador" />
+                            <Label fx:id="lblCronometro" style="-fx-font-size: 22px; -fx-font-weight: bold;" text="00:00" />
+                        </HBox>
+                    </children>
+
+                </VBox>
+            </top>
+
+            <center>
+                <HBox spacing="30.0" BorderPane.alignment="CENTER">
+                    <padding>
+                        <Insets bottom="10" left="15" right="15" top="10" />
+                    </padding>
+
+                    <children>
+
+                        <VBox spacing="10.0" styleClass="vbox-board">
+                            <children>
+                                <Label fx:id="lblTableroJugador" styleClass="board-title" text="Tablero del Jugador" />
+
+
+                                <GridPane fx:id="gridJugador" prefHeight="450.0" prefWidth="450.0" styleClass="grid-board">
+
+                                    <columnConstraints>
+                                        <ColumnConstraints />
+                                        <ColumnConstraints />
+                                        <ColumnConstraints />
+                                    </columnConstraints>
+
+                                    <rowConstraints>
+                                        <RowConstraints />
+                                        <RowConstraints />
+                                        <RowConstraints />
+                                    </rowConstraints>
+
+                                </GridPane>
+                            </children>
+                        </VBox>
+
+                        <VBox alignment="CENTER" spacing="10.0" styleClass="vbox-board">
+                            <children>
+                                <Label styleClass="board-title" text="Tablero de la Máquina" />
+
+                                <GridPane fx:id="gridMaquina" prefHeight="450.0" prefWidth="450.0" styleClass="grid-board">
+
+                                    <columnConstraints>
+                                        <ColumnConstraints />
+                                        <ColumnConstraints />
+                                        <ColumnConstraints />
+                                    </columnConstraints>
+
+                                    <rowConstraints>
+                                        <RowConstraints />
+                                        <RowConstraints />
+                                        <RowConstraints />
+                                    </rowConstraints>
+
+                                </GridPane>
+
+                                <Button fx:id="btnVstaBarcosEnemigos" onAction="#onVstaBarcosEnemigos" text="Revelar tablero" />
+
+                            </children>
+                        </VBox>
+
+                    </children>
+                </HBox>
+            </center>
+
+            <bottom>
+                <VBox spacing="8.0" BorderPane.alignment="CENTER">
+                    <padding>
+                        <Insets bottom="15" left="15" right="15" top="10" />
+                    </padding>
+
+                    <children>
+
+                        <Label fx:id="lblEstado" text="Coloca el cursor sobre el tablero enemigo y dispara." />
+
+                        <HBox spacing="10.0">
+                            <children>
+                                <Button fx:id="btnVolverMenu" text="Volver al menú" />
+
+                                <Button fx:id="btnRendirse" text="Rendirse" />
+                            </children>
+                        </HBox>
+
+                    </children>
+                </VBox>
+            </bottom>
+
+        </BorderPane>
+    </children>
+</AnchorPane>

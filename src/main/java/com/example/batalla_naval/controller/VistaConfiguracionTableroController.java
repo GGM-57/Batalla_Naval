@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -25,6 +26,7 @@ import javafx.util.Duration;
 import com.example.batalla_naval.model.Coordenada;
 import com.example.batalla_naval.model.Orientacion;
 import javafx.event.ActionEvent;
+import javafx.scene.control.Tooltip;
 
 import java.io.IOException;
 
@@ -46,6 +48,8 @@ public class VistaConfiguracionTableroController {
     private static final int MAX_DESTRUCTORES = 3;
     private static final int MAX_SUBMARINOS = 2;
     private static final int MAX_PORTAAVIONES = 1;
+    private Orientacion orientacionActual = Orientacion.HORIZONTAL;
+
 
     private int fragatasColocadas = 0;
     private int destructoresColocados = 0;
@@ -148,6 +152,21 @@ public class VistaConfiguracionTableroController {
 
     private void habilitarDrag(Pane paneNavio) {
 
+        Label orientLabel = new Label("H");
+        orientLabel.setStyle(
+                "-fx-background-color: rgba(0,0,0,0.7);" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-size: 10px;" +
+                        "-fx-padding: 2 4 2 4;" +
+                        "-fx-background-radius: 4;"
+        );
+
+
+        orientLabel.setTranslateX(5);
+        orientLabel.setTranslateY(5);
+
+        paneNavio.getChildren().add(orientLabel);
+
 
         paneNavio.setOnMouseEntered(e -> {
             SoundEffects.playHover();
@@ -180,6 +199,30 @@ public class VistaConfiguracionTableroController {
             st.play();
 
         });
+        paneNavio.setOnMouseClicked(e -> {
+            if (e.getButton() == MouseButton.SECONDARY) {
+                orientacionActual = (orientacionActual == Orientacion.HORIZONTAL)
+                        ? Orientacion.VERTICAL
+                        : Orientacion.HORIZONTAL;
+
+                orientLabel.setText(
+                        orientacionActual == Orientacion.HORIZONTAL ? "H" : "V"
+                );
+
+                informationLabel.setText(
+                        "Orientación: " + orientacionActual + " (clic derecho para cambiar)"
+                );
+            }
+        });
+
+
+
+        Tooltip tip = new Tooltip("Clic derecho para rotar (H / V)");
+        tip.setShowDelay(Duration.ZERO);
+        tip.setHideDelay(Duration.seconds(0.1));
+        tip.setShowDuration(Duration.seconds(4));
+        Tooltip.install(paneNavio, tip);
+
 
 
 
@@ -245,7 +288,7 @@ public class VistaConfiguracionTableroController {
                     int fila    = (int) (event.getY()/CELL);
 
 
-                    Orientacion orientacion = Orientacion.HORIZONTAL;
+                    Orientacion orientacion = orientacionActual;
 
 
                     Barco barcoTemporal = new Barco(tipo, tamanio);
@@ -335,7 +378,8 @@ public class VistaConfiguracionTableroController {
 
 
 
-                Orientacion orientacion = Orientacion.HORIZONTAL;
+                Orientacion orientacion = orientacionActual;
+
 
 
                 boolean colocado = tableroJugador.ubicarBarco(barco, inicio, orientacion);
@@ -350,7 +394,21 @@ public class VistaConfiguracionTableroController {
                     barco.getForma().setTranslateY(0);
                     tableroJugadorGrid.add(barco.getForma(), columna, fila);
 
-                    GridPane.setColumnSpan(barco.getForma(), barco.getTamanio());
+                    if (orientacion == Orientacion.VERTICAL) {
+                        barco.getForma().setRotate(90);
+                    } else {
+                        barco.getForma().setRotate(0);
+                    }
+
+
+                    if (orientacion == Orientacion.HORIZONTAL) {
+                        GridPane.setColumnSpan(barco.getForma(), barco.getTamanio());
+                        GridPane.setRowSpan(barco.getForma(), 1);
+                    } else {
+                        GridPane.setRowSpan(barco.getForma(), barco.getTamanio());
+                        GridPane.setColumnSpan(barco.getForma(), 1);
+                    }
+
 
                     event.setDropCompleted(true);
 

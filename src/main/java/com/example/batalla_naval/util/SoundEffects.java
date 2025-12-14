@@ -48,6 +48,11 @@ public class SoundEffects {
             clickSound.play(0.9);
         }
     }
+    public static void stoplayClick() {
+        if (clickSound != null){
+            clickSound.stop();
+        }
+    }
 
     public static void playNegativeClick(){
         if(clickNegativeSound !=null){

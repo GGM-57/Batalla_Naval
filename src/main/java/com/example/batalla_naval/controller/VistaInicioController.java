@@ -30,7 +30,10 @@ public class VistaInicioController {
 
     @FXML
     private void initialize() {
-
+        usernameField.textProperty().addListener((obs, oldText, newText) -> {
+            if (!newText.trim().isEmpty()) {
+                usernameField.setStyle("");
+            }});
 
         MusicManager.playMenuMusic();
         jugarButton.setOnMouseEntered(e -> SoundEffects.playHover());
@@ -50,13 +53,37 @@ public class VistaInicioController {
             SoundEffects.playClick();
             onInstruccionesClick(e);
         });
+        usernameField.setOnAction(e -> {
+            SoundEffects.playClick();
+            try {
+                onJugarClick(new ActionEvent(usernameField, null));
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+
 
 
     }
 
     @FXML
     private void onJugarClick(ActionEvent event) throws IOException {
-        SesionJuego.setNombreJugador(usernameField.getText());
+        String nombre = usernameField.getText().trim();
+
+        if (nombre.isEmpty()) {
+            usernameField.setStyle(
+                    "-fx-border-color: #ef4444;" + "-fx-border-width: 2;" + "-fx-background-color: #1f2937;" +
+                            "-fx-text-fill: white;"
+            );
+
+            usernameField.requestFocus();
+            SoundEffects.stoplayClick();
+            SoundEffects.playNegativeClick();
+            return;
+        }
+        usernameField.setStyle("");
+
+        SesionJuego.setNombreJugador(nombre);
         cambiarVentana(event, "/com/example/batalla_naval/VistaConfiguracionTablero.fxml");
     }
 

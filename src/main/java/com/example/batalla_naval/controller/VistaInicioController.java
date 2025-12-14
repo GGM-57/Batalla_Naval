@@ -34,6 +34,7 @@ public class VistaInicioController {
             if (!newText.trim().isEmpty()) {
                 usernameField.setStyle("");
             }});
+        System.out.println("el juego corre perfectamente");
 
         MusicManager.playMenuMusic();
         jugarButton.setOnMouseEntered(e -> SoundEffects.playHover());

@@ -7,12 +7,12 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="rootContainer" alignment="CENTER" spacing="30.0" styleClass="defeat-container" stylesheets="@VistaDerrota.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.batalla_naval.controller.ControladorDerrota">
+<VBox fx:id="rootContainer" alignment="CENTER" prefHeight="629.0" prefWidth="655.0" spacing="30.0" styleClass="defeat-container" stylesheets="@VistaDerrota.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.batalla_naval.controller.ControladorDerrota">
 
     <Label styleClass="defeat-title" text="¡FLOTA HUNDIDA!" />
 
-    <ImageView fitHeight="200.0" pickOnBounds="true" preserveRatio="true">
-        <Image url="@images/fuego1.gif" />
+    <ImageView fitHeight="321.0" fitWidth="792.0" pickOnBounds="true" preserveRatio="true">
+        <Image url="@images/barcosdestruidos.gif" />
     </ImageView>
 
     <Label styleClass="defeat-message" text="La máquina ha destruido todos tus barcos." />

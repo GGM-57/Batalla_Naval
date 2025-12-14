@@ -36,22 +36,19 @@ public class Tablero {
     }
 
 
-    // Validar si se puede ubicar el barco
     public boolean puedeUbicarBarco(Barco barco, Coordenada inicio, Orientacion orientacion) {
         int fila = inicio.getFila();
         int columna = inicio.getColumna();
         int tamanio = barco.getTamanio();
 
-        // 1) Primero: validar que el barco cabe y que NO choca directamente
         for (int i = 0; i < tamanio; i++) {
             int f = (orientacion == Orientacion.VERTICAL) ? fila + i : fila;
             int c = (orientacion == Orientacion.HORIZONTAL) ? columna + i : columna;
 
-            if (!dentro(f, c)) return false;                 // se sale
-            if (grilla[f][c].tieneBarco()) return false;     // choque directo
+            if (!dentro(f, c)) return false;
+            if (grilla[f][c].tieneBarco()) return false;
         }
 
-        // 2) Regla clásica: NO puede haber barcos adyacentes (ni diagonales)
         for (int i = 0; i < tamanio; i++) {
             int f = (orientacion == Orientacion.VERTICAL) ? fila + i : fila;
             int c = (orientacion == Orientacion.HORIZONTAL) ? columna + i : columna;
@@ -63,7 +60,6 @@ public class Tablero {
 
                     if (!dentro(ff, cc)) continue;
 
-                    // Si hay cualquier barco alrededor, es inválido
                     if (grilla[ff][cc].tieneBarco()) return false;
                 }
             }
@@ -73,7 +69,6 @@ public class Tablero {
     }
 
 
-    // Colocar barco si es válido
     public boolean ubicarBarco(Barco barco, Coordenada inicio, Orientacion orientacion) {
         if (!puedeUbicarBarco(barco, inicio, orientacion)) {
             return false;
@@ -100,7 +95,6 @@ public class Tablero {
         return true;
     }
 
-    // Disparo a una coordenada
     public ResultadoDisparo recibirDisparo(Coordenada coord) {
         Celda celda = grilla[coord.getFila()][coord.getColumna()];
 
@@ -136,7 +130,6 @@ public class Tablero {
     }
 
 
-    // Solo para debug
     public void imprimirTableroDebug() {
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {

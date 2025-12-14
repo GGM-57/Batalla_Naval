@@ -284,32 +284,46 @@ public class ControladorJuego {
 
 
     private void colocarFlotaMaquinaAleatoria() {
+        flotaMaquina.clear();
+        tableroMaquina = new Tablero(TAM, TAM);
+
         colocarBarcosDeTipoMaquina("Fragata", 1, 4);
         colocarBarcosDeTipoMaquina("Destructor", 2, 3);
         colocarBarcosDeTipoMaquina("Submarino", 3, 2);
         colocarBarcosDeTipoMaquina("Portaaviones", 4, 1);
     }
 
+
     private void colocarBarcosDeTipoMaquina(String tipo, int tamaño, int cantidad) {
-        int colocados= 0;
+        int colocados = 0;
 
         while (colocados < cantidad) {
-            Barco barco= new Barco(tipo, tamaño);
+            Barco barco = new Barco(tipo, tamaño);
 
-            int fila= random.nextInt(TAM);
-            int col= random.nextInt(TAM);
+            int fila = random.nextInt(TAM);
+            int col  = random.nextInt(TAM);
 
 
-            Orientacion orientacion= Orientacion.HORIZONTAL;
-            Coordenada inicio= new Coordenada(fila, col);
+            Orientacion orientacion = random.nextBoolean()
+                    ? Orientacion.HORIZONTAL
+                    : Orientacion.VERTICAL;
 
-            boolean ok= tableroMaquina.ubicarBarco(barco, inicio, orientacion);
+            Coordenada inicio = new Coordenada(fila, col);
+
+            boolean ok = tableroMaquina.ubicarBarco(barco, inicio, orientacion);
+
             if (ok) {
+
+                barco.setOrientacion(orientacion);
+
                 flotaMaquina.add(barco);
                 colocados++;
+
             }
         }
     }
+
+
 
 
 

@@ -16,33 +16,27 @@ import java.util.List;
 
 public class Barco {
 
-    // ================== LÓGICA DEL JUEGO (MODELO) ==================
-    private String tipo;          // nombre del barco (Fragata, etc.)
-    private int tamaño;           // 1, 2, 3, 4
+    private String tipo;
+    private int tamaño;
     private final List<Coordenada> posiciones = new ArrayList<>();
     private int golpes = 0;
 
     private boolean vertical = true;
     private int fila;
     private int columna;
-    private boolean posicionado = false;   // ¿ya está en el tablero?
+    private boolean posicionado = false;
 
-    // ================== PARTE GRÁFICA (VISTA) ======================
     private Group forma;
     private Orientacion orientacion = Orientacion.HORIZONTAL;
 
-    // para poder quitarlo del GridPane en batalla cuando se hunda
     private Node contenedorEnGrid;
-// grupo de figuras que dibuja el barco
 
     public Barco(String tipo, int tamaño) {
         this.tamaño = tamaño;
         this.tipo = tipo;
 
-        // Crear la figura visual según el tipo
         this.forma = crearForma();
 
-        // Limitar área visible del barco para evitar offsets raros
         forma.layoutBoundsProperty().addListener((obs, oldB, newB) -> {
             Rectangle clip = new Rectangle(
                     newB.getMinX(),
@@ -57,7 +51,6 @@ public class Barco {
         habilitarRotacion();
     }
 
-    // ================== GETTERS / SETTERS DE LÓGICA ==================
 
     public String getTipo() {
         return tipo;
@@ -67,7 +60,6 @@ public class Barco {
         return tamaño;
     }
 
-    // Versión sin ñ para usar desde Tablero
     public int getTamanio() {
         return tamaño;
     }
@@ -91,7 +83,6 @@ public class Barco {
 
     public void setOrientacion(Orientacion orientacion) {
         this.orientacion = orientacion;
-        // opcional: sincronizar tu boolean vertical si lo sigues usando
         this.vertical = (orientacion == Orientacion.VERTICAL);
     }
 
@@ -118,7 +109,6 @@ public class Barco {
         return posiciones;
     }
 
-    // ===== Métodos que pide el diagrama: agregarCoordenada / golpes =====
 
     public void agregarCoordenada(Coordenada coord) {
         posiciones.add(coord);
@@ -132,7 +122,6 @@ public class Barco {
         return golpes >= tamaño;
     }
 
-    // ================== PARTE GRÁFICA ===============================
 
     public Group getForma() {
         return forma;
@@ -180,7 +169,6 @@ public class Barco {
         }
     }
 
-    // ================== DIBUJO DE CADA TIPO ==========================
 
     private Group crearGenerico() {
         Group g = new Group();
@@ -206,7 +194,6 @@ public class Barco {
 
         double alturaCuerpo = 18.0;
 
-        // 1. CUERPO
         Rectangle cuerpo = new Rectangle(longitudCuerpo, alturaCuerpo);
         cuerpo.setArcWidth(10);
         cuerpo.setArcHeight(10);
@@ -215,7 +202,6 @@ public class Barco {
         cuerpo.setStrokeWidth(1.8);
         g.getChildren().add(cuerpo);
 
-        // 2. PROA (Triángulo)
         Polygon proa = new Polygon();
 
         proa.getPoints().addAll(
@@ -228,7 +214,6 @@ public class Barco {
         proa.setStrokeWidth(1.5);
         g.getChildren().add(proa);
 
-        // 3. LÍNEA DECORATIVA
         javafx.scene.shape.Line lineaDecorativa = new javafx.scene.shape.Line();
         lineaDecorativa.setStartX(0);
         lineaDecorativa.setStartY(12);
@@ -238,7 +223,6 @@ public class Barco {
         lineaDecorativa.setStrokeWidth(2);
         g.getChildren().add(lineaDecorativa);
 
-        // 4. CABINA
         Rectangle cabina = new Rectangle(14, 10);
         cabina.setFill(Color.web("#E5E7EB"));
         cabina.setStroke(Color.BLACK);
@@ -247,7 +231,6 @@ public class Barco {
         cabina.setTranslateY(3);
         g.getChildren().add(cabina);
 
-        // 5. VENTANA
         Rectangle ventana = new Rectangle(6, 5);
         ventana.setFill(Color.web("#60A5FA"));
         ventana.setStroke(Color.BLACK);
@@ -266,16 +249,13 @@ public class Barco {
     private Group crearDestructor() {
         Group g = new Group();
 
-        // Destructor ocupa 2 celdas
-        int t = this.tamaño; // debería ser 2
+        int t = this.tamaño;
         double cellStep = 45;
         double anchoSegmento = 40;
         double alto = 18;
 
-        // 40 + 45*(t-1) => para t=2: 85
         double anchoTotal = (t * cellStep) - (cellStep - anchoSegmento);
 
-        // ===== CASCO (UNA SOLA PIEZA) =====
         Rectangle casco = new Rectangle(anchoTotal, alto);
         casco.setArcWidth(18);
         casco.setArcHeight(18);
@@ -284,7 +264,6 @@ public class Barco {
         casco.setStrokeWidth(1.6);
         g.getChildren().add(casco);
 
-        // Proa más clara para dar volumen
         Rectangle proa = new Rectangle(14, alto);
         proa.setArcWidth(18);
         proa.setArcHeight(18);
@@ -293,7 +272,6 @@ public class Barco {
         proa.setTranslateX(anchoTotal - 14);
         g.getChildren().add(proa);
 
-        // Cola (aleta) sin sobresalir
         Rectangle cola = new Rectangle(7, 10);
         cola.setArcWidth(10);
         cola.setArcHeight(10);
@@ -304,7 +282,6 @@ public class Barco {
         cola.setTranslateY(4);
         g.getChildren().add(cola);
 
-        // ===== FRANJA CENTRAL (deck) =====
         Rectangle franja = new Rectangle(anchoTotal - 18, 4);
         franja.setArcWidth(10);
         franja.setArcHeight(10);
@@ -314,7 +291,6 @@ public class Barco {
         franja.setTranslateY(7);
         g.getChildren().add(franja);
 
-        // ===== SUPERSTRUCTURA (dentro del casco) =====
         Rectangle superestructura = new Rectangle(20, 10);
         superestructura.setArcWidth(8);
         superestructura.setArcHeight(8);
@@ -325,7 +301,6 @@ public class Barco {
         superestructura.setTranslateY(4);
         g.getChildren().add(superestructura);
 
-        // Ventanitas (3) sobre la superestructura
         for (int v = 0; v < 3; v++) {
             Rectangle win = new Rectangle(4, 3);
             win.setArcWidth(3);
@@ -338,7 +313,6 @@ public class Barco {
             g.getChildren().add(win);
         }
 
-        // ===== CAÑÓN (dentro del casco, hacia la proa) =====
         Rectangle baseCanon = new Rectangle(10, 6);
         baseCanon.setArcWidth(6);
         baseCanon.setArcHeight(6);
@@ -359,7 +333,6 @@ public class Barco {
         tuboCanon.setTranslateY(8);
         g.getChildren().add(tuboCanon);
 
-        // Luz frontal pequeña
         Rectangle luz = new Rectangle(3, 3);
         luz.setArcWidth(4);
         luz.setArcHeight(4);
@@ -378,14 +351,12 @@ public class Barco {
     private Group crearSubmarino() {
         Group g = new Group();
 
-        // Medidas base (alineadas a tu grilla)
-        double cellStep = 45;     // distancia entre celdas
-        double alto = 18;         // alto del submarino
-        double anchoSegmento = 40; // ancho visual por celda
+        double cellStep = 45;
+        double alto = 18;
+        double anchoSegmento = 40;
 
-        double anchoTotal = (tamaño * cellStep) - (cellStep - anchoSegmento); // 40 + 45*(tamaño-1)
+        double anchoTotal = (tamaño * cellStep) - (cellStep - anchoSegmento);
 
-        // ===== CUERPO PRINCIPAL (UNA SOLA PIEZA) =====
         Rectangle cuerpo = new Rectangle(anchoTotal, alto);
         cuerpo.setArcWidth(22);
         cuerpo.setArcHeight(22);
@@ -394,7 +365,6 @@ public class Barco {
         cuerpo.setStrokeWidth(1.6);
         g.getChildren().add(cuerpo);
 
-        // Proa (nariz) más clara
         Rectangle proa = new Rectangle(14, alto);
         proa.setArcWidth(22);
         proa.setArcHeight(22);
@@ -403,7 +373,6 @@ public class Barco {
         proa.setTranslateX(anchoTotal - 14);
         g.getChildren().add(proa);
 
-        // Cola (aleta) sin sobresalir del alto
         Rectangle cola = new Rectangle(8, 10);
         cola.setArcWidth(10);
         cola.setArcHeight(10);
@@ -414,8 +383,6 @@ public class Barco {
         cola.setTranslateY(4);
         g.getChildren().add(cola);
 
-        // ===== DETALLES SUPERIORES =====
-        // Franja superior (deck)
         Rectangle franja = new Rectangle(anchoTotal - 18, 4);
         franja.setArcWidth(10);
         franja.setArcHeight(10);
@@ -425,7 +392,6 @@ public class Barco {
         franja.setTranslateY(7);
         g.getChildren().add(franja);
 
-        // Escotilla central (centrada)
         double centroX = anchoTotal / 2.0;
         Rectangle escotilla = new Rectangle(14, 9);
         escotilla.setArcWidth(8);
@@ -437,9 +403,8 @@ public class Barco {
         escotilla.setTranslateY(4.5);
         g.getChildren().add(escotilla);
 
-        // Ventanas (3) distribuidas proporcionalmente
         for (int k = 1; k <= 3; k++) {
-            double px = (anchoTotal * (k / 4.0)) - 2.5; // 1/4, 2/4, 3/4
+            double px = (anchoTotal * (k / 4.0)) - 2.5;
             Rectangle ventana = new Rectangle(5, 5);
             ventana.setArcWidth(6);
             ventana.setArcHeight(6);
@@ -451,7 +416,6 @@ public class Barco {
             g.getChildren().add(ventana);
         }
 
-        // Luz frontal
         Rectangle luz = new Rectangle(3, 3);
         luz.setArcWidth(4);
         luz.setArcHeight(4);
@@ -471,27 +435,22 @@ public class Barco {
     private Group crearPortaaviones() {
         Group g = new Group();
 
-        // Usa el tamaño real del barco (en tu caso 4)
-        int t = this.tamaño; // o int t = 4;
+        int t = this.tamaño;
 
-        // Medidas base alineadas a tu grilla
         double cellStep = 45;
         double anchoSegmento = 40;
         double alto = 20;
 
-        // 40 + 45*(t-1)  => para t=4: 175
         double anchoTotal = (t * cellStep) - (cellStep - anchoSegmento);
 
-        // ===== CASCO (UNA SOLA PIEZA) =====
         Rectangle casco = new Rectangle(anchoTotal, alto);
         casco.setArcWidth(18);
         casco.setArcHeight(18);
-        casco.setFill(Color.web("#4b5563"));          // gris naval
+        casco.setFill(Color.web("#4b5563"));
         casco.setStroke(Color.web("#111827"));
         casco.setStrokeWidth(1.8);
         g.getChildren().add(casco);
 
-        // Proa más clara para dar volumen
         Rectangle proa = new Rectangle(18, alto);
         proa.setArcWidth(18);
         proa.setArcHeight(18);
@@ -500,18 +459,16 @@ public class Barco {
         proa.setTranslateX(anchoTotal - 18);
         g.getChildren().add(proa);
 
-        // ===== CUBIERTA (DECK) =====
         Rectangle cubierta = new Rectangle(anchoTotal - 6, alto - 6);
         cubierta.setArcWidth(14);
         cubierta.setArcHeight(14);
-        cubierta.setFill(Color.web("#1f2937"));       // cubierta oscura
+        cubierta.setFill(Color.web("#1f2937"));
         cubierta.setStroke(Color.web("#0b1220"));
         cubierta.setStrokeWidth(1.2);
         cubierta.setTranslateX(3);
         cubierta.setTranslateY(3);
         g.getChildren().add(cubierta);
 
-        // Línea central de la cubierta (amarilla)
         Rectangle lineaCentral = new Rectangle(anchoTotal - 22, 3);
         lineaCentral.setArcWidth(6);
         lineaCentral.setArcHeight(6);
@@ -520,7 +477,6 @@ public class Barco {
         lineaCentral.setTranslateY(9);
         g.getChildren().add(lineaCentral);
 
-        // Marcas blancas pequeñas sobre la pista
         for (int k = 0; k < t; k++) {
             Rectangle marca = new Rectangle(10, 2);
             marca.setFill(Color.web("#e5e7eb"));
@@ -529,7 +485,6 @@ public class Barco {
             g.getChildren().add(marca);
         }
 
-        // Pista oblicua (diagonal simple con Polygon)
         javafx.scene.shape.Polygon pistaOblicua = new javafx.scene.shape.Polygon(
                 anchoTotal * 0.55,  3.0,
                 anchoTotal - 6.0,   3.0,
@@ -541,7 +496,6 @@ public class Barco {
         pistaOblicua.setStrokeWidth(1.0);
         g.getChildren().add(pistaOblicua);
 
-        // ===== ELEVADORES (rectángulos claros) =====
         Rectangle elev1 = new Rectangle(16, 6);
         elev1.setArcWidth(6);
         elev1.setArcHeight(6);
@@ -562,8 +516,6 @@ public class Barco {
         elev2.setTranslateY(4);
         g.getChildren().add(elev2);
 
-        // ===== ISLA / SUPERSTRUCTURA (DENTRO DE LA CUBIERTA) =====
-        // Base isla
         Rectangle isla = new Rectangle(22, 12);
         isla.setArcWidth(8);
         isla.setArcHeight(8);
@@ -574,7 +526,6 @@ public class Barco {
         isla.setTranslateY(5);
         g.getChildren().add(isla);
 
-        // Nivel superior isla
         Rectangle islaTop = new Rectangle(14, 6);
         islaTop.setArcWidth(6);
         islaTop.setArcHeight(6);
@@ -585,7 +536,6 @@ public class Barco {
         islaTop.setTranslateY(3);
         g.getChildren().add(islaTop);
 
-        // Ventanitas isla
         for (int v = 0; v < 3; v++) {
             Rectangle win = new Rectangle(4, 3);
             win.setArcWidth(3);
@@ -598,7 +548,6 @@ public class Barco {
             g.getChildren().add(win);
         }
 
-        // Radar/antena (SIN sobresalir)
         Rectangle radar = new Rectangle(10, 2);
         radar.setArcWidth(4);
         radar.setArcHeight(4);
@@ -612,7 +561,6 @@ public class Barco {
         return g;
     }
 
-    // ================== MAPEO TIPO → TAMAÑO =========================
 
     public static int tamañoPorTipo(String tipo) {
         return switch (tipo) {
@@ -624,17 +572,14 @@ public class Barco {
         };
     }
 
-    // ================== ROTACIÓN ====================================
 
     public void rotarNavio() {
         this.vertical = !this.vertical;
 
-        // Rotamos solo los rectángulos que forman el “cuerpo” principal
         for (Node n : forma.getChildren()) {
             if (n instanceof Rectangle parte) {
-                // Detectamos si este rectángulo forma parte del cuerpo (ancho 40, alto ~18–20)
                 if (parte.getWidth() == 40 && (parte.getHeight() == 18 || parte.getHeight() == 20)) {
-                    int index = (int) (parte.getTranslateX() / 45); // aproximado
+                    int index = (int) (parte.getTranslateX() / 45);
                     if (vertical) {
                         parte.setTranslateX(0);
                         parte.setTranslateY(index * 45);
@@ -645,7 +590,12 @@ public class Barco {
                 }
             }
         }
+
+        this.orientacion = vertical
+                ? Orientacion.VERTICAL
+                : Orientacion.HORIZONTAL;
     }
+
 
     public void habilitarRotacion() {
         forma.setOnMouseClicked(event -> {
@@ -724,7 +674,6 @@ public class Barco {
 
             /*Agregar la copia al nuevo Group*/
             if (nodoClonado != null) {
-                // Copiar propiedades genéricas de Node (como Opacity, etc.)
                 nodoClonado.setOpacity(nodoOriginal.getOpacity());
 
                 nuevaForma.getChildren().add(nodoClonado);

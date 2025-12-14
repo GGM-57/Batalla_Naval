@@ -16,6 +16,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.event.ActionEvent;
 import javafx.stage.Stage;
+import com.example.batalla_naval.model.Orientacion;
 
 import java.util.List;
 
@@ -74,33 +75,40 @@ public class ControladorVistaTableroMaquina {
 
         for (Barco barco : flota) {
             int filaInicio = barco.getFila();
-            int colInicio = barco.getColumna();
-
-            // Clona la forma del barco para evitar mover el original de la vista principal
+            int colInicio  = barco.getColumna();
 
             javafx.scene.Group formaBarco = barco.clonarForma();
-
-
             formaBarco.setOnMouseClicked(null);
 
-            // Posicionar el barco clonado en el GridPane
+            if (barco.getOrientacion() == Orientacion.VERTICAL) {
+                javafx.geometry.Bounds b = formaBarco.getBoundsInLocal();
+                double pivotX = b.getMinX() + b.getWidth() / 2.0;
+                double pivotY = b.getMinY() + b.getHeight() / 2.0;
+                formaBarco.getTransforms().add(new javafx.scene.transform.Rotate(90, pivotX, pivotY));
+            }
+
             gridTableroMaquina.add(formaBarco, colInicio, filaInicio);
 
-            // Centrarlo y aplicar el ColumnSpan
             GridPane.setHalignment(formaBarco, HPos.CENTER);
             GridPane.setValignment(formaBarco, VPos.CENTER);
-            GridPane.setColumnSpan(formaBarco, barco.getTamaño());
 
+            if (barco.getOrientacion() == Orientacion.HORIZONTAL) {
+                GridPane.setColumnSpan(formaBarco, barco.getTamanio());
+                GridPane.setRowSpan(formaBarco, 1);
+            } else {
+                GridPane.setRowSpan(formaBarco, barco.getTamanio());
+                GridPane.setColumnSpan(formaBarco, 1);
+            }
 
             if (barco.estaHundido()) {
-
                 formaBarco.setOpacity(0.5);
             }
         }
     }
 
+
+
     private void pintarDisparos(Tablero tablero) {
-        // Recorrer el tablero y pintar el estado de cada celda
         for (int f = 0; f < TAM; f++) {
             for (int c = 0; c < TAM; c++) {
                 Celda celda = tablero.getCelda(f, c);
@@ -108,10 +116,8 @@ public class ControladorVistaTableroMaquina {
 
                 if (celda.estaGolpeada()) {
                     if (celda.tieneBarco()) {
-                        // TOCADO o HUNDIDO
                         p.setStyle("-fx-background-color: #f97316; -fx-border-color: #1f2933; -fx-border-width: 1;");
                     } else {
-                        // AGUA
                         p.setStyle("-fx-background-color: #020617; -fx-border-color: #1f2933; -fx-border-width: 1;");
                     }
                 }

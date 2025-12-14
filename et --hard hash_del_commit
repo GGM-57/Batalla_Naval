@@ -1,0 +1,23 @@
+[33m491004c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge branch 'main' of https://github.com/GGM-57/Batalla_Naval
+[33mee9c86e[m acomode el tablero con el margen
+[33m3b3ec54[m fusional cambios
+[33mb704dee[m se le agrego un sountrack al menu de inicio
+[33m05e5771[m tamano de la ventana ajustado y correcciones de tablero
+[33mc6b2888[m ajuste del tablero, ya no se deforma (faltan ajustes)
+[33m832e445[m fusionando lo que hizo mi compañero Merge branch 'main' of github.com:GGM-57/Batalla_Naval
+[33m0a32ea2[m agreo modelo de mvc segun el diagrama de flujo que hice
+[33m3918184[m canvas del portaaviones
+[33m5e546d9[m imagen en canva de los submarinos actualizada
+[33m457238b[m imagen en canva de los barquitos destructores actualizada
+[33m3baa1c6[m[33m ([m[1;31morigin/barcos[m[33m, [m[1;32mbarcos[m[33m)[m Agrego diseño nuevo de fragata
+[33m5247312[m Agrego diseño nuevo de fragata
+[33m35f0a45[m se modificó logica de la vista 2, se creó clase navio y clase tablero para la creacion de los metodos que permiten drag y drop en el tablero de la vista 2 - me falta corregir error al colocar los barcos porque se estan poniendo en una sola celda, lo cual deforma el tablero
+[33m6e7cc9b[m en la vista 2 (VistaConfiguracionTablero) ya se pueden posicionar navios (de tipo imagen) y se creó la clase navio, falta logica de rotacion de navios, de verificar sobreposicion, y de que los navios tengan una tamaño de acuerdo a su categoria
+[33m32b7bb7[m Merge branch 'main' of https://github.com/GGM-57/Batalla_Naval
+[33m510f490[m se estiliza vista 2 donde se configura el tablero del jugador
+[33m0e14192[m Instrucciones agregadas
+[33m8de0715[m logica para el boton de instrucciones, ya muestra alerbox al presionar
+[33mcf8b40b[m se agregan modificacines de la vista inicial y queda funcional el boton de jugar para pasar a la siguiente vista donde se configura la posicion de navios del jugador, tambien se elabora el fxml y el css de la siguiente vista que es la posicion de navios del jugador, pero faltan correciones
+[33m7c543bb[m se estiliza la ventana inicial en el fxml y css
+[33mf050385[m se crea vista inicialfsml  y se agregan algunos estilos css
+[33m4ecc18b[m inicializacion del proyecto

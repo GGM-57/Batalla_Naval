@@ -8,6 +8,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
+import com.example.batalla_naval.model.Orientacion;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +28,12 @@ public class Barco {
     private boolean posicionado = false;   // ¿ya está en el tablero?
 
     // ================== PARTE GRÁFICA (VISTA) ======================
-    private Group forma;          // grupo de figuras que dibuja el barco
+    private Group forma;
+    private Orientacion orientacion = Orientacion.HORIZONTAL;
+
+    // para poder quitarlo del GridPane en batalla cuando se hunda
+    private Node contenedorEnGrid;
+// grupo de figuras que dibuja el barco
 
     public Barco(String tipo, int tamaño) {
         this.tamaño = tamaño;
@@ -76,6 +83,26 @@ public class Barco {
     public int getColumna() {
         return columna;
     }
+    public Orientacion getOrientacion() {
+        return orientacion;
+    }
+
+
+
+    public void setOrientacion(Orientacion orientacion) {
+        this.orientacion = orientacion;
+        // opcional: sincronizar tu boolean vertical si lo sigues usando
+        this.vertical = (orientacion == Orientacion.VERTICAL);
+    }
+
+    public Node getContenedorEnGrid() {
+        return contenedorEnGrid;
+    }
+
+    public void setContenedorEnGrid(Node contenedorEnGrid) {
+        this.contenedorEnGrid = contenedorEnGrid;
+    }
+
 
     public void setPosicion(int fila, int columna) {
         this.fila = fila;
@@ -233,55 +260,7 @@ public class Barco {
         return g;
     }
 
-//    private Group crearFragata() {
-//        Group g = new Group();
-//
-//        Rectangle cuerpo = new Rectangle(40, 18);
-//        cuerpo.setArcWidth(10);
-//        cuerpo.setArcHeight(10);
-//        cuerpo.setFill(Color.web("#334155"));
-//        cuerpo.setStroke(Color.BLACK);
-//        cuerpo.setStrokeWidth(1.8);
-//        g.getChildren().add(cuerpo);
-//
-//        Polygon proa = new Polygon();
-//        proa.getPoints().addAll(
-//                40.0, 0.0,
-//                40.0, 18.0,
-//                54.0, 9.0
-//        );
-//        proa.setFill(Color.web("#475569"));
-//        proa.setStroke(Color.BLACK);
-//        proa.setStrokeWidth(1.5);
-//        g.getChildren().add(proa);
-//
-//        javafx.scene.shape.Line lineaDecorativa = new javafx.scene.shape.Line();
-//        lineaDecorativa.setStartX(0);
-//        lineaDecorativa.setStartY(12);
-//        lineaDecorativa.setEndX(40);
-//        lineaDecorativa.setEndY(12);
-//        lineaDecorativa.setStroke(Color.web("#93C5FD"));
-//        lineaDecorativa.setStrokeWidth(2);
-//        g.getChildren().add(lineaDecorativa);
-//
-//        Rectangle cabina = new Rectangle(14, 10);
-//        cabina.setFill(Color.web("#E5E7EB"));
-//        cabina.setStroke(Color.BLACK);
-//        cabina.setStrokeWidth(1.2);
-//        cabina.setTranslateX(6);
-//        cabina.setTranslateY(3);
-//        g.getChildren().add(cabina);
-//
-//        Rectangle ventana = new Rectangle(6, 5);
-//        ventana.setFill(Color.web("#60A5FA"));
-//        ventana.setStroke(Color.BLACK);
-//        ventana.setStrokeWidth(1);
-//        ventana.setTranslateX(9);
-//        ventana.setTranslateY(5);
-//        g.getChildren().add(ventana);
-//
-//        return g;
-//    }
+
 
     /* Destructor (2 celdas) */
     private Group crearDestructor() {

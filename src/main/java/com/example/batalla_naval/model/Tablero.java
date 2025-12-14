@@ -95,6 +95,8 @@ public class Tablero {
         }
 
         barco.setPosicion(fila, columna);
+        barco.setOrientacion(orientacion);
+
         return true;
     }
 

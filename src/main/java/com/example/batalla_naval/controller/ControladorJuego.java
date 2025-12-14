@@ -29,6 +29,11 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 import javafx.animation.PauseTransition;
+import javafx.scene.layout.StackPane;
+import javafx.geometry.Pos;
+import javafx.scene.transform.Rotate;
+import javafx.geometry.Bounds;
+
 
 
 
@@ -142,8 +147,8 @@ public class ControladorJuego {
         lblTurno.setText("Turno del jugador");
         lblEstado.setText("Haz clic en el tablero de la máquina para disparar.");
 
-//        iniciarCronometro();
-//        System.out.println("CRONO: iniciado");
+
+
     }
 
 
@@ -224,47 +229,51 @@ public class ControladorJuego {
         System.out.println("Barcos del jugador en batalla: " + flotaJugador.size());
     }
 
+
+
+
+
     private void pintarBarcosJugador() {
 
 
-        for (int fila= 0; fila < TAM; fila++) {
-            for (int col= 0; col < TAM; col++) {
-                Pane p= celdasJugador[fila][col];
+        for (int fila = 0; fila < TAM; fila++) {
+            for (int col = 0; col < TAM; col++) {
+                Pane p = celdasJugador[fila][col];
                 p.setStyle("-fx-background-color: #111827; -fx-border-color: #1f2933; -fx-border-width: 1;");
             }
         }
 
-
         for (Barco barco : flotaJugador) {
 
-            int filaInicio= barco.getFila();
-            int colInicio = barco.getColumna();
+            int filaInicio = barco.getFila();
+            int colInicio  = barco.getColumna();
+
+            Orientacion orient = barco.getOrientacion();
 
 
-            javafx.scene.Group forma= barco.getForma();
+            StackPane contenedor = crearContenedorBarco(barco, orient);
 
 
-            forma.setOnMouseClicked(null);
+            barco.setContenedorEnGrid(contenedor);
 
 
-
-            forma.setTranslateX(0);
-            forma.setTranslateY(0);
-            forma.setLayoutX(0);
-            forma.setLayoutY(0);
+            gridJugador.add(contenedor, colInicio, filaInicio);
 
 
-            gridJugador.add(forma, colInicio, filaInicio);
+            if (orient == Orientacion.HORIZONTAL) {
+                GridPane.setColumnSpan(contenedor, barco.getTamanio());
+                GridPane.setRowSpan(contenedor, 1);
+            } else {
+                GridPane.setRowSpan(contenedor, barco.getTamanio());
+                GridPane.setColumnSpan(contenedor, 1);
+            }
 
 
-            GridPane.setHalignment(forma, HPos.CENTER);
-            GridPane.setValignment(forma, VPos.CENTER);
-
-
-            GridPane.setColumnSpan(forma, barco.getTamaño());
-
+            GridPane.setHalignment(contenedor, HPos.CENTER);
+            GridPane.setValignment(contenedor, VPos.CENTER);
         }
     }
+
 
 
 
@@ -385,7 +394,7 @@ public class ControladorJuego {
             }
 
             case HUNDIDO -> {
-                //p.setStyle("-fx-background-color: #b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
+
                 marcarBarcoHundido(tableroMaquina, celdasMaquina, fila, col);
             }
         }
@@ -480,6 +489,7 @@ public class ControladorJuego {
         turnoJugador= true;
         lblTurno.setText("Turno del jugador");
     }
+
     private void simularPensandoMaquina() {
         if (juegoTerminado) return;
 
@@ -494,6 +504,45 @@ public class ControladorJuego {
         pause.play();
     }
 
+    private StackPane crearContenedorBarco(Barco barco, Orientacion ori) {
+
+        int t = barco.getTamanio();
+
+        double w = (ori == Orientacion.HORIZONTAL) ? (t * CELL) : CELL;
+        double h = (ori == Orientacion.HORIZONTAL) ? CELL : (t * CELL);
+
+        StackPane box = new StackPane();
+        box.setPrefSize(w, h);
+        box.setMinSize(w, h);
+        box.setMaxSize(w, h);
+        box.setAlignment(Pos.CENTER);
+
+        var node = barco.getForma();
+        if (node == null) return box;
+
+        node.setOnMouseClicked(null);
+
+        node.getTransforms().clear();
+        node.setRotate(0);
+        node.setTranslateX(0);
+        node.setTranslateY(0);
+        node.setLayoutX(0);
+        node.setLayoutY(0);
+
+        if (ori == Orientacion.VERTICAL) {
+            Bounds b = node.getBoundsInLocal();
+            double pivotX = b.getMinX() + b.getWidth() / 2.0;
+            double pivotY = b.getMinY() + b.getHeight() / 2.0;
+            node.getTransforms().add(new Rotate(90, pivotX, pivotY));
+        }
+
+        box.getChildren().add(node);
+        return box;
+    }
+
+
+
+
 
     private void actualizarCeldaJugador(int fila, int col, ResultadoDisparo resultado) {
         Pane p= celdasJugador[fila][col];
@@ -503,12 +552,12 @@ public class ControladorJuego {
                     p.setStyle("-fx-background-color: #020617; -fx-border-color: #1f2933; -fx-border-width: 1;");
             }
             case TOCADO -> {
-               // p.setStyle("-fx-background-color:#f97316; -fx-border-color: #1f2933; -fx-border-width: 1;");
+
                 marcarBarcoTocado(tableroJugador, celdasJugador, fila, col);
 
             }
             case HUNDIDO -> {
-               // p.setStyle("-fx-background-color:#b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
+
                 marcarBarcoHundido(tableroJugador, celdasJugador, fila, col);
             }
         }
@@ -518,7 +567,7 @@ public class ControladorJuego {
     private void mostrarAnimacionHundimiento(Pane celda) {
         try {
             celda.getChildren().clear();
-            //celda.setStyle("-fx-background-color:#b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
+
 
             String rutaGif= "/com/example/batalla_naval/images/explosion1.gif";
             Image gifImage= new Image(getClass().getResource(rutaGif).toExternalForm());
@@ -540,7 +589,7 @@ public class ControladorJuego {
 
     private void mostrarAnimacionTocado(Pane celda) {
         try {
-            //celda.setStyle("-fx-background-color:#f97316; -fx-border-color: #1f2933; -fx-border-width: 1;");
+
 
             String rutaGif = "/com/example/batalla_naval/images/fuego4.gif";
             Image gifImage = new Image(getClass().getResource(rutaGif).toExternalForm());
@@ -586,15 +635,13 @@ public class ControladorJuego {
 
         Barco barcoHundido= celdaImpacto.getBarco();
 
-        if (tablero==tableroJugador) {
-            Node formaBarco= barcoHundido.getForma();
-
-
-            if (formaBarco != null && formaBarco.getParent() instanceof GridPane gridPadre) {
-                gridPadre.getChildren().remove(formaBarco);
+        if (tablero == tableroJugador) {
+            Node cont = barcoHundido.getContenedorEnGrid();
+            if (cont != null && cont.getParent() instanceof GridPane gridPadre) {
+                gridPadre.getChildren().remove(cont);
             }
-
         }
+
         for (int f= 0; f < TAM; f++) {
             for (int c= 0; c < TAM; c++) {
                 Celda celda= tablero.getCelda(f, c);
@@ -613,7 +660,7 @@ public class ControladorJuego {
     private void marcarBarcoTocado(Tablero tablero, Pane[][] celdas, int fila, int col) {
         Pane p = celdas[fila][col];
 
-        //p.setStyle("-fx-background-color: #f97316; -fx-border-color: #1f2933; -fx-border-width: 1;");
+
 
         mostrarAnimacionTocado(p);
     }
@@ -733,13 +780,13 @@ public class ControladorJuego {
 
             ctrlMaquina.cargarDatosYMostrar(this.tableroMaquina, this.flotaMaquina);
 
-            //Crear el nuevo Stage (Ventana)
+
             Stage stage = new Stage();
             stage.setTitle("Tablero de la Máquina");
             stage.setScene(new Scene(root));
 
 
-            // Mostrar la ventana SIN bloquear la principal
+
             stage.show();
 
         } catch (IOException e) {

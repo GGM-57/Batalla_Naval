@@ -392,6 +392,7 @@ public class VistaConfiguracionTableroController {
 
 
                 if (colocado) {
+                    barco.setOrientacion(orientacion);
                     SoundEffects.playPosicionarBarco();
                     informationLabel.setText("✔ Barco colocado en (" + fila + ", " + columna + ")");
 

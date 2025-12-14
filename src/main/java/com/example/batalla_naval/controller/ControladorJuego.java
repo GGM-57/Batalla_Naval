@@ -161,7 +161,7 @@ public class ControladorJuego {
         if (lblTableroJugador != null) {
             lblTableroJugador.setText("Tablero de " + nombre);
         } else {
-            System.out.println("ERROR: lblTableroJugador no está inyectado (fx:id no coincide en VistaBatalla.fxml)");
+            System.out.println("ERROR:");
         }
 
 
@@ -173,7 +173,7 @@ public class ControladorJuego {
         });
 
         btnVolverMenu.setOnAction(e -> {
-            System.out.println(">>> Sonido del botón presionado");
+
             SoundEffects.playClick();
 
             SoundEffects.playClick();
@@ -228,7 +228,6 @@ public class ControladorJuego {
         }
         flotaJugador.clear();
         flotaJugador.addAll(set);
-        System.out.println("Barcos del jugador en batalla: " + flotaJugador.size());
     }
 
 

@@ -46,26 +46,26 @@ public class VistaConfiguracionTableroController {
     @FXML private Label submarinoCount;
     @FXML private Label portaavionesCount;
 
-    private static final int CELL = 45;
+    private static final int CELL= 45;
 
     /*límites y contadores de barcos*/
-    private static final int MAX_FRAGATAS = 4;
-    private static final int MAX_DESTRUCTORES = 3;
-    private static final int MAX_SUBMARINOS = 2;
-    private static final int MAX_PORTAAVIONES = 1;
-    private Orientacion orientacionActual = Orientacion.HORIZONTAL;
+    private static final int MAX_FRAGATAS= 4;
+    private static final int MAX_DESTRUCTORES= 3;
+    private static final int MAX_SUBMARINOS= 2;
+    private static final int MAX_PORTAAVIONES= 1;
+    private Orientacion orientacionActual= Orientacion.HORIZONTAL;
 
 
-    private int fragatasColocadas = 0;
-    private int destructoresColocados = 0;
-    private int submarinosColocados = 0;
-    private int portaavionesColocados = 0;
+    private int fragatasColocadas= 0;
+    private int destructoresColocados= 0;
+    private int submarinosColocados= 0;
+    private int portaavionesColocados= 0;
 
 
     private Pane[][] celdasGraficas;
 
 
-    private final java.util.List<Pane> celdasPreview = new java.util.ArrayList<>();
+    private final java.util.List<Pane> celdasPreview= new java.util.ArrayList<>();
 
 
 
@@ -73,7 +73,7 @@ public class VistaConfiguracionTableroController {
     @FXML private Pane paneDestructores;
     @FXML private Pane paneSubmarinos;
     @FXML private Pane panePortaaviones;
-    private Tablero tableroJugador = new Tablero(10, 10);
+    private Tablero tableroJugador= new Tablero(10, 10);
 
     @FXML private GridPane tableroJugadorGrid;
 
@@ -81,7 +81,7 @@ public class VistaConfiguracionTableroController {
     @FXML
     /*metodo que se ejecuta automáticamente al cargar el controlador*/
     private void initialize() {
-        String nombre = SesionJuego.getNombreJugador();
+        String nombre= SesionJuego.getNombreJugador();
         lblTituloTablero.setText("Tablero de " + nombre);
         btnIniciarBatalla.setOnMouseEntered(e->{
             SoundEffects.playHover();
@@ -113,8 +113,8 @@ public class VistaConfiguracionTableroController {
         crearBarcosPanelIzquierdo();
 
         configurarEventosArrastre();
-        celdasGraficas = TableroUIFactory.construirTablero(tableroJugadorGrid, 10, CELL);
-        System.out.println("Inicializando tablero vista 2");
+        celdasGraficas= TableroUIFactory.construirTablero(tableroJugadorGrid, 10, CELL);
+
 
 
     }
@@ -127,25 +127,25 @@ public class VistaConfiguracionTableroController {
      * se conecta con VistaConfiguracionTablero.fxml*/
     private void crearBarcosPanelIzquierdo() {
 
-        Barco fragata = new Barco("Fragata", 1);
+        Barco fragata= new Barco("Fragata", 1);
 
         paneFragatas.getChildren().add(fragata.getForma());
         paneFragatas.setUserData(fragata); /*guarda el barco en el pane para poder moverlo*/
         habilitarDrag(paneFragatas);
 
-        Barco destructor = new Barco("Destructor", 2);
+        Barco destructor= new Barco("Destructor", 2);
 
         paneDestructores.getChildren().add(destructor.getForma());
         paneDestructores.setUserData(destructor);
         habilitarDrag(paneDestructores);
 
-        Barco submarino = new Barco("Submarino", 3);
+        Barco submarino= new Barco("Submarino", 3);
 
         paneSubmarinos.getChildren().add(submarino.getForma());
         paneSubmarinos.setUserData(submarino);
         habilitarDrag(paneSubmarinos);
 
-        Barco portaaviones = new Barco("Portaaviones", 4);
+        Barco portaaviones= new Barco("Portaaviones", 4);
 
         panePortaaviones.getChildren().add(portaaviones.getForma());
         panePortaaviones.setUserData(portaaviones);
@@ -157,7 +157,7 @@ public class VistaConfiguracionTableroController {
 
     private void habilitarDrag(Pane paneNavio) {
 
-        Label orientLabel = new Label("H");
+        Label orientLabel= new Label("H");
         orientLabel.setStyle(
                 "-fx-background-color: rgba(0,0,0,0.7);" +
                         "-fx-text-fill: white;" +
@@ -176,7 +176,7 @@ public class VistaConfiguracionTableroController {
         paneNavio.setOnMouseEntered(e -> {
             SoundEffects.playHover();
 
-            ScaleTransition st =new ScaleTransition(Duration.millis(150), paneNavio);
+            ScaleTransition st=new ScaleTransition(Duration.millis(150), paneNavio);
             st.setToX(1.1);
             st.setToY(1.1);
             st.play();
@@ -205,13 +205,13 @@ public class VistaConfiguracionTableroController {
 
         });
         paneNavio.setOnMouseClicked(e -> {
-            if (e.getButton() == MouseButton.SECONDARY) {
-                orientacionActual = (orientacionActual == Orientacion.HORIZONTAL)
+            if (e.getButton()== MouseButton.SECONDARY) {
+                orientacionActual= (orientacionActual== Orientacion.HORIZONTAL)
                         ? Orientacion.VERTICAL
                         : Orientacion.HORIZONTAL;
 
                 orientLabel.setText(
-                        orientacionActual == Orientacion.HORIZONTAL ? "H" : "V"
+                        orientacionActual== Orientacion.HORIZONTAL ? "H" : "V"
                 );
 
                 informationLabel.setText(
@@ -222,7 +222,7 @@ public class VistaConfiguracionTableroController {
 
 
 
-        Tooltip tip = new Tooltip("Clic derecho para rotar (H / V)");
+        Tooltip tip= new Tooltip("Clic derecho para rotar (H / V)");
         tip.setShowDelay(Duration.ZERO);
         tip.setHideDelay(Duration.seconds(0.1));
         tip.setShowDuration(Duration.seconds(4));
@@ -236,23 +236,22 @@ public class VistaConfiguracionTableroController {
 
 
 
-            Barco barco = (Barco) paneNavio.getUserData();
+            Barco barco= (Barco) paneNavio.getUserData();
             if (barco==null) {
-                System.out.println("⚠ ERROR: paneNavio no tiene un Navio asignado en setUserData()");
                 return;
             }
 
 
-            Dragboard dragboard = paneNavio.startDragAndDrop(TransferMode.MOVE);
+            Dragboard dragboard= paneNavio.startDragAndDrop(TransferMode.MOVE);
 
 
-            ClipboardContent content = new ClipboardContent();
+            ClipboardContent content= new ClipboardContent();
 
 
             content.putString(barco.getTipo());
 
 
-            WritableImage snapshot = barco.getForma().snapshot(null, null);
+            WritableImage snapshot= barco.getForma().snapshot(null, null);
             content.putImage(snapshot);
 
 
@@ -277,28 +276,28 @@ public class VistaConfiguracionTableroController {
 
             limpiarPreview();
 
-            Dragboard dragboard = event.getDragboard();
+            Dragboard dragboard= event.getDragboard();
 
             if (event.getGestureSource() != tableroJugadorGrid && dragboard.hasImage()) {
                 event.acceptTransferModes(TransferMode.MOVE);
 
 
 
-                String tipo = dragboard.getString();
+                String tipo= dragboard.getString();
                 if (tipo != null) {
 
-                    int tamanio = Barco.tamañoPorTipo(tipo);
+                    int tamanio= Barco.tamañoPorTipo(tipo);
 
-                    int columna = (int) (event.getX()/CELL);
-                    int fila    = (int) (event.getY()/CELL);
-
-
-                    Orientacion orientacion = orientacionActual;
+                    int columna= (int) (event.getX()/CELL);
+                    int fila   = (int) (event.getY()/CELL);
 
 
-                    Barco barcoTemporal = new Barco(tipo, tamanio);
-                    Coordenada inicio = new Coordenada(fila, columna);
-                    boolean valido = tableroJugador.puedeUbicarBarco(barcoTemporal, inicio, orientacion);
+                    Orientacion orientacion= orientacionActual;
+
+
+                    Barco barcoTemporal= new Barco(tipo, tamanio);
+                    Coordenada inicio= new Coordenada(fila, columna);
+                    boolean valido= tableroJugador.puedeUbicarBarco(barcoTemporal, inicio, orientacion);
 
 
                     marcarPreview(fila, columna, tamanio, orientacion, valido);
@@ -315,12 +314,12 @@ public class VistaConfiguracionTableroController {
         /*--------------------------- DRAG DROPPED -----------------------------*/
         tableroJugadorGrid.setOnDragDropped(event -> {
 
-            Dragboard dragboard = event.getDragboard();
+            Dragboard dragboard= event.getDragboard();
 
             if (dragboard.hasImage()) {
 
-                String tipo = dragboard.getString();
-                int tamaño = Barco.tamañoPorTipo(tipo);
+                String tipo= dragboard.getString();
+                int tamaño= Barco.tamañoPorTipo(tipo);
 
 
                 switch (tipo) {
@@ -359,11 +358,11 @@ public class VistaConfiguracionTableroController {
                 }
 
 
-                Barco barco = new Barco(tipo, tamaño);
+                Barco barco= new Barco(tipo, tamaño);
 
 
-                int columna = (int) (event.getX()/CELL);
-                int fila    = (int) (event.getY()/CELL);
+                int columna= (int) (event.getX()/CELL);
+                int fila   = (int) (event.getY()/CELL);
 
 
 
@@ -379,15 +378,15 @@ public class VistaConfiguracionTableroController {
 
 
 
-                Coordenada inicio = new Coordenada(fila, columna);
+                Coordenada inicio= new Coordenada(fila, columna);
 
 
 
-                Orientacion orientacion = orientacionActual;
+                Orientacion orientacion= orientacionActual;
 
 
 
-                boolean colocado = tableroJugador.ubicarBarco(barco, inicio, orientacion);
+                boolean colocado= tableroJugador.ubicarBarco(barco, inicio, orientacion);
 
 
 
@@ -397,13 +396,13 @@ public class VistaConfiguracionTableroController {
                     informationLabel.setText("✔ Barco colocado en (" + fila + ", " + columna + ")");
 
 
-                    StackPane contenedor = crearContenedorBarco(barco, orientacion);
+                    StackPane contenedor= crearContenedorBarco(barco, orientacion);
 
 
                     tableroJugadorGrid.add(contenedor, columna, fila);
 
 
-                    if (orientacion == Orientacion.HORIZONTAL) {
+                    if (orientacion== Orientacion.HORIZONTAL) {
                         GridPane.setColumnSpan(contenedor, barco.getTamanio());
                         GridPane.setRowSpan(contenedor, 1);
                     } else {
@@ -436,8 +435,8 @@ public class VistaConfiguracionTableroController {
                     }
 
 
-                    int totalNecesario = MAX_FRAGATAS + MAX_DESTRUCTORES + MAX_SUBMARINOS + MAX_PORTAAVIONES;
-                    int totalColocado = fragatasColocadas + destructoresColocados +
+                    int totalNecesario= MAX_FRAGATAS + MAX_DESTRUCTORES + MAX_SUBMARINOS + MAX_PORTAAVIONES;
+                    int totalColocado= fragatasColocadas + destructoresColocados +
                             submarinosColocados + portaavionesColocados;
 
                     if (totalColocado==totalNecesario) {
@@ -479,9 +478,9 @@ public class VistaConfiguracionTableroController {
 
         limpiarPreview();
 
-        for (int i = 0; i < tamanio; i++) {
+        for (int i= 0; i < tamanio; i++) {
             int f = (orientacion==Orientacion.HORIZONTAL) ? filaInicio : filaInicio + i;
-            int c = (orientacion==Orientacion.HORIZONTAL) ? columnaInicio + i : columnaInicio;
+            int c= (orientacion==Orientacion.HORIZONTAL) ? columnaInicio + i : columnaInicio;
 
             if (f < 0 || f >= tableroJugador.getFilas()
                     || c < 0 || c >= tableroJugador.getColumnas()) {
@@ -489,10 +488,10 @@ public class VistaConfiguracionTableroController {
                 continue;
             }
 
-            Pane celda = celdasGraficas[f][c];
+            Pane celda= celdasGraficas[f][c];
             if (celda==null) continue;
 
-            String styleClass = valido ? "celda-preview" : "celda-preview-invalid";
+            String styleClass= valido ? "celda-preview" : "celda-preview-invalid";
             if (!celda.getStyleClass().contains(styleClass)) {
                 celda.getStyleClass().add(styleClass);
             }
@@ -505,16 +504,16 @@ public class VistaConfiguracionTableroController {
                 "/com/example/batalla_naval/VistaBatalla.fxml"
         ));
 
-        Parent root = loader.load();
+        Parent root= loader.load();
 
-        ControladorJuego controladorJuego = loader.getController();
+        ControladorJuego controladorJuego= loader.getController();
 
 
         controladorJuego.initData(tableroJugador);
 
 
-        Stage stage = (Stage) btnIniciarBatalla.getScene().getWindow();
-        Scene scene = new Scene(root);
+        Stage stage= (Stage) btnIniciarBatalla.getScene().getWindow();
+        Scene scene= new Scene(root);
         stage.setScene(scene);
         stage.show();
     }
@@ -522,18 +521,18 @@ public class VistaConfiguracionTableroController {
     private StackPane crearContenedorBarco(Barco barco, Orientacion orientacion) {
 
 
-        int t = barco.getTamanio();
-        double w = (orientacion == Orientacion.HORIZONTAL) ? (t * CELL) : CELL;
-        double h = (orientacion == Orientacion.HORIZONTAL) ? CELL : (t * CELL);
+        int t= barco.getTamanio();
+        double w= (orientacion== Orientacion.HORIZONTAL) ? (t * CELL) : CELL;
+        double h= (orientacion== Orientacion.HORIZONTAL) ? CELL : (t * CELL);
 
-        StackPane box = new StackPane();
+        StackPane box= new StackPane();
         box.setPrefSize(w, h);
         box.setMinSize(w, h);
         box.setMaxSize(w, h);
         box.setAlignment(Pos.CENTER);
 
 
-        var node = barco.getForma();
+        var node= barco.getForma();
 
 
         node.getTransforms().clear();
@@ -541,10 +540,10 @@ public class VistaConfiguracionTableroController {
         node.setTranslateX(0);
         node.setTranslateY(0);
 
-        if (orientacion == Orientacion.VERTICAL) {
-            Bounds b = node.getBoundsInLocal();
-            double pivotX = b.getMinX() + b.getWidth() / 2.0;
-            double pivotY = b.getMinY() + b.getHeight() / 2.0;
+        if (orientacion== Orientacion.VERTICAL) {
+            Bounds b= node.getBoundsInLocal();
+            double pivotX= b.getMinX() + b.getWidth() / 2.0;
+            double pivotY= b.getMinY() + b.getHeight() / 2.0;
             node.getTransforms().add(new Rotate(90, pivotX, pivotY));
         }
 

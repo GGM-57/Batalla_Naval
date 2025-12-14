@@ -135,7 +135,6 @@ public class VistaInicioController {
 
     private void cambiarVentana(ActionEvent event, String fxml) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource(fxml));
-        System.out.println("cambio de ventana 1 correcto");
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);

@@ -448,10 +448,15 @@ public class ControladorJuego {
 
 
             if (tableroJugador.todosBarcosHundidos(flotaJugador)) {
-                juegoTerminado= true;
+                juegoTerminado = true;
+                detenerCronometro(); /* Detener el tiempo, ya que el juego terminó*/
                 lblTurno.setText("Juego terminado");
-                lblEstado.setText("La máquina ha hundido toda tu flota. Has perdido.");
+                lblEstado.setText("¡DERROTA! La máquina ha hundido toda tu flota.");
                 deshabilitarClicksMaquina();
+
+                /* Lógica para ir a la pantalla de Derrota:*/
+                NavegadorEscenas.irAVista(gridJugador, "/com/example/batalla_naval/VistaDerrota.fxml");
+
                 return;
             }
 

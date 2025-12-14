@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+
+<VBox fx:id="rootContainer" alignment="CENTER" spacing="30.0" styleClass="defeat-container"
+      stylesheets="@VistaDerrota.css" xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.batalla_naval.controller.ControladorDerrota">
+
+    <Label styleClass="defeat-title" text="¡FLOTA HUNDIDA!" />
+
+    <ImageView fitHeight="200.0" pickOnBounds="true" preserveRatio="true">
+        <Image url="@images/fuego1.gif" />
+    </ImageView>
+
+    <Label styleClass="defeat-message" text="La máquina ha destruido todos tus barcos." />
+
+    <HBox alignment="CENTER" spacing="20.0">
+        <Button onAction="#volverAIntentar" styleClass="btn-retry" text="Volver a Intentar" />
+        <Button onAction="#irAlMenu" styleClass="btn-menu" text="Menú Principal" />
+    </HBox>
+</VBox>

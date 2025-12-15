@@ -83,3 +83,42 @@
 
 .start-btn {
 }
+
+/* ===== BOTÓN CONTINUAR ===== */
+#continuarButton {
+    -fx-background-color: linear-gradient(to bottom, #1e3a8a, #1e40af);
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+
+    -fx-padding: 10 24 10 24;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+
+    -fx-border-color: #60a5fa;
+    -fx-border-width: 2;
+
+    -fx-cursor: hand;
+}
+
+/* Hover */
+#continuarButton:hover {
+    -fx-background-color: linear-gradient(to bottom, #2563eb, #1d4ed8);
+    -fx-border-color: #93c5fd;
+}
+
+/* Presionado */
+#continuarButton:pressed {
+    -fx-background-color: linear-gradient(to bottom, #1e40af, #1e3a8a);
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+}
+
+/* Deshabilitado (cuando no hay guardado) */
+#continuarButton:disabled {
+    -fx-background-color: #374151;
+    -fx-text-fill: #9ca3af;
+    -fx-border-color: #4b5563;
+    -fx-opacity: 0.6;
+    -fx-cursor: default;
+}

@@ -53,7 +53,12 @@
                 fx:id="jugarButton"
                 onAction="#onJugarClick"/>
 
-        <Button fx:id="continuarButton" text="Continuar" onAction="#onContinuarClick"/>
+        <Button fx:id="continuarButton"
+                text="Continuar"
+                prefWidth="150"
+                prefHeight="45"
+                onAction="#onContinuarClick"/>
+
 
 
         <!--style="-fx-background-color: white;

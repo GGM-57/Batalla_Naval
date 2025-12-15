@@ -50,9 +50,9 @@
 .grid-board {
     -fx-background-color: #020617;
     -fx-border-color: #0f172a;
-    -fx-border-width: 6;
-    -fx-background-radius: 10;
-    -fx-border-radius: 10;
+    -fx-border-width: 0;
+    -fx-background-radius: 1;
+    -fx-border-radius: 1;
     -fx-grid-lines-visible: false;
 }
 
@@ -134,4 +134,118 @@
    ============================================ */
 .shadowed {
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 8, 0.3, 2, 2);
+}
+
+.tituloTableroJugador {
+    /* Estilo para el título de cada tablero (Jugador y Oponente) */
+    -fx-font-size: 24px;
+    -fx-font-weight: extra-bold;
+    -fx-text-fill: #e0f2f1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 8, 0.4, 1, 2);
+    -fx-alignment: center;
+    -fx-padding: 5 0 10 0;
+
+}
+
+.labelTurnos {
+    /* Estilo para la etiqueta que indica el turno actual */
+    -fx-font-size: 20px;
+    -fx-text-fill: #ffdf6a;
+    -fx-font-weight: bold;
+    -fx-background-color: #3e5870;
+    -fx-padding: 6 12;
+    -fx-background-radius: 8;
+    -fx-border-color: #1f2933;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 5, 0.2, 1, 1);
+    -fx-alignment: left;
+}
+
+
+.labelTituloBatallaNaval {
+    -fx-font-size: 48px;
+    -fx-text-fill: linear-gradient(to bottom, #f0f8ff, #cfe5ef);
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-padding: 10;
+    -fx-effect: dropshadow(gaussian, rgba(5, 21, 88, 0.9), 12, 0.6, 2, 4);
+    -fx-border-color: #2b455b;
+    -fx-border-width: 0 0 2 0;
+}
+
+.vbox-center{
+    -fx-text-alignment: center;
+
+}
+.btnRevelarTablero {
+    /* Estilo con énfasis en el azul marino vibrante */
+    -fx-background-color: linear-gradient(#3b82f6, #1d4ed8); /* Azul intenso */
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-padding: 10 20;
+    -fx-border-color: #0c4a6e; /* Azul oscuro para el borde */
+    -fx-border-width: 2;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 6, 0.2, 2, 2);
+}
+
+.btnRevelarTablero:hover {
+    -fx-background-color: linear-gradient(#60a5fa, #3b82f6);
+}
+
+.btnRevelarTablero:pressed {
+    -fx-background-color: #1e40af;
+    -fx-translate-y: 1;
+
+}
+
+
+/* ============================================
+   PANEL CONTENEDOR DE TABLEROS DIFERENCIADO
+   ============================================ */
+
+/* Panel del Jugador: Más claro/neutro (parecido al fondo general, pero con sombreado) */
+.vbox-board-jugador {
+    -fx-background-color: #d1e4eb; /* Azul muy claro, cerca de tu fondo #8fb5c5 */
+    -fx-padding: 15;
+    -fx-background-radius: 18;
+    -fx-border-radius: 18;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0.3, 2, 3);
+}
+
+/* Panel de la Máquina: El color oscuro que ya usabas (o uno similar al panel base) */
+.vbox-board-maquina {
+    -fx-background-color: #3e5870; /* Azul grisáceo oscuro */
+    -fx-padding: 15;
+    -fx-background-radius: 18;
+    -fx-border-radius: 18;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0.3, 2, 3);
+    /* Puedes añadir un borde para simular el borde de la imagen */
+    -fx-border-color: #2b455b;
+    -fx-border-width: 2;
+}
+
+
+/* ============================================
+   TÍTULOS DE TABLERO DIFERENCIADO
+   ============================================ */
+
+/* Título del Jugador: Texto oscuro (negro/azul oscuro) sobre fondo claro */
+.board-title-jugador {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a; /* Color de texto oscuro general */
+    /* Usa la sombra de tu tituloTableroJugador si quieres que destaque más */
+}
+
+/* Título de la Máquina: Texto claro sobre fondo oscuro */
+.board-title-maquina {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e5e7eb; /* Texto claro (como en tu estilo base .board-title) */
+    /* Usa la sombra de tu tituloTableroJugador si quieres que destaque más */
 }

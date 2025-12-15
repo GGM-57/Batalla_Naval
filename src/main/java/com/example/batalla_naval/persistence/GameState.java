@@ -23,4 +23,6 @@ public class GameState implements Serializable {
     public boolean juegoIniciado;
 
     public int segundos;
+    public boolean[][] disparosJugador;
+
 }

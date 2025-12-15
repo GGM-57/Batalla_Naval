@@ -1,6 +1,8 @@
 package com.example.batalla_naval.model;
+import java.io.Serializable;
 
-public class Coordenada {
+public class Coordenada implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private final int fila;
     private final int columna;

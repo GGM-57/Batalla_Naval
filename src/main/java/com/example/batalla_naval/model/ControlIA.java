@@ -7,14 +7,21 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Random;
 
-public class ControlIA {
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+
+
+public class ControlIA implements Serializable {
+    private static final long serialVersionUID = 1L;
+
 
     private enum Modo { HUNT, TARGET }
     private enum Dir { NONE, H, V }
 
     private final int tam;
     private final boolean[][] disparos;
-    private final Random random=new Random();
+    private transient Random random = new Random();
 
 
     private final Deque<Coordenada> colaVecinos=new ArrayDeque<>();
@@ -252,5 +259,11 @@ public class ControlIA {
             }
         }
     }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        this.random = new Random();
+    }
+
 
 }

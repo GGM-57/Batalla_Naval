@@ -1,8 +1,12 @@
 package com.example.batalla_naval.model;
 
 import java.util.List;
+import java.io.Serializable;
 
-public class Tablero {
+
+public class Tablero implements Serializable {
+    private static final long serialVersionUID = 1L;
+
 
     private final int filas;
     private final int columnas;

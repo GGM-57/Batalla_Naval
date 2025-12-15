@@ -53,9 +53,17 @@
                 fx:id="jugarButton"
                 onAction="#onJugarClick"/>
 
-                <!--style="-fx-background-color: white;
-                        -fx-font-size: 22px;
-                        -fx-font-weight: bold;"/>-->
+        <Button fx:id="continuarButton"
+                text="Continuar"
+                prefWidth="150"
+                prefHeight="45"
+                onAction="#onContinuarClick"/>
+
+
+
+        <!--style="-fx-background-color: white;
+                -fx-font-size: 22px;
+                -fx-font-weight: bold;"/>-->
     </VBox>
 
     <!-- IMÁGENES DECORATIVAS ABAJO -->

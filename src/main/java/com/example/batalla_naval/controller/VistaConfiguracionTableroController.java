@@ -125,6 +125,8 @@ public class VistaConfiguracionTableroController {
 
     /*logica para el movimiento de imagenes en la vista 2 de configuracion del tablero
      * se conecta con VistaConfiguracionTablero.fxml*/
+    /* Crea las instancias de barcos (Fragata, Destructor, Submarino, Portaaviones) para
+    el panel izquierdo, agrega su forma al Pane correspondiente, guarda el barco en userData y habilita el arrastre para cada uno. */
     private void crearBarcosPanelIzquierdo() {
 
         Barco fragata= new Barco("Fragata", 1);
@@ -153,7 +155,11 @@ public class VistaConfiguracionTableroController {
     }
 
     /*____________________________________METODOS PARA TOMAR, ARRASTRAR Y SOLTAR EN EL TABLERO___________________________________*/
-    /*metodo que permite tomar/arrastar (drag) la imagen del panel izquiero al tabler/gridpane*/
+    /*metodo que permite tomar/arrastar (drag) la imagen del panel izquiero al tabler/gridpane
+     Habilita la interacción del Pane de un barco para arrastrarlo: agrega un label de orientación (H/V),
+    configura efectos visuales (hover/press/release) y sonidos, permite cambiar orientación con clic derecho,
+    y define el inicio del drag (Dragboard) copiando tipo e imagen (snapshot) para soltarlo en el tablero. */
+
 
     private void habilitarDrag(Pane paneNavio) {
 
@@ -264,10 +270,11 @@ public class VistaConfiguracionTableroController {
     }
 
 
-    /*metodo que permite ubicar la imegen en el player board (gridpane)
-    * eventos que usa el metodo:
-    * onDragOver → cuando el barco está siendo arrastrado por encima del tablero
-    * onDragDropped → cuando el barco se suelta sobre el tablero*/
+
+    /* Configura los eventos de arrastre en el GridPane del tablero: en onDragOver calcula fila/columna
+    y muestra un “preview” válido/ inválido según puedeUbicarBarco; en onDragDropped valida límites y cupos
+    por tipo, intenta ubicar el barco en el modelo (ubicarBarco), actualiza contadores/UI, dibuja el barco en
+    el grid y habilita el botón de iniciar cuando la flota está completa. También limpia preview al salir del tablero. */
 
     private void configurarEventosArrastre() {
 
@@ -461,7 +468,8 @@ public class VistaConfiguracionTableroController {
 
     }
 
-
+    /* Elimina las clases CSS de preview (válido/ inválido) de las
+    celdas marcadas previamente y limpia la lista celdasPreview para evitar residuos visuales. */
     private void limpiarPreview() {
         for (Pane p : celdasPreview) {
             p.getStyleClass().remove("celda-preview");
@@ -469,7 +477,9 @@ public class VistaConfiguracionTableroController {
         }
         celdasPreview.clear();
     }
-
+    /* Marca visualmente (con CSS) las celdas que ocuparía un barco si se
+    soltara en la posición actual, según tamaño y orientación; si la ubicación no es
+     válida, usa una clase distinta para indicar error. */
     private void marcarPreview(int filaInicio,
                                int columnaInicio,
                                int tamanio,
@@ -498,6 +508,9 @@ public class VistaConfiguracionTableroController {
             celdasPreview.add(celda);
         }
     }
+
+    /* Cambia de escena a la vista de batalla (VistaBatalla.fxml): carga el FXML, obtiene el ControladorJuego,
+    le pasa el tableroJugador ya configurado mediante initData, y reemplaza la escena del Stage actual. */
     private void irALucha(ActionEvent event) throws IOException {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource(
@@ -518,6 +531,9 @@ public class VistaConfiguracionTableroController {
         stage.show();
     }
 
+    /* Construye un contenedor (StackPane) del tamaño exacto que ocupará el barco en el GridPane, resetea
+     transformaciones del nodo del barco y aplica rotación de 90° si la orientación es vertical, dejando la
+     forma lista para agregarse al tablero. */
     private StackPane crearContenedorBarco(Barco barco, Orientacion orientacion) {
 
 

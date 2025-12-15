@@ -9,12 +9,20 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import com.example.batalla_naval.model.Orientacion;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+
 
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Barco {
+
+
+public class Barco implements Serializable {
+    private static final long serialVersionUID = 1L;
+
 
     private String tipo;
     private int tamaño;
@@ -26,10 +34,14 @@ public class Barco {
     private int columna;
     private boolean posicionado = false;
 
-    private Group forma;
+    private transient Group forma;
     private Orientacion orientacion = Orientacion.HORIZONTAL;
 
-    private Node contenedorEnGrid;
+    private transient Node contenedorEnGrid;
+
+    /* Constructor: asigna tipo y tamaño, crea la forma gráfica del barco
+    según el tipo, aplica un “clip” a la forma para recortarla a sus bounds,
+    normaliza la forma para que empiece en (0,0) y habilita la rotación con clic derecho. */
 
     public Barco(String tipo, int tamaño) {
         this.tamaño = tamaño;
@@ -51,7 +63,25 @@ public class Barco {
         habilitarRotacion();
     }
 
+    private void reconstruirForma() {
+        this.forma = crearForma();
 
+        forma.layoutBoundsProperty().addListener((obs, oldB, newB) -> {
+            Rectangle clip = new Rectangle(
+                    newB.getMinX(),
+                    newB.getMinY(),
+                    newB.getWidth(),
+                    newB.getHeight()
+            );
+            forma.setClip(clip);
+        });
+
+        normalizarForma(this.forma);
+        habilitarRotacion();
+    }
+
+    /* Retorna el tipo del barco (Fragata, Destructor,
+     Submarino, Portaaviones) para identificarlo en la lógica y en la UI. */
     public String getTipo() {
         return tipo;
     }
@@ -60,6 +90,8 @@ public class Barco {
         return tamaño;
     }
 
+    /* Retorna el tamaño del barco (número de celdas que ocupa)
+     usando el atributo tamaño. */
     public int getTamanio() {
         return tamaño;
     }
@@ -68,32 +100,45 @@ public class Barco {
         return vertical;
     }
 
+    /* Retorna la fila donde quedó anclado/posicionado el barco en el tablero. */
+
     public int getFila() {
         return fila;
     }
 
+    /* Retorna la columna donde quedó anclado/posicionado el barco en el tablero. */
     public int getColumna() {
         return columna;
     }
+
+    /* Devuelve la orientación actual como enum Orientacion
+     (HORIZONTAL o VERTICAL), para mantener consistencia entre modelo y vista. */
     public Orientacion getOrientacion() {
         return orientacion;
     }
 
-
-
+    /* Cambia la orientación del barco y sincroniza el boolean
+     vertical para que ambos representen el mismo estado. */
     public void setOrientacion(Orientacion orientacion) {
         this.orientacion = orientacion;
         this.vertical = (orientacion == Orientacion.VERTICAL);
     }
 
+    /* Devuelve el Node contenedor asociado en el GridPane
+     (por ejemplo el StackPane que lo representa), para poder removerlo o
+     manipularlo desde controladores. */
     public Node getContenedorEnGrid() {
         return contenedorEnGrid;
     }
 
+    /* Guarda la referencia al contenedor visual del barco dentro del GridPane,
+     facilitando operaciones como eliminarlo cuando se hunde. */
     public void setContenedorEnGrid(Node contenedorEnGrid) {
         this.contenedorEnGrid = contenedorEnGrid;
     }
 
+    /* Define la posición base del barco (fila y columna) y
+    marca posicionado=true para indicar que ya fue colocado en el tablero. */
 
     public void setPosicion(int fila, int columna) {
         this.fila = fila;
@@ -101,33 +146,43 @@ public class Barco {
         this.posicionado = true;
     }
 
-    public boolean esPosicionado() {
-        return posicionado;
-    }
-
+    /* Devuelve la lista de coordenadas ocupadas por el barco en el tablero;
+     esta lista se usa para validar impactos y colocación. */
     public List<Coordenada> getPosiciones() {
         return posiciones;
     }
 
-
+    /* Agrega una coordenada a la lista de posiciones ocupadas por el barco,
+    normalmente al ubicarlo en el tablero. */
     public void agregarCoordenada(Coordenada coord) {
         posiciones.add(coord);
     }
 
+    /* Incrementa el contador de impactos (golpes) cuando el barco recibe un disparo exitoso. */
     public void registrarGolpe() {
         golpes++;
     }
 
+    /* Retorna true si el número de golpes es mayor o igual al tamaño del barco,
+    indicando que todas sus partes fueron alcanzadas. */
     public boolean estaHundido() {
         return golpes >= tamaño;
     }
 
-
+    /* Devuelve el Group que representa gráficamente al barco
+    (rectángulos/polígonos/líneas) para dibujarlo en la interfaz. */
     public Group getForma() {
+        if (forma == null) {
+            reconstruirForma();
+        }
         return forma;
     }
 
-    /** Decide la forma a dibujar según el tipo */
+
+
+    /* Crea y retorna la forma gráfica correspondiente al tipo del barco,
+    delegando en métodos específicos (fragata, destructor, submarino, portaaviones)
+     o en una forma genérica si el tipo no coincide. */
     private Group crearForma() {
         switch (tipo) {
             case "Fragata":
@@ -143,10 +198,9 @@ public class Barco {
         }
     }
 
-    /**
-     * Ajusta los hijos del grupo para que la esquina superior izquierda del conjunto
-     * quede en (0,0).
-     */
+    /* Ajusta los translateX/translateY de los hijos del Group para que el
+    conjunto quede alineado con esquina superior izquierda en (0,0), evitando
+    offsets que dañen la colocación en el GridPane. */
     private void normalizarForma(Group g) {
         if (g == null || g.getChildren().isEmpty()) return;
 
@@ -169,7 +223,8 @@ public class Barco {
         }
     }
 
-
+    /* Construye una forma simple de barco usando rectángulos repetidos según el tamaño,
+    como fallback cuando el tipo no está definido. */
     private Group crearGenerico() {
         Group g = new Group();
         for (int i = 0; i < tamaño; i++) {
@@ -183,7 +238,9 @@ public class Barco {
         return g;
     }
 
-    /* Fragata */
+    /* Construye la forma visual de una fragata (1 celda)
+     con cuerpo, proa, detalles decorativos y cabina/ventana, definiendo colores
+     y bordes para estilo. */
     private Group crearFragata() {
         Group g = new Group();
 
@@ -245,7 +302,9 @@ public class Barco {
 
 
 
-    /* Destructor (2 celdas) */
+    /* Construye la forma visual de un destructor
+    calculando el ancho total según tamaño y agregando casco, proa, cola,
+     franja, superestructura, ventanas y elementos decorativos. */
     private Group crearDestructor() {
         Group g = new Group();
 
@@ -561,7 +620,8 @@ public class Barco {
         return g;
     }
 
-
+    /* Método estático que retorna el tamaño estándar asociado a cada tipo
+          de barco, centralizando la regla de negocio de longitudes por tipo. */
     public static int tamañoPorTipo(String tipo) {
         return switch (tipo) {
             case "Fragata" -> 1;
@@ -572,7 +632,10 @@ public class Barco {
         };
     }
 
-
+    /* Alterna la orientación vertical/horizontal y reacomoda
+    las partes rectangulares principales (segmentos) cambiando sus
+     translateX/translateY para que la forma se “gire” visualmente;
+     también actualiza el enum orientacion. */
     public void rotarNavio() {
         this.vertical = !this.vertical;
 
@@ -596,7 +659,9 @@ public class Barco {
                 : Orientacion.HORIZONTAL;
     }
 
-
+    /* Registra un handler de clic sobre la forma para que al hacer
+    clic derecho (MouseButton.SECONDARY) se ejecute rotarNavio(),
+     permitiendo rotación interactiva en la UI. */
     public void habilitarRotacion() {
         forma.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.SECONDARY) {
@@ -682,4 +747,12 @@ public class Barco {
 
         return nuevaForma;
     }
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+
+        // UI: nunca se serializa
+        this.contenedorEnGrid = null;
+        reconstruirForma();
+    }
+
 }

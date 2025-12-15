@@ -35,6 +35,10 @@ import javafx.geometry.Pos;
 import javafx.scene.transform.Rotate;
 import javafx.geometry.Bounds;
 
+import com.example.batalla_naval.persistence.GamePersistence;
+import com.example.batalla_naval.persistence.GameState;
+import javafx.application.Platform;
+
 
 
 
@@ -92,7 +96,9 @@ public class ControladorJuego {
 
 
 
-
+    /* Inicializa la escena de juego con el tablero del jugador: construye ambos GridPane, configura estilos base, crea la IA,
+     registra los clics sobre el tablero enemigo, extrae/pinta la flota del jugador y genera/ubica aleatoriamente la flota de
+     la máquina. También deja listo el texto de estado/turno.  */
     public void initData(Tablero tableroJugador) {
         this.tableroJugador= tableroJugador;
 
@@ -137,7 +143,9 @@ public class ControladorJuego {
                 });
             }
         }
-
+        /* Recorre todas las celdas del tablero del jugador para detectar barcos colocados y construir
+        la lista flotaJugador sin duplicados (usa un Set). Esto sirve para saber qué barcos existen realmente
+         en el tablero durante la partida.  */
         extraerFlotaJugadorDesdeTablero();
         pintarBarcosJugador();
 
@@ -199,6 +207,8 @@ public class ControladorJuego {
 
             if (!juegoTerminado) {
                 juegoTerminado= true;
+                GamePersistence.borrar();
+
                 detenerCronometro();
                 lblTurno.setText("Juego terminado");
                 lblEstado.setText("Te has rendido. La máquina gana.");
@@ -233,7 +243,9 @@ public class ControladorJuego {
 
 
 
-
+    /* Limpia el estilo visual del grid del jugador y luego dibuja cada barco de la flota como un
+     contenedor (StackPane) agregado al GridPane, respetando orientación y tamaño mediante spans.
+      También guarda el contenedor en el objeto Barco para poder retirarlo después. */
     private void pintarBarcosJugador() {
 
 
@@ -280,7 +292,8 @@ public class ControladorJuego {
 
 
 
-
+    /* Reinicia el tablero y la flota de la máquina y luego coloca sus barcos con cantidades/tamaños
+     definidos (fragata, destructor, submarino, portaaviones) usando ubicaciones y orientaciones aleatorias válidas.  */
 
     private void colocarFlotaMaquinaAleatoria() {
         flotaMaquina.clear();
@@ -292,6 +305,9 @@ public class ControladorJuego {
         colocarBarcosDeTipoMaquina("Portaaviones", 4, 1);
     }
 
+    /* Coloca repetidamente barcos de un tipo específico en el tablero de la máquina
+    hasta completar la cantidad requerida. Para cada barco, elige fila/columna/orientación aleatoria
+     y valida la ubicación con ubicarBarco; si es válida lo agrega a la flota.  */
 
     private void colocarBarcosDeTipoMaquina(String tipo, int tamaño, int cantidad) {
         int colocados = 0;
@@ -327,8 +343,12 @@ public class ControladorJuego {
 
 
 
-
+    /* Gestiona el disparo del jugador sobre el tablero enemigo: valida turno/fin del juego,
+     arranca cronómetro en el primer disparo, evita disparos repetidos, aplica el disparo al modelo
+      (recibirDisparo), actualiza UI y sonidos según el resultado y verifica victoria. Si fue agua,
+       pasa turno a la máquina con una pausa simulando “pensar”. CO */
     private void manejarDisparoJugador(int fila, int col) {
+
         if (!turnoJugador || juegoTerminado) {
             return;
         }
@@ -379,7 +399,9 @@ public class ControladorJuego {
             String nombre= SesionJuego.getNombreJugador();
             String resumen= "¡" + nombre + " ganaste! Tiempo: " + tiempo;
 
+            GamePersistence.borrar();
             NavegadorEscenas.irAVictoria(gridJugador, resumen);
+
             return;
         }
 
@@ -393,9 +415,11 @@ public class ControladorJuego {
             turnoJugador= true;
             lblTurno.setText("Tu turno (continúas)");
         }
+        guardarPartida();
 
     }
-
+    /* Actualiza la representación visual de una celda en el tablero de la máquina después de un disparo:
+     pinta agua, o dispara rutinas para marcar “tocado” o “hundido” (incluyendo animaciones/halo de seguridad). */
 
     private void actualizarCeldaMaquina(int fila, int col, ResultadoDisparo resultado) {
         Pane p= celdasMaquina[fila][col];
@@ -416,7 +440,8 @@ public class ControladorJuego {
     }
 
 
-
+    /* Desactiva la interacción del usuario sobre el tablero enemigo removiendo los handlers de clic
+    en todas las celdas. Se usa cuando el juego termina para impedir más disparos. */
     private void deshabilitarClicksMaquina() {
         for (int f= 0; f < TAM; f++) {
             for (int c= 0; c < TAM; c++) {
@@ -427,7 +452,10 @@ public class ControladorJuego {
 
 
 
-
+    /* Ejecuta el turno de la IA: elige una coordenada con iaMaquina, dispara al tablero del jugador,
+    informa el resultado a la IA, reproduce sonidos con retraso para simular impacto, actualiza el tablero
+    del jugador y verifica derrota. Si el resultado fue agua devuelve turno al jugador; si no, la máquina
+    continúa tras una pausa.*/
 
     private void turnoMaquina() {
         if (juegoTerminado) return;
@@ -477,7 +505,9 @@ public class ControladorJuego {
                 lblTurno.setText("Juego terminado");
                 lblEstado.setText("¡DERROTA! La máquina ha hundido toda tu flota.");
                 deshabilitarClicksMaquina();
+                GamePersistence.borrar();
 
+                GamePersistence.borrar();
                 /* Lógica para ir a la pantalla de Derrota:*/
                 NavegadorEscenas.irAVista(gridJugador, "/com/example/batalla_naval/VistaDerrota.fxml");
 
@@ -495,6 +525,7 @@ public class ControladorJuego {
                 lblTurno.setText("Turno de la máquina");
                 simularPensandoMaquina();
             }
+            guardarPartida();
 
 
         });
@@ -504,7 +535,8 @@ public class ControladorJuego {
         turnoJugador= true;
         lblTurno.setText("Turno del jugador");
     }
-
+    /* Genera una espera corta (PauseTransition) para simular que la máquina
+    “piensa” antes de disparar. Tras el delay, si el juego sigue activo, ejecuta turnoMaquina(). */
     private void simularPensandoMaquina() {
         if (juegoTerminado) return;
 
@@ -518,7 +550,9 @@ public class ControladorJuego {
         });
         pause.play();
     }
-
+    /* Crea un StackPane con tamaño exacto para representar gráficamente un barco según su orientación,
+     resetea transforms/posiciones del nodo visual del barco y lo rota 90° si es vertical. Devuelve el
+      contenedor listo para insertarse en el GridPane. */
     private StackPane crearContenedorBarco(Barco barco, Orientacion ori) {
 
         int t = barco.getTamanio();
@@ -558,7 +592,8 @@ public class ControladorJuego {
 
 
 
-
+    /* Actualiza la UI del tablero del jugador en la celda impactada por la máquina: pinta agua o activa rutinas
+     de “tocado/hundido” para mostrar animaciones y marcar halo alrededor si corresponde. */
     private void actualizarCeldaJugador(int fila, int col, ResultadoDisparo resultado) {
         Pane p= celdasJugador[fila][col];
 
@@ -578,7 +613,8 @@ public class ControladorJuego {
         }
     }
 
-
+    /* Reemplaza el contenido visual de una celda por un GIF de explosión/hundimiento, ajustándolo al tamaño
+    de la celda. Si falla la carga del recurso, aplica un estilo de respaldo (color rojo) y registra el error. */
     private void mostrarAnimacionHundimiento(Pane celda) {
         try {
             celda.getChildren().clear();
@@ -601,7 +637,8 @@ public class ControladorJuego {
             celda.setStyle("-fx-background-color: #b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
         }
     }
-
+    /* Muestra una animación (GIF de fuego) en la celda donde hubo impacto “tocado”,
+    ajustando el GIF al tamaño del Pane. Si falla, aplica un estilo alterno (naranja) y registra el error. */
     private void mostrarAnimacionTocado(Pane celda) {
         try {
 
@@ -622,7 +659,8 @@ public class ControladorJuego {
             celda.setStyle("-fx-background-color: #f97316; -fx-border-color: #1f2933; -fx-border-width: 1;");
         }
     }
-
+    /* Detiene el cronómetro y navega a VistaInicio.fxml cargando el FXML y
+    reemplazando la Scene del Stage actual. Si ocurre un error de carga, informa en lblEstado. */
     private void volverAlMenu(ActionEvent event) {
         detenerCronometro();
 
@@ -644,6 +682,10 @@ public class ControladorJuego {
             lblEstado.setText("Error al volver al menú.");
         }
     }
+
+    /* A partir de una celda impactada, obtiene el barco asociado y marca todas sus celdas como hundidas (animación).
+     Si el barco es del jugador, además elimina su contenedor del GridPane para que no quede dibujado encima. Finalmente
+     aplica el “halo seguro” alrededor del barco hundido. */
     private void marcarBarcoHundido(Tablero tablero, Pane[][] celdas, int fila, int col) {
         Celda celdaImpacto= tablero.getCelda(fila, col);
         if (!celdaImpacto.tieneBarco()) return;
@@ -671,7 +713,7 @@ public class ControladorJuego {
         marcarHaloHundido(tablero, celdas, barcoHundido);
 
     }
-
+    /* Marca visualmente una celda como “tocado” mostrando la animación de fuego en esa posición. */
     private void marcarBarcoTocado(Tablero tablero, Pane[][] celdas, int fila, int col) {
         Pane p = celdas[fila][col];
 
@@ -679,7 +721,8 @@ public class ControladorJuego {
 
         mostrarAnimacionTocado(p);
     }
-
+    /* Recorre las celdas del barco hundido y pinta un halo (celdas vecinas 8-direcciones) como “seguras” cuando no contienen barco,
+     evitando sobrescribir estilos de celdas ya marcadas como impacto. */
     private void marcarHaloHundido(Tablero tablero, Pane[][] celdas, Barco barcoHundido) {
         for (int f= 0; f < TAM; f++) {
             for (int c= 0; c < TAM; c++) {
@@ -710,7 +753,8 @@ public class ControladorJuego {
     }
 
 
-
+    /* Cambia o activa música adicional de “batalla/problemas” una
+     sola vez (flag musicaBatallaIniciada) para intensificar el ambiente cuando la máquina hunde un barco. */
     private void activarMusicaBatalla() {
         if (!musicaBatallaIniciada) {
             musicaBatallaIniciada= true;
@@ -718,6 +762,9 @@ public class ControladorJuego {
             MusicManager.playLoop(MusicTrack.PROBLEMAS, 0.35);
         }
     }
+
+    /* Reinicia el contador de tiempo a cero y arranca un Timeline que incrementa los segundos cada 1s,
+    actualizando lblCronometro en formato mm:ss. */
     private void iniciarCronometro() {
         detenerCronometro();
 
@@ -747,7 +794,8 @@ public class ControladorJuego {
     }
 
 
-
+    /* Simula el tiempo de viaje del proyectil: reproduce el sonido de lanzamiento y, tras una pausa fija (1.5s),
+     ejecuta la acción recibida (normalmente reproducir explosión/impacto). */
     private void reproducirImpactoConRetraso(Runnable sonidoExplosion) {
         SoundEffects.proyectilLanzado();
 
@@ -782,9 +830,10 @@ public class ControladorJuego {
     }
 
 /*metodo para mostrar el tablero de la maquina en segundo plano. Se conecta con VistaTableroMaquina.FXML
- y con el ControladorVistaTableroMaquina*/
-
-
+ y con el ControladorVistaTableroMaquina
+    Abre una ventana modal (Stage) con VistaTableroMaquina.fxml para “reconocimiento” del enemigo.
+     Carga el FXML, entrega al controlador el tablero y la flota de la máquina, configura owner/modality y
+      muestra con showAndWait() para bloquear la ventana principal mientras esté abierta. CO */
     public void onVstaBarcosEnemigos(ActionEvent actionEvent) {
         SoundEffects.playClick();
         try {
@@ -814,6 +863,179 @@ public class ControladorJuego {
             lblEstado.setText("Error al cargar la vista del tablero de la máquina.");
         }
     }
+
+
+    private GameState construirEstadoActual() {
+        GameState gs = new GameState();
+        gs.tableroJugador = this.tableroJugador;
+        gs.tableroMaquina = this.tableroMaquina;
+
+        gs.flotaJugador = this.flotaJugador;
+        gs.flotaMaquina = this.flotaMaquina;
+
+        gs.ia = this.iaMaquina;
+
+        gs.turnoJugador = this.turnoJugador;
+        gs.juegoTerminado = this.juegoTerminado;
+        gs.juegoIniciado = this.JuegoIniciado;
+
+        gs.segundos = this.segundos;
+
+        // Copia profunda de disparosJugador
+        gs.disparosJugador = new boolean[TAM][TAM];
+        for (int f = 0; f < TAM; f++) {
+            System.arraycopy(this.disparosJugador[f], 0, gs.disparosJugador[f], 0, TAM);
+        }
+
+        return gs;
+    }
+    private void guardarPartida() {
+        GamePersistence.guardar(construirEstadoActual());
+    }
+
+
+    private void iniciarCronometroDesde(int segundosIniciales) {
+        detenerCronometro();
+
+        this.segundos = Math.max(0, segundosIniciales);
+
+        if (lblCronometro != null) {
+            int min = this.segundos / 60;
+            int seg = this.segundos % 60;
+            lblCronometro.setText(String.format("%02d:%02d", min, seg));
+        }
+
+        cronometro = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            segundos++;
+            int min = segundos / 60;
+            int seg = segundos % 60;
+            if (lblCronometro != null) {
+                lblCronometro.setText(String.format("%02d:%02d", min, seg));
+            }
+        }));
+        cronometro.setCycleCount(Timeline.INDEFINITE);
+        cronometro.play();
+    }
+
+
+    public void initFromState(GameState gs) {
+        if (gs == null) return;
+
+        this.tableroJugador = gs.tableroJugador;
+        this.tableroMaquina = gs.tableroMaquina;
+
+        this.flotaJugador.clear();
+        this.flotaJugador.addAll(gs.flotaJugador);
+
+        this.flotaMaquina.clear();
+        this.flotaMaquina.addAll(gs.flotaMaquina);
+
+        this.iaMaquina = gs.ia;
+
+        this.turnoJugador = gs.turnoJugador;
+        this.juegoTerminado = gs.juegoTerminado;
+        this.JuegoIniciado = gs.juegoIniciado;
+
+        // Restaurar disparosJugador
+        for (int f = 0; f < TAM; f++) {
+            Arrays.fill(this.disparosJugador[f], false);
+        }
+        if (gs.disparosJugador != null) {
+            for (int f = 0; f < TAM; f++) {
+                System.arraycopy(gs.disparosJugador[f], 0, this.disparosJugador[f], 0, TAM);
+            }
+        }
+
+        // Reconstruir UI
+        celdasJugador = TableroUIFactory.construirTablero(gridJugador, TAM, CELL);
+        celdasMaquina = TableroUIFactory.construirTablero(gridMaquina, TAM, CELL);
+
+        String base = "-fx-background-color: #111827; -fx-border-color: #1f2933; -fx-border-width: 1;";
+        for (int f = 0; f < TAM; f++) {
+            for (int c = 0; c < TAM; c++) {
+                celdasJugador[f][c].setStyle(base);
+                celdasMaquina[f][c].setStyle(base);
+            }
+        }
+
+        // Re-enganchar clicks del enemigo
+        for (int fila = 0; fila < TAM; fila++) {
+            for (int col = 0; col < TAM; col++) {
+                final int f = fila;
+                final int c = col;
+                celdasMaquina[f][c].setOnMouseClicked(e -> {
+                    if (btnVstaBarcosEnemigos != null) btnVstaBarcosEnemigos.setDisable(true);
+                    manejarDisparoJugador(f, c);
+                });
+            }
+        }
+
+        // Si el juego ya terminó, bloquear clicks
+        if (juegoTerminado) {
+            deshabilitarClicksMaquina();
+        }
+
+        // Botón de “ver tablero enemigo”: solo si NO ha iniciado
+        if (btnVstaBarcosEnemigos != null) {
+            btnVstaBarcosEnemigos.setDisable(JuegoIniciado);
+        }
+
+        // Pintar barcos jugador (solo vivos dibujados como contenedor)
+        pintarBarcosJugador();
+
+        // Pintar disparos/hits (simple)
+        repintarImpactosDesdeTablero(tableroJugador, celdasJugador, true);
+        repintarImpactosDesdeTablero(tableroMaquina, celdasMaquina, false);
+
+        // Etiquetas
+        String nombre = SesionJuego.getNombreJugador();
+        if (lblTableroJugador != null) lblTableroJugador.setText("Tablero de " + nombre);
+
+        if (juegoTerminado) {
+            lblTurno.setText("Juego terminado");
+        } else {
+            lblTurno.setText(turnoJugador ? ("Turno de " + nombre) : "Turno de la máquina");
+        }
+        lblEstado.setText("Partida cargada.");
+
+        // Cronómetro
+        if (JuegoIniciado && !juegoTerminado) {
+            iniciarCronometroDesde(gs.segundos);
+        } else {
+            detenerCronometro();
+            if (lblCronometro != null) lblCronometro.setText("00:00");
+        }
+
+        // Guardar al cerrar ventana
+        Platform.runLater(() -> {
+            Stage st = (Stage) gridJugador.getScene().getWindow();
+            st.setOnCloseRequest(ev -> guardarPartida());
+        });
+    }
+
+
+    private void repintarImpactosDesdeTablero(Tablero t, Pane[][] celdas, boolean esJugador) {
+        for (int f = 0; f < TAM; f++) {
+            for (int c = 0; c < TAM; c++) {
+                Celda celda = t.getCelda(f, c);
+                Pane p = celdas[f][c];
+
+                if (!celda.estaGolpeada()) continue;
+
+                if (!celda.tieneBarco()) {
+                    p.setStyle("-fx-background-color: #020617; -fx-border-color: #1f2933; -fx-border-width: 1;");
+                } else {
+                    Barco b = celda.getBarco();
+                    if (b.estaHundido()) {
+                        p.setStyle("-fx-background-color: #b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
+                    } else {
+                        p.setStyle("-fx-background-color: #f97316; -fx-border-color: #1f2933; -fx-border-width: 1;");
+                    }
+                }
+            }
+        }
+    }
+
 
 
 

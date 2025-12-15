@@ -16,6 +16,10 @@ import com.example.batalla_naval.util.SoundEffects;
 import com.example.batalla_naval.model.SesionJuego;
 import javafx.scene.control.TextField;
 
+import com.example.batalla_naval.persistence.GamePersistence;
+import com.example.batalla_naval.persistence.GameState;
+
+
 import java.io.IOException;
 import java.util.Optional;
 
@@ -27,6 +31,8 @@ public class VistaInicioController {
     private Button instruccionesButton;
     @FXML
     private TextField usernameField;
+    @FXML
+    private Button continuarButton;
 
 
     @FXML
@@ -64,6 +70,10 @@ public class VistaInicioController {
             }
         });
 
+        if (continuarButton != null) {
+            continuarButton.setOnMouseEntered(e -> SoundEffects.playHover());
+            continuarButton.setDisable(!GamePersistence.existeGuardado());
+        }
 
 
     }
@@ -87,6 +97,27 @@ public class VistaInicioController {
 
         SesionJuego.setNombreJugador(nombre);
         cambiarVentana(event, "/com/example/batalla_naval/VistaConfiguracionTablero.fxml");
+    }
+    @FXML
+    private void onContinuarClick(ActionEvent event) throws IOException {
+        if (!GamePersistence.existeGuardado()) {
+            return;
+        }
+
+        GameState gs = GamePersistence.cargar();
+        if (gs == null) {
+            return;
+        }
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/batalla_naval/VistaBatalla.fxml"));
+        Parent root = loader.load();
+
+        ControladorJuego ctrl = loader.getController();
+        ctrl.initFromState(gs);
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
 

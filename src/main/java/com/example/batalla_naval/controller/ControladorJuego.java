@@ -367,28 +367,34 @@ public class ControladorJuego {
             lblEstado.setText("Ya disparaste a (" + fila + ", " + col + "). Elige otra casilla.");
             return;
         }
-        disparosJugador[fila][col]= true;
+        disparosJugador[fila][col] = true;
 
-        Coordenada objetivo= new Coordenada(fila, col);
-        ResultadoDisparo resultado= tableroMaquina.recibirDisparo(objetivo);
+        Coordenada objetivo = new Coordenada(fila, col);
+        ResultadoDisparo resultado = tableroMaquina.recibirDisparo(objetivo);
 
-        actualizarCeldaMaquina(fila, col, resultado);
+        reproducirDisparoJugadorConRetraso(() -> {
 
-        switch (resultado) {
-            case AGUA ->{
-                lblEstado.setText("Disparaste a (" + fila + ", " + col + "): AGUA.");
+            actualizarCeldaMaquina(fila, col, resultado);
 
+
+            switch (resultado) {
+                case AGUA -> {
+                    lblEstado.setText("Disparaste a (" + fila + ", " + col + "): AGUA.");
+                    SoundEffects.misilFallado();
+                }
+                case TOCADO -> {
+                    lblEstado.setText("Disparaste a (" + fila + ", " + col + "): TOCADO.");
+                    SoundEffects.playExplosion1();
+                }
+                case HUNDIDO -> {
+                    lblEstado.setText("¡Hundiste un barco enemigo!");
+                    SoundEffects.playExplosion2();
+                }
             }
-            case TOCADO ->{
-                lblEstado.setText("Disparaste a (" + fila + ", " + col + "): TOCADO.");
-                SoundEffects.playExplosion1();
-            }
-            case HUNDIDO ->{
-                lblEstado.setText("¡Hundiste un barco enemigo!");
-                SoundEffects.playExplosion2();
-            }
 
-        }
+            // aquí sigue tu lógica normal: victoria/turnos, etc.
+        });
+
 
         if (tableroMaquina.todosBarcosHundidos(flotaMaquina)) {
             juegoTerminado= true;
@@ -418,6 +424,13 @@ public class ControladorJuego {
         guardarPartida();
 
     }
+    private void reproducirDisparoJugadorConRetraso(Runnable onImpacto) {
+        SoundEffects.playFuegoAmigo();           // 1) sonido inicial
+        PauseTransition pausa = new PauseTransition(Duration.seconds(0.6)); // ajusta
+        pausa.setOnFinished(e -> onImpacto.run()); // 2) ejecutar impacto
+        pausa.play();
+    }
+
     /* Actualiza la representación visual de una celda en el tablero de la máquina después de un disparo:
      pinta agua, o dispara rutinas para marcar “tocado” o “hundido” (incluyendo animaciones/halo de seguridad). */
 
@@ -427,6 +440,7 @@ public class ControladorJuego {
         switch (resultado) {
             case AGUA -> {
                 p.setStyle("-fx-background-color: #020617; -fx-border-color: #1f2933; -fx-border-width: 1;");
+
             }
             case TOCADO -> {
                 marcarBarcoTocado(tableroMaquina, celdasMaquina, fila, col);

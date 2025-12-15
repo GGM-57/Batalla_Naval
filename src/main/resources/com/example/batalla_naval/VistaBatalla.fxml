@@ -12,23 +12,27 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<AnchorPane prefHeight="720.0" prefWidth="1080.0" stylesheets="@VistaBatalla.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.batalla_naval.controller.ControladorJuego">
+<AnchorPane prefHeight="720.0" prefWidth="1030.0" stylesheets="@VistaBatalla.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.batalla_naval.controller.ControladorJuego">
 
     <children>
-        <BorderPane prefHeight="720.0" prefWidth="1080.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <BorderPane prefHeight="720.0" prefWidth="1030.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
             <top>
-                <VBox spacing="4.0" BorderPane.alignment="CENTER">
+                <VBox spacing="4.0" BorderPane.alignment="CENTER" styleClass="vbox-center">
                     <padding>
                         <Insets bottom="10" left="15" right="15" top="15" />
                     </padding>
                     <children>
-                        <Label fx:id="lblTitulo" text="Batalla Naval" />
+                        <Label fx:id="lblTitulo" text="Batalla Naval" alignment="CENTER" maxWidth="Infinity" styleClass="labelTituloBatallaNaval"/>
 
-                        <HBox alignment="CENTER_LEFT" spacing="12">
-                            <Label fx:id="lblTurno" text="Turno del jugador" />
-                            <Label fx:id="lblCronometro" style="-fx-font-size: 22px; -fx-font-weight: bold;" text="00:00" />
+                        <HBox  spacing="750" styleClass="box-coffe">
+                            <Label fx:id="lblTurno" text="Turno del jugador" styleClass="labelTurnos" alignment="CENTER_LEFT"/>
+                            <Label fx:id="lblCronometro" alignment="CENTER_RIGHT"
+                                   text="00:00"
+                                   style="-fx-font-size: 22px; -fx-font-weight: bold;" />
                         </HBox>
+
+
                     </children>
 
                 </VBox>
@@ -42,12 +46,13 @@
 
                     <children>
 
-                        <VBox spacing="10.0" styleClass="vbox-board">
+<!--                        contenedor tablero jugador-->
+                        <VBox spacing="20.0" styleClass="vbox-board-jugador">
                             <children>
-                                <Label fx:id="lblTableroJugador" styleClass="board-title" text="Tablero del Jugador" />
+                                <Label fx:id="lblTableroJugador" styleClass="board-title-jugador" text="Tablero del Jugador" />
 
 
-                                <GridPane fx:id="gridJugador" prefHeight="450.0" prefWidth="450.0" styleClass="grid-board">
+                                <GridPane fx:id="gridJugador" maxHeight="480.0" maxWidth="480.0" styleClass="grid-board">
 
                                     <columnConstraints>
                                         <ColumnConstraints />
@@ -65,11 +70,12 @@
                             </children>
                         </VBox>
 
-                        <VBox alignment="CENTER" spacing="10.0" styleClass="vbox-board">
+<!--                        tablero maquina-->
+                        <VBox alignment="CENTER" spacing="10.0" styleClass="vbox-board-maquina" >
                             <children>
-                                <Label styleClass="board-title" text="Tablero de la Máquina" />
+                                <Label styleClass="board-title-maquina" text="Tablero de la Máquina" />
 
-                                <GridPane fx:id="gridMaquina" prefHeight="450.0" prefWidth="450.0" styleClass="grid-board">
+                                <GridPane fx:id="gridMaquina" maxHeight="480.0" maxWidth="480.0" styleClass="grid-board">
 
                                     <columnConstraints>
                                         <ColumnConstraints />
@@ -85,7 +91,7 @@
 
                                 </GridPane>
 
-                                <Button fx:id="btnVstaBarcosEnemigos" onAction="#onVstaBarcosEnemigos" text="Revelar tablero" />
+                                <Button fx:id="btnVstaBarcosEnemigos" onAction="#onVstaBarcosEnemigos" text="Revelar tablero" styleClass="btnRevelarTablero" />
 
                             </children>
                         </VBox>

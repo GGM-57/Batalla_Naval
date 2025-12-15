@@ -9,12 +9,20 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import com.example.batalla_naval.model.Orientacion;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+
 
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Barco {
+
+
+public class Barco implements Serializable {
+    private static final long serialVersionUID = 1L;
+
 
     private String tipo;
     private int tamaño;
@@ -26,10 +34,10 @@ public class Barco {
     private int columna;
     private boolean posicionado = false;
 
-    private Group forma;
+    private transient Group forma;
     private Orientacion orientacion = Orientacion.HORIZONTAL;
 
-    private Node contenedorEnGrid;
+    private transient Node contenedorEnGrid;
 
     /* Constructor: asigna tipo y tamaño, crea la forma gráfica del barco
     según el tipo, aplica un “clip” a la forma para recortarla a sus bounds,
@@ -39,6 +47,23 @@ public class Barco {
         this.tamaño = tamaño;
         this.tipo = tipo;
 
+        this.forma = crearForma();
+
+        forma.layoutBoundsProperty().addListener((obs, oldB, newB) -> {
+            Rectangle clip = new Rectangle(
+                    newB.getMinX(),
+                    newB.getMinY(),
+                    newB.getWidth(),
+                    newB.getHeight()
+            );
+            forma.setClip(clip);
+        });
+
+        normalizarForma(this.forma);
+        habilitarRotacion();
+    }
+
+    private void reconstruirForma() {
         this.forma = crearForma();
 
         forma.layoutBoundsProperty().addListener((obs, oldB, newB) -> {
@@ -147,8 +172,13 @@ public class Barco {
     /* Devuelve el Group que representa gráficamente al barco
     (rectángulos/polígonos/líneas) para dibujarlo en la interfaz. */
     public Group getForma() {
+        if (forma == null) {
+            reconstruirForma();
+        }
         return forma;
     }
+
+
 
     /* Crea y retorna la forma gráfica correspondiente al tipo del barco,
     delegando en métodos específicos (fragata, destructor, submarino, portaaviones)
@@ -717,4 +747,12 @@ public class Barco {
 
         return nuevaForma;
     }
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+
+        // UI: nunca se serializa
+        this.contenedorEnGrid = null;
+        reconstruirForma();
+    }
+
 }

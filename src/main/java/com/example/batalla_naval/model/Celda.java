@@ -1,6 +1,9 @@
 package com.example.batalla_naval.model;
 
-public class Celda {
+import java.io.Serializable;
+
+public class Celda implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private final int fila;
     private final int columna;
@@ -32,4 +35,8 @@ public class Celda {
     public void setBarco(Barco barco) {
         this.barco = barco;
     }
+
+    // opcional (no afecta a nadie)
+    public int getFila() { return fila; }
+    public int getColumna() { return columna; }
 }

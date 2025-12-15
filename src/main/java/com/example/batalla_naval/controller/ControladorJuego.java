@@ -35,6 +35,10 @@ import javafx.geometry.Pos;
 import javafx.scene.transform.Rotate;
 import javafx.geometry.Bounds;
 
+import com.example.batalla_naval.persistence.GamePersistence;
+import com.example.batalla_naval.persistence.GameState;
+import javafx.application.Platform;
+
 
 
 
@@ -203,6 +207,8 @@ public class ControladorJuego {
 
             if (!juegoTerminado) {
                 juegoTerminado= true;
+                GamePersistence.borrar();
+
                 detenerCronometro();
                 lblTurno.setText("Juego terminado");
                 lblEstado.setText("Te has rendido. La máquina gana.");
@@ -393,7 +399,9 @@ public class ControladorJuego {
             String nombre= SesionJuego.getNombreJugador();
             String resumen= "¡" + nombre + " ganaste! Tiempo: " + tiempo;
 
+            GamePersistence.borrar();
             NavegadorEscenas.irAVictoria(gridJugador, resumen);
+
             return;
         }
 
@@ -407,6 +415,7 @@ public class ControladorJuego {
             turnoJugador= true;
             lblTurno.setText("Tu turno (continúas)");
         }
+        guardarPartida();
 
     }
     /* Actualiza la representación visual de una celda en el tablero de la máquina después de un disparo:
@@ -496,7 +505,9 @@ public class ControladorJuego {
                 lblTurno.setText("Juego terminado");
                 lblEstado.setText("¡DERROTA! La máquina ha hundido toda tu flota.");
                 deshabilitarClicksMaquina();
+                GamePersistence.borrar();
 
+                GamePersistence.borrar();
                 /* Lógica para ir a la pantalla de Derrota:*/
                 NavegadorEscenas.irAVista(gridJugador, "/com/example/batalla_naval/VistaDerrota.fxml");
 
@@ -514,6 +525,7 @@ public class ControladorJuego {
                 lblTurno.setText("Turno de la máquina");
                 simularPensandoMaquina();
             }
+            guardarPartida();
 
 
         });
@@ -851,6 +863,179 @@ public class ControladorJuego {
             lblEstado.setText("Error al cargar la vista del tablero de la máquina.");
         }
     }
+
+
+    private GameState construirEstadoActual() {
+        GameState gs = new GameState();
+        gs.tableroJugador = this.tableroJugador;
+        gs.tableroMaquina = this.tableroMaquina;
+
+        gs.flotaJugador = this.flotaJugador;
+        gs.flotaMaquina = this.flotaMaquina;
+
+        gs.ia = this.iaMaquina;
+
+        gs.turnoJugador = this.turnoJugador;
+        gs.juegoTerminado = this.juegoTerminado;
+        gs.juegoIniciado = this.JuegoIniciado;
+
+        gs.segundos = this.segundos;
+
+        // Copia profunda de disparosJugador
+        gs.disparosJugador = new boolean[TAM][TAM];
+        for (int f = 0; f < TAM; f++) {
+            System.arraycopy(this.disparosJugador[f], 0, gs.disparosJugador[f], 0, TAM);
+        }
+
+        return gs;
+    }
+    private void guardarPartida() {
+        GamePersistence.guardar(construirEstadoActual());
+    }
+
+
+    private void iniciarCronometroDesde(int segundosIniciales) {
+        detenerCronometro();
+
+        this.segundos = Math.max(0, segundosIniciales);
+
+        if (lblCronometro != null) {
+            int min = this.segundos / 60;
+            int seg = this.segundos % 60;
+            lblCronometro.setText(String.format("%02d:%02d", min, seg));
+        }
+
+        cronometro = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            segundos++;
+            int min = segundos / 60;
+            int seg = segundos % 60;
+            if (lblCronometro != null) {
+                lblCronometro.setText(String.format("%02d:%02d", min, seg));
+            }
+        }));
+        cronometro.setCycleCount(Timeline.INDEFINITE);
+        cronometro.play();
+    }
+
+
+    public void initFromState(GameState gs) {
+        if (gs == null) return;
+
+        this.tableroJugador = gs.tableroJugador;
+        this.tableroMaquina = gs.tableroMaquina;
+
+        this.flotaJugador.clear();
+        this.flotaJugador.addAll(gs.flotaJugador);
+
+        this.flotaMaquina.clear();
+        this.flotaMaquina.addAll(gs.flotaMaquina);
+
+        this.iaMaquina = gs.ia;
+
+        this.turnoJugador = gs.turnoJugador;
+        this.juegoTerminado = gs.juegoTerminado;
+        this.JuegoIniciado = gs.juegoIniciado;
+
+        // Restaurar disparosJugador
+        for (int f = 0; f < TAM; f++) {
+            Arrays.fill(this.disparosJugador[f], false);
+        }
+        if (gs.disparosJugador != null) {
+            for (int f = 0; f < TAM; f++) {
+                System.arraycopy(gs.disparosJugador[f], 0, this.disparosJugador[f], 0, TAM);
+            }
+        }
+
+        // Reconstruir UI
+        celdasJugador = TableroUIFactory.construirTablero(gridJugador, TAM, CELL);
+        celdasMaquina = TableroUIFactory.construirTablero(gridMaquina, TAM, CELL);
+
+        String base = "-fx-background-color: #111827; -fx-border-color: #1f2933; -fx-border-width: 1;";
+        for (int f = 0; f < TAM; f++) {
+            for (int c = 0; c < TAM; c++) {
+                celdasJugador[f][c].setStyle(base);
+                celdasMaquina[f][c].setStyle(base);
+            }
+        }
+
+        // Re-enganchar clicks del enemigo
+        for (int fila = 0; fila < TAM; fila++) {
+            for (int col = 0; col < TAM; col++) {
+                final int f = fila;
+                final int c = col;
+                celdasMaquina[f][c].setOnMouseClicked(e -> {
+                    if (btnVstaBarcosEnemigos != null) btnVstaBarcosEnemigos.setDisable(true);
+                    manejarDisparoJugador(f, c);
+                });
+            }
+        }
+
+        // Si el juego ya terminó, bloquear clicks
+        if (juegoTerminado) {
+            deshabilitarClicksMaquina();
+        }
+
+        // Botón de “ver tablero enemigo”: solo si NO ha iniciado
+        if (btnVstaBarcosEnemigos != null) {
+            btnVstaBarcosEnemigos.setDisable(JuegoIniciado);
+        }
+
+        // Pintar barcos jugador (solo vivos dibujados como contenedor)
+        pintarBarcosJugador();
+
+        // Pintar disparos/hits (simple)
+        repintarImpactosDesdeTablero(tableroJugador, celdasJugador, true);
+        repintarImpactosDesdeTablero(tableroMaquina, celdasMaquina, false);
+
+        // Etiquetas
+        String nombre = SesionJuego.getNombreJugador();
+        if (lblTableroJugador != null) lblTableroJugador.setText("Tablero de " + nombre);
+
+        if (juegoTerminado) {
+            lblTurno.setText("Juego terminado");
+        } else {
+            lblTurno.setText(turnoJugador ? ("Turno de " + nombre) : "Turno de la máquina");
+        }
+        lblEstado.setText("Partida cargada.");
+
+        // Cronómetro
+        if (JuegoIniciado && !juegoTerminado) {
+            iniciarCronometroDesde(gs.segundos);
+        } else {
+            detenerCronometro();
+            if (lblCronometro != null) lblCronometro.setText("00:00");
+        }
+
+        // Guardar al cerrar ventana
+        Platform.runLater(() -> {
+            Stage st = (Stage) gridJugador.getScene().getWindow();
+            st.setOnCloseRequest(ev -> guardarPartida());
+        });
+    }
+
+
+    private void repintarImpactosDesdeTablero(Tablero t, Pane[][] celdas, boolean esJugador) {
+        for (int f = 0; f < TAM; f++) {
+            for (int c = 0; c < TAM; c++) {
+                Celda celda = t.getCelda(f, c);
+                Pane p = celdas[f][c];
+
+                if (!celda.estaGolpeada()) continue;
+
+                if (!celda.tieneBarco()) {
+                    p.setStyle("-fx-background-color: #020617; -fx-border-color: #1f2933; -fx-border-width: 1;");
+                } else {
+                    Barco b = celda.getBarco();
+                    if (b.estaHundido()) {
+                        p.setStyle("-fx-background-color: #b91c1c; -fx-border-color: #1f2933; -fx-border-width: 1;");
+                    } else {
+                        p.setStyle("-fx-background-color: #f97316; -fx-border-color: #1f2933; -fx-border-width: 1;");
+                    }
+                }
+            }
+        }
+    }
+
 
 
 
